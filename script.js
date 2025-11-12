@@ -2166,26 +2166,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Sobrescribir función de guardar proyecto para usar el nuevo sistema
-        const originalSaveProject = saveProject;
-        function saveProject() {
-            if (projectManager) {
-                projectManager.saveCurrentProject();
-            } else {
-                originalSaveProject();
-            }
+        if (typeof saveProject !== 'undefined') {
+            const originalSaveProject = saveProject;
+            window.saveProject = function() {
+                if (projectManager) {
+                    projectManager.saveCurrentProject();
+                } else {
+                    originalSaveProject();
+                }
+            };
         }
 
         // Sobrescribir función de cargar proyecto
-        const originalLoadProject = loadProject;
-        function loadProject(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        if (typeof loadProject !== 'undefined') {
+            const originalLoadProject = loadProject;
+            window.loadProject = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
 
-            if (projectManager) {
-                projectManager.importProject(file);
-            } else {
-                originalLoadProject(event);
-            }
+                if (projectManager) {
+                    projectManager.importProject(file);
+                } else {
+                    originalLoadProject(event);
+                }
+            };
         }
 
 if (typeof module !== 'undefined' && module.exports) { module.exports = { createComponent }; }
