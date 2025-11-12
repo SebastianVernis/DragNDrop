@@ -3,6 +3,11 @@
         let draggedComponentType = null;
         let elementIdCounter = 0;
         let currentFilter = 'todas';
+        
+        // Nuevas instancias de módulos
+        let fileLoader = null;
+        let projectManager = null;
+        let componentExtractor = null;
 
         // Plantillas precargadas
         const plantillas = [
@@ -227,6 +232,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM Content Loaded - Starting initialization');
             console.log('Templates array length:', plantillas.length);
+            
+            // Inicializar módulos nuevos
+            initializeNewModules();
+            
             setupComponentDrag();
             setupCanvasDrop();
             setupKeyboardShortcuts();
@@ -236,6 +245,24 @@
             showGallery();
             console.log('Gallery shown');
         });
+
+        // Inicializar nuevos módulos
+        function initializeNewModules() {
+            try {
+                fileLoader = new FileLoader();
+                projectManager = new ProjectManager();
+                componentExtractor = new ComponentExtractor();
+                
+                // Exponer globalmente para acceso desde otros módulos
+                window.fileLoader = fileLoader;
+                window.projectManager = projectManager;
+                window.componentExtractor = componentExtractor;
+                
+                console.log('Nuevos módulos inicializados correctamente');
+            } catch (error) {
+                console.error('Error inicializando módulos:', error);
+            }
+        }
 
         // Configurar búsqueda de componentes
         function setupComponentSearch() {
@@ -1873,4 +1900,292 @@ document.addEventListener('DOMContentLoaded', function() {
                 return hex.length === 1 ? '0' + hex : hex;
             }).join('');
         }
+
+        // ===== NUEVAS FUNCIONES PARA MEJORAS =====
+
+        // Importar archivo HTML
+        function importHTMLFile(event) {
+            const file = event.target.files[0];
+            if (file && fileLoader) {
+                fileLoader.processFile(file);
+            }
+            // Limpiar input
+            event.target.value = '';
+        }
+
+        // Mostrar panel de proyectos
+        function showProjectsPanel() {
+            const panel = document.getElementById('projectsPanel');
+            panel.classList.remove('hidden');
+            loadProjectsList();
+        }
+
+        // Ocultar panel de proyectos
+        function hideProjectsPanel() {
+            const panel = document.getElementById('projectsPanel');
+            panel.classList.add('hidden');
+        }
+
+        // Cargar lista de proyectos
+        function loadProjectsList() {
+            if (!projectManager) return;
+            
+            const projectsList = document.getElementById('projectsList');
+            const projects = projectManager.getStoredProjects();
+            
+            if (projects.length === 0) {
+                projectsList.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">No hay proyectos guardados</div>';
+                return;
+            }
+            
+            projectsList.innerHTML = projects.map(project => `
+                <div class="project-card" onclick="loadProjectFromPanel('${project.id}')">
+                    <div class="project-thumbnail">
+                        ${project.thumbnail ? `<img src="${project.thumbnail}" style="width: 100%; height: 100%; object-fit: cover;">` : '📄'}
+                    </div>
+                    <div class="project-info">
+                        <h4 class="project-name">${project.name}</h4>
+                        <div class="project-meta">
+                            Modificado: ${new Date(project.modified).toLocaleDateString()}
+                        </div>
+                        <div class="project-actions-card">
+                            <button class="project-action-btn" onclick="event.stopPropagation(); renameProjectDialog('${project.id}')">Renombrar</button>
+                            <button class="project-action-btn" onclick="event.stopPropagation(); duplicateProjectFromPanel('${project.id}')">Duplicar</button>
+                            <button class="project-action-btn" onclick="event.stopPropagation(); exportProjectFromPanel('${project.id}')">Exportar</button>
+                            <button class="project-action-btn danger" onclick="event.stopPropagation(); deleteProjectFromPanel('${project.id}')">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Cargar proyecto desde panel
+        function loadProjectFromPanel(projectId) {
+            if (projectManager && projectManager.loadProject(projectId)) {
+                hideProjectsPanel();
+            }
+        }
+
+        // Eliminar proyecto desde panel
+        function deleteProjectFromPanel(projectId) {
+            if (confirm('¿Estás seguro de que quieres eliminar este proyecto?')) {
+                projectManager.deleteProject(projectId);
+                loadProjectsList();
+            }
+        }
+
+        // Duplicar proyecto desde panel
+        function duplicateProjectFromPanel(projectId) {
+            projectManager.duplicateProject(projectId);
+            loadProjectsList();
+        }
+
+        // Exportar proyecto desde panel
+        function exportProjectFromPanel(projectId) {
+            projectManager.exportProject(projectId);
+        }
+
+        // Mostrar diálogo de nuevo proyecto
+        function createNewProjectDialog() {
+            const modal = document.getElementById('newProjectModal');
+            modal.classList.remove('hidden');
+            const input = document.getElementById('projectName');
+            input.focus();
+            
+            // Agregar listener para Enter
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    createNewProjectFromDialog();
+                }
+            });
+        }
+
+        // Ocultar diálogo de nuevo proyecto
+        function hideNewProjectModal() {
+            const modal = document.getElementById('newProjectModal');
+            modal.classList.add('hidden');
+            document.getElementById('projectName').value = '';
+        }
+
+        // Crear nuevo proyecto desde diálogo
+        function createNewProjectFromDialog() {
+            const name = document.getElementById('projectName').value.trim();
+            if (name) {
+                projectManager.createNewProject(name);
+                hideNewProjectModal();
+                hideProjectsPanel();
+                // Limpiar canvas
+                document.getElementById('canvas').innerHTML = '';
+                selectedElement = null;
+                document.getElementById('propertiesPanel').innerHTML = `
+                    <h2 class="panel-title">Propiedades</h2>
+                    <div class="properties-empty">
+                        ← Arrastra componentes al canvas o selecciona un elemento para editar sus propiedades
+                    </div>
+                `;
+            }
+        }
+
+        // Renombrar proyecto
+        function renameProjectDialog(projectId) {
+            const newName = prompt('Nuevo nombre del proyecto:');
+            if (newName && newName.trim()) {
+                projectManager.renameProject(projectId, newName.trim());
+                loadProjectsList();
+            }
+        }
+
+        // Importar proyecto desde archivo
+        function importProjectFile(event) {
+            const file = event.target.files[0];
+            if (file && projectManager) {
+                projectManager.importProject(file).then(project => {
+                    if (project) {
+                        loadProjectsList();
+                    }
+                });
+            }
+            event.target.value = '';
+        }
+
+        // Mostrar biblioteca de componentes
+        function showComponentsLibrary() {
+            const panel = document.getElementById('componentsLibraryPanel');
+            panel.classList.remove('hidden');
+            loadComponentsLibrary();
+        }
+
+        // Ocultar biblioteca de componentes
+        function hideComponentsLibrary() {
+            const panel = document.getElementById('componentsLibraryPanel');
+            panel.classList.add('hidden');
+        }
+
+        // Cargar biblioteca de componentes
+        function loadComponentsLibrary() {
+            if (!componentExtractor) return;
+            
+            const componentsList = document.getElementById('libraryComponentsList');
+            const components = componentExtractor.getStoredComponents();
+            
+            if (components.length === 0) {
+                componentsList.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">No hay componentes en la biblioteca<br><small>Importa archivos HTML para extraer componentes automáticamente</small></div>';
+                return;
+            }
+            
+            componentsList.innerHTML = components.map(component => `
+                <div class="library-component-card" onclick="addComponentFromLibrary('${component.id}')">
+                    <div class="component-preview">
+                        ${component.preview || component.type}
+                    </div>
+                    <div class="component-info">
+                        <h4 class="component-name">${component.name}</h4>
+                        <div class="component-tags">
+                            ${component.tags.map(tag => `<span class="component-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Buscar componentes en biblioteca
+        function searchLibraryComponents() {
+            const query = document.getElementById('componentLibrarySearch').value;
+            if (!componentExtractor) return;
+            
+            const components = query ? 
+                componentExtractor.searchComponents(query) : 
+                componentExtractor.getStoredComponents();
+            
+            const componentsList = document.getElementById('libraryComponentsList');
+            
+            if (components.length === 0) {
+                componentsList.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">No se encontraron componentes</div>';
+                return;
+            }
+            
+            componentsList.innerHTML = components.map(component => `
+                <div class="library-component-card" onclick="addComponentFromLibrary('${component.id}')">
+                    <div class="component-preview">
+                        ${component.preview || component.type}
+                    </div>
+                    <div class="component-info">
+                        <h4 class="component-name">${component.name}</h4>
+                        <div class="component-tags">
+                            ${component.tags.map(tag => `<span class="component-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Agregar componente desde biblioteca
+        function addComponentFromLibrary(componentId) {
+            if (!componentExtractor) return;
+            
+            const components = componentExtractor.getStoredComponents();
+            const component = components.find(c => c.id === componentId);
+            
+            if (component) {
+                // Crear elemento desde HTML del componente
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = component.html;
+                const element = tempDiv.firstElementChild;
+                
+                if (element) {
+                    // Asignar nuevo ID y clases del editor
+                    element.id = 'element-' + (elementIdCounter++);
+                    element.classList.add('canvas-element');
+                    
+                    // Agregar funcionalidad del editor
+                    const deleteBtn = document.createElement('div');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.textContent = '×';
+                    deleteBtn.onclick = function(e) {
+                        e.stopPropagation();
+                        deleteElement(element);
+                    };
+                    element.appendChild(deleteBtn);
+
+                    element.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        selectElement(element);
+                    });
+
+                    element.addEventListener('dblclick', function(e) {
+                        e.stopPropagation();
+                        makeElementEditable(element);
+                    });
+                    
+                    // Agregar al canvas
+                    document.getElementById('canvas').appendChild(element);
+                    hideComponentsLibrary();
+                    showToast(`Componente "${component.name}" agregado`);
+                }
+            }
+        }
+
+        // Sobrescribir función de guardar proyecto para usar el nuevo sistema
+        const originalSaveProject = saveProject;
+        function saveProject() {
+            if (projectManager) {
+                projectManager.saveCurrentProject();
+            } else {
+                originalSaveProject();
+            }
+        }
+
+        // Sobrescribir función de cargar proyecto
+        const originalLoadProject = loadProject;
+        function loadProject(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (projectManager) {
+                projectManager.importProject(file);
+            } else {
+                originalLoadProject(event);
+            }
+        }
+
 if (typeof module !== 'undefined' && module.exports) { module.exports = { createComponent }; }
