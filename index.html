@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor HTML Drag &amp; Drop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra de herramientas superior -->
+        <div class="toolbar">
+            <button class="toolbar-btn" onclick="showGallery()">🎨 Plantillas</button>
+            <button class="toolbar-btn" onclick="newProject()">🗎 Nuevo</button>
+            <div class="toolbar-divider"></div>
+            <button class="toolbar-btn active" id="btnDesktop" onclick="setCanvasSize('desktop')">🖥️ Escritorio</button>
+            <button class="toolbar-btn" id="btnTablet" onclick="setCanvasSize('tablet')">📱 Tablet</button>
+            <button class="toolbar-btn" id="btnMobile" onclick="setCanvasSize('mobile')">📱 Móvil</button>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-divider"></div>
+            <button class="toolbar-btn primary" onclick="exportHTML()">📥 Exportar HTML</button>
+            <div class="toolbar-divider"></div>
+            <button class="toolbar-btn" onclick="exportZip()">📦 Exportar Todo</button>
+            <button class="toolbar-btn" onclick="showHelp()">❓ Ayuda</button>
+            <button class="toolbar-btn" onclick="saveProject()">💾 Guardar</button>
+            <button class="toolbar-btn" onclick="document.getElementById('loadProjectInput').click()">📂 Cargar</button>
+            <input type="file" id="loadProjectInput" accept=".json" onchange="loadProject(event)">
+        </div>
+
+        <!-- Contenido principal con 3 paneles -->
+        <div class="main-content">
+            <!-- Panel izquierdo - Componentes -->
+            <div class="components-panel">
+                <h2 class="panel-title">Componentes</h2>
+                <input type="text" id="componentSearch" placeholder="Buscar componentes..." style="width: 100%; padding: 8px; margin-bottom: 16px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px;">
+
+                <!-- Categoría: Layout -->
+                <div class="component-category">
+                    <div class="category-title" onclick="toggleCategory(this)">
+                        Layout
+                        <span class="category-arrow">▼</span>
+                    </div>
+                    <div class="component-list">
+                        <div class="component-item" draggable="true" data-type="contenedor">Contenedor</div>
+                        <div class="component-item" draggable="true" data-type="seccion">Sección</div>
+                        <div class="component-item" draggable="true" data-type="fila">Fila</div>
+                        <div class="component-item" draggable="true" data-type="columna">Columna</div>
+                        <div class="component-item" draggable="true" data-type="grid2">Grid 2 Columnas</div>
+                        <div class="component-item" draggable="true" data-type="grid3">Grid 3 Columnas</div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Texto -->
+                <div class="component-category">
+                    <div class="category-title" onclick="toggleCategory(this)">
+                        Texto
+                        <span class="category-arrow">▼</span>
+                    </div>
+                    <div class="component-list">
+                        <div class="component-item" draggable="true" data-type="h1">Título H1</div>
+                        <div class="component-item" draggable="true" data-type="h2">Título H2</div>
+                        <div class="component-item" draggable="true" data-type="h3">Título H3</div>
+                        <div class="component-item" draggable="true" data-type="p">Párrafo</div>
+                        <div class="component-item" draggable="true" data-type="span">Texto en línea</div>
+                        <div class="component-item" draggable="true" data-type="ul">Lista desordenada</div>
+                        <div class="component-item" draggable="true" data-type="ol">Lista ordenada</div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Medios -->
+                <div class="component-category">
+                    <div class="category-title" onclick="toggleCategory(this)">
+                        Medios
+                        <span class="category-arrow">▼</span>
+                    </div>
+                    <div class="component-list">
+                        <div class="component-item" draggable="true" data-type="img">Imagen</div>
+                        <div class="component-item" draggable="true" data-type="video">Video</div>
+                        <div class="component-item" draggable="true" data-type="iframe">Iframe</div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Formularios -->
+                <div class="component-category">
+                    <div class="category-title" onclick="toggleCategory(this)">
+                        Formularios
+                        <span class="category-arrow">▼</span>
+                    </div>
+                    <div class="component-list">
+                        <div class="component-item" draggable="true" data-type="input">Campo de texto</div>
+                        <div class="component-item" draggable="true" data-type="textarea">Textarea</div>
+                        <div class="component-item" draggable="true" data-type="button">Botón</div>
+                        <div class="component-item" draggable="true" data-type="checkbox">Checkbox</div>
+                        <div class="component-item" draggable="true" data-type="radio">Radio</div>
+                        <div class="component-item" draggable="true" data-type="select">Select</div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Componentes -->
+                <div class="component-category">
+                    <div class="category-title" onclick="toggleCategory(this)">
+                        Componentes
+                        <span class="category-arrow">▼</span>
+                    </div>
+                    <div class="component-list">
+                        <div class="component-item" draggable="true" data-type="btn-primary">Botón Primario</div>
+                        <div class="component-item" draggable="true" data-type="btn-secondary">Botón Secundario</div>
+                        <div class="component-item" draggable="true" data-type="card">Card</div>
+                        <div class="component-item" draggable="true" data-type="navbar">Navbar</div>
+                        <div class="component-item" draggable="true" data-type="footer">Footer</div>
+                        <div class="component-item" draggable="true" data-type="hero">Hero Section</div>
+                    </div>
+                </div>
+
+                <!-- Categoría: UI Avanzado -->
+                <div class="component-category">
+                    <div class="category-title" onclick="toggleCategory(this)">
+                        UI Avanzado
+                        <span class="category-arrow">▼</span>
+                    </div>
+                    <div class="component-list">
+                        <div class="component-item" draggable="true" data-type="tabs">Pestañas (Tabs)</div>
+                        <div class="component-item" draggable="true" data-type="accordion">Acordeón</div>
+                        <div class="component-item" draggable="true" data-type="modal">Modal</div>
+                        <div class="component-item" draggable="true" data-type="carousel">Carrusel</div>
+                        <div class="component-item" draggable="true" data-type="alert">Alerta</div>
+                        <div class="component-item" draggable="true" data-type="badge">Badge</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel central - Canvas -->
+            <div class="canvas-panel">
+                <div class="canvas-wrapper" id="canvasWrapper">
+                    <div id="canvas"></div>
+                </div>
+            </div>
+
+            <!-- Panel derecho - Propiedades -->
+            <div class="properties-panel" id="propertiesPanel">
+                <h2 class="panel-title">Propiedades</h2>
+                <div class="properties-empty">
+                    ← Arrastra componentes al canvas o selecciona un elemento para editar sus propiedades
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documentación -->
+    <div class="gallery-screen hidden" id="helpScreen">
+        <div class="gallery-container">
+            <div class="gallery-header">
+                <h1>Ayuda del Editor HTML</h1>
+                <p>Guía completa de todas las funcionalidades</p>
+            </div>
+
+            <div class="quick-actions">
+                <button class="quick-action-btn" onclick="document.getElementById('helpScreen').classList.add('hidden'); document.getElementById('galleryScreen').classList.remove('hidden');"> ← Volver a Plantillas</button>
+                <button class="quick-action-btn primary" onclick="document.getElementById('helpScreen').classList.add('hidden');">Cerrar Ayuda</button>
+            </div>
+
+            <div style="max-width: 1000px; margin: 0 auto; background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <h2 style="color: #1e293b; margin: 0 0 20px 0; font-size: 24px;">Funcionalidades del Editor</h2>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 20px;">Panel Superior</h3>
+                    <ul style="padding-left: 20px; margin: 0;">
+                        <li><strong>Plantillas:</strong> Accede a plantillas predefinidas para diferentes tipos de sitios web</li>
+                        <li><strong>Nuevo:</strong> Comienza un nuevo proyecto en blanco</li>
+                        <li><strong>Escritorio/Tablet/Móvil:</strong> Cambia el tamaño del canvas para ver cómo se adapta tu diseño</li>
+                        <li><strong>Exportar HTML:</strong> Exporta tu diseño como un archivo HTML completo</li>
+                        <li><strong>Exportar Todo:</strong> Exporta HTML, CSS y JS en archivos separados</li>
+                        <li><strong>Guardar/Cargar:</strong> Guarda tu proyecto para trabajar en él más tarde</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 20px;">Panel de Componentes</h3>
+                    <p>Todos los componentes se pueden arrastrar al canvas:</p>
+                    <ul style="padding-left: 20px; margin: 0;">
+                        <li><strong>Layout:</strong> Contenedores, secciones, filas, columnas y layouts en cuadrícula</li>
+                        <li><strong>Texto:</strong> Títulos, párrafos, listas y elementos de texto</li>
+                        <li><strong>Medios:</strong> Imágenes, videos e iframes</li>
+                        <li><strong>Formularios:</strong> Inputs, textareas, botones, checkboxes, radios y selects</li>
+                        <li><strong>Componentes:</strong> Botones, cards, navbars, footers y hero sections</li>
+                        <li><strong>UI Avanzado:</strong> Pestañas, acordeones, modales, carruseles, alertas y badges</li>
+                    </ul>
+                    <p><strong>Búsqueda:</strong> Usa la barra de búsqueda para encontrar componentes rápidamente</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 20px;">Canvas</h3>
+                    <ul style="padding-left: 20px; margin: 0;">
+                        <li><strong>Seleccionar:</strong> Haz clic en cualquier elemento para seleccionarlo</li>
+                        <li><strong>Editar texto:</strong> Haz doble clic en elementos de texto para editarlos</li>
+                        <li><strong>Eliminar:</strong> Usa el botón de cruz roja en las esquinas de los elementos seleccionados</li>
+                        <li><strong>Previsualización:</strong> Ve cómo se verá tu diseño en diferentes tamaños de pantalla</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 20px;">Panel de Propiedades</h3>
+                    <p>Cuando seleccionas un elemento, puedes cambiar sus propiedades:</p>
+                    <ul style="padding-left: 20px; margin: 0;">
+                        <li><strong>General:</strong> ID, clases CSS y tag HTML</li>
+                        <li><strong>Dimensiones:</strong> Ancho, alto, y valores máximos</li>
+                        <li><strong>Espaciado:</strong> Padding y margin para cada lado</li>
+                        <li><strong>Posicionamiento:</strong> Valores de display y position</li>
+                        <li><strong>Tipografía:</strong> Tamaño, peso, color y alineación de texto</li>
+                        <li><strong>Fondo y Bordes:</strong> Colores, anchos, estilos y radios</li>
+                        <li><strong>Sombra y Efectos:</strong> Sombra, opacidad y transiciones</li>
+                        <li><strong>Flexbox:</strong> Control avanzado para layouts flexibles</li>
+                        <li><strong>Grid:</strong> Control para layouts basados en cuadrícula</li>
+                        <li><strong>Atributos:</strong> Atributos específicos según el tipo de elemento</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 20px;">Atajos de Teclado</h3>
+                    <ul style="padding-left: 20px; margin: 0;">
+                        <li><strong>Supr o Delete:</strong> Eliminar elemento seleccionado</li>
+                        <li><strong>Ctrl+S:</strong> Guardar proyecto</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 20px;">Componentes Avanzados</h3>
+                    <p>Los componentes de UI Avanzado incluyen:</p>
+                    <ul style="padding-left: 20px; margin: 0;">
+                        <li><strong>Pestañas:</strong> Muestra contenido en pestañas interactivas</li>
+                        <li><strong>Acordeón:</strong> Contenido colapsable en secciones</li>
+                        <li><strong>Modal:</strong> Ventanas emergentes con contenido</li>
+                        <li><strong>Carrusel:</strong> Galería de contenido deslizable</li>
+                        <li><strong>Alertas:</strong> Mensajes de notificación con diferentes estilos</li>
+                        <li><strong>Badges:</strong> Elementos pequeños para resaltar información</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Galería de Plantillas -->
+    <div class="gallery-screen" id="galleryScreen">
+        <div class="gallery-container">
+            <div class="gallery-header">
+                <h1>Selecciona una plantilla para empezar</h1>
+                <p>Elige entre nuestras plantillas profesionales o comienza desde cero</p>
+            </div>
+
+            <div class="quick-actions">
+                <button class="quick-action-btn" onclick="startBlankProject()">📄 Nuevo Proyecto Blanco</button>
+                <button class="quick-action-btn" onclick="document.getElementById('loadProjectInput').click()">📂 Cargar Proyecto</button>
+            </div>
+
+            <div class="category-filters">
+                <button class="category-btn active" onclick="filterTemplates('todas')">Todas</button>
+                <button class="category-btn" onclick="filterTemplates('negocios')">Negocios</button>
+                <button class="category-btn" onclick="filterTemplates('personal')">Personal</button>
+                <button class="category-btn" onclick="filterTemplates('blog')">Blog</button>
+                <button class="category-btn" onclick="filterTemplates('servicios')">Servicios</button>
+                <button class="category-btn" onclick="filterTemplates('tienda')">Tienda</button>
+            </div>
+
+            <div class="templates-grid" id="templatesGrid">
+                <!-- Las plantillas se cargan dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
