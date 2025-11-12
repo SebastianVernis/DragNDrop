@@ -1873,3 +1873,4 @@ document.addEventListener('DOMContentLoaded', function() {
                 return hex.length === 1 ? '0' + hex : hex;
             }).join('');
         }
+if (typeof module !== 'undefined' && module.exports) { module.exports = { createComponent }; }

@@ -2,6 +2,11 @@
 const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
+  webServer: {
+    command: 'npx http-server -p 8080',
+    url: 'http://127.0.0.1:8080',
+    reuseExistingServer: !process.env.CI,
+  },
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
