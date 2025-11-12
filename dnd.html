@@ -1149,12 +1149,16 @@
 
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Starting initialization');
+            console.log('Templates array length:', plantillas.length);
             setupComponentDrag();
             setupCanvasDrop();
             setupKeyboardShortcuts();
             setupComponentSearch();
             renderTemplates();
+            console.log('Templates rendered');
             showGallery();
+            console.log('Gallery shown');
         });
 
         // Configurar búsqueda de componentes
@@ -1192,10 +1196,17 @@
         // Renderizar plantillas
         function renderTemplates() {
             const grid = document.getElementById('templatesGrid');
+            if (!grid) {
+                console.error('Templates grid not found');
+                return;
+            }
+            
             const filtered = currentFilter === 'todas'
                 ? plantillas
                 : plantillas.filter(t => t.categoria === currentFilter);
 
+            console.log('Rendering templates:', filtered.length);
+            
             grid.innerHTML = filtered.map(template => `
                 <div class="template-card" onclick="loadTemplate('${template.id}')">
                     <div class="template-preview">${template.emoji}</div>
@@ -1289,6 +1300,7 @@
 
         // Empezar proyecto en blanco
         function startBlankProject() {
+            console.log('startBlankProject called');
             document.getElementById('canvas').innerHTML = '';
             selectedElement = null;
             document.getElementById('propertiesPanel').innerHTML = `
@@ -2552,7 +2564,7 @@ body {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Página Web</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
+    <script src="script.js"><\/script>
 </head>
 <body>
 ${clone.innerHTML}
