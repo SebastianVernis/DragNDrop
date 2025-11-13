@@ -458,3 +458,6 @@ class ProjectManager {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = ProjectManager;
 }
+
+// Exportar globalmente para compatibilidad
+window.ProjectManager = ProjectManager;

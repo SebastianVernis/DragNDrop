@@ -238,6 +238,7 @@
             
             setupComponentDrag();
             setupCanvasDrop();
+            setupCanvasDropForMovement();
             setupKeyboardShortcuts();
             setupComponentSearch();
             renderTemplates();
@@ -373,6 +374,9 @@
                     e.stopPropagation();
                     makeElementEditable(element);
                 });
+
+                // Configurar drag & drop para movimiento de elementos
+                setupElementDragAndDrop(element);
             });
 
             hideGallery();
@@ -858,6 +862,9 @@
                 makeElementEditable(element);
             });
 
+            // Configurar drag & drop para movimiento de elementos
+            setupElementDragAndDrop(element);
+
             // Manejar eventos especiales para componentes avanzados
             if (type === 'tabs') {
                 setupTabs(element);
@@ -870,6 +877,213 @@
             }
 
             return element;
+        }
+
+        // ===== SISTEMA DE DRAG & DROP PARA ELEMENTOS DEL CANVAS =====
+        
+        let draggedCanvasElement = null;
+        let dropIndicator = null;
+
+        // Configurar drag & drop para un elemento del canvas
+        function setupElementDragAndDrop(element) {
+            // Hacer el elemento arrastrable
+            element.draggable = true;
+            
+            // Eventos de drag para el elemento
+            element.addEventListener('dragstart', function(e) {
+                // Solo permitir arrastre si el elemento está seleccionado
+                if (!element.classList.contains('selected')) {
+                    e.preventDefault();
+                    return;
+                }
+                
+                draggedCanvasElement = element;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/html', element.outerHTML);
+                
+                // Agregar clase visual durante el arrastre
+                element.classList.add('dragging-canvas-element');
+                
+                // Crear indicador de drop
+                createDropIndicator();
+                
+                // Configurar imagen de arrastre transparente
+                const img = document.createElement('img');
+                img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                e.dataTransfer.setDragImage(img, 0, 0);
+            });
+
+            element.addEventListener('dragend', function(e) {
+                element.classList.remove('dragging-canvas-element');
+                draggedCanvasElement = null;
+                removeDropIndicator();
+                clearDropZones();
+            });
+
+            // Eventos de drop para recibir elementos
+            element.addEventListener('dragover', function(e) {
+                if (draggedCanvasElement && draggedCanvasElement !== element) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    
+                    // Determinar posición de inserción
+                    const rect = element.getBoundingClientRect();
+                    const midY = rect.top + rect.height / 2;
+                    const isAfter = e.clientY > midY;
+                    
+                    showDropIndicator(element, isAfter);
+                }
+            });
+
+            element.addEventListener('dragleave', function(e) {
+                // Solo ocultar si realmente salimos del elemento
+                const rect = element.getBoundingClientRect();
+                if (e.clientX < rect.left || e.clientX > rect.right || 
+                    e.clientY < rect.top || e.clientY > rect.bottom) {
+                    hideDropIndicator();
+                }
+            });
+
+            element.addEventListener('drop', function(e) {
+                if (draggedCanvasElement && draggedCanvasElement !== element) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Determinar posición de inserción
+                    const rect = element.getBoundingClientRect();
+                    const midY = rect.top + rect.height / 2;
+                    const isAfter = e.clientY > midY;
+                    
+                    // Realizar el movimiento
+                    moveElement(draggedCanvasElement, element, isAfter);
+                    
+                    showToast('Elemento movido');
+                }
+            });
+        }
+
+        // Crear indicador visual de drop
+        function createDropIndicator() {
+            if (!dropIndicator) {
+                dropIndicator = document.createElement('div');
+                dropIndicator.className = 'drop-indicator';
+                dropIndicator.style.cssText = `
+                    position: absolute;
+                    height: 3px;
+                    background: #3b82f6;
+                    border-radius: 2px;
+                    z-index: 1000;
+                    display: none;
+                    box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+                `;
+                document.body.appendChild(dropIndicator);
+            }
+        }
+
+        // Mostrar indicador de drop en posición específica
+        function showDropIndicator(targetElement, isAfter) {
+            if (!dropIndicator) return;
+            
+            const rect = targetElement.getBoundingClientRect();
+            const canvasRect = document.getElementById('canvas').getBoundingClientRect();
+            
+            dropIndicator.style.display = 'block';
+            dropIndicator.style.left = (rect.left - canvasRect.left + 10) + 'px';
+            dropIndicator.style.width = (rect.width - 20) + 'px';
+            
+            if (isAfter) {
+                dropIndicator.style.top = (rect.bottom - canvasRect.top - 1) + 'px';
+            } else {
+                dropIndicator.style.top = (rect.top - canvasRect.top - 2) + 'px';
+            }
+        }
+
+        // Ocultar indicador de drop
+        function hideDropIndicator() {
+            if (dropIndicator) {
+                dropIndicator.style.display = 'none';
+            }
+        }
+
+        // Remover indicador de drop
+        function removeDropIndicator() {
+            if (dropIndicator) {
+                dropIndicator.remove();
+                dropIndicator = null;
+            }
+        }
+
+        // Limpiar zonas de drop
+        function clearDropZones() {
+            const elements = document.querySelectorAll('.canvas-element');
+            elements.forEach(el => {
+                el.classList.remove('drop-zone-active');
+            });
+        }
+
+        // Mover elemento a nueva posición
+        function moveElement(draggedElement, targetElement, insertAfter) {
+            const parent = targetElement.parentNode;
+            
+            // Validar que no estamos moviendo un padre dentro de su hijo
+            if (isDescendant(draggedElement, targetElement)) {
+                showToast('No se puede mover un elemento dentro de sí mismo', 'error');
+                return;
+            }
+            
+            // Realizar el movimiento
+            if (insertAfter) {
+                // Insertar después del elemento objetivo
+                if (targetElement.nextSibling) {
+                    parent.insertBefore(draggedElement, targetElement.nextSibling);
+                } else {
+                    parent.appendChild(draggedElement);
+                }
+            } else {
+                // Insertar antes del elemento objetivo
+                parent.insertBefore(draggedElement, targetElement);
+            }
+            
+            // Mantener selección en el elemento movido
+            selectElement(draggedElement);
+        }
+
+        // Verificar si un elemento es descendiente de otro
+        function isDescendant(parent, child) {
+            let node = child.parentNode;
+            while (node != null) {
+                if (node === parent) {
+                    return true;
+                }
+                node = node.parentNode;
+            }
+            return false;
+        }
+
+        // Configurar drag & drop para el canvas (para elementos desde el panel)
+        function setupCanvasDropForMovement() {
+            const canvas = document.getElementById('canvas');
+            
+            canvas.addEventListener('dragover', function(e) {
+                // Solo para elementos del canvas, no del panel de componentes
+                if (draggedCanvasElement) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                }
+            });
+
+            canvas.addEventListener('drop', function(e) {
+                if (draggedCanvasElement) {
+                    e.preventDefault();
+                    
+                    // Si se suelta en el canvas vacío, mover al final
+                    if (e.target === canvas) {
+                        canvas.appendChild(draggedCanvasElement);
+                        selectElement(draggedCanvasElement);
+                        showToast('Elemento movido al final');
+                    }
+                }
+            });
         }
 
         // Setup para componentes de pestañas
@@ -1779,64 +1993,90 @@ document.addEventListener('DOMContentLoaded', function() {
             URL.revokeObjectURL(url);
         }
 
-        // Guardar proyecto
+        // Guardar proyecto (versión mejorada)
         function saveProject() {
-            const canvas = document.getElementById('canvas');
-            const project = {
-                html: canvas.innerHTML,
-                timestamp: new Date().toISOString()
-            };
-
-            const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'proyecto.json';
-            a.click();
-            URL.revokeObjectURL(url);
-
-            showToast('Proyecto guardado');
+            try {
+                const project = enhancedProjectManager.saveCurrentProject();
+                showToast('Proyecto guardado en formato mejorado');
+            } catch (error) {
+                console.error('Error al guardar proyecto:', error);
+                showToast('Error al guardar proyecto', 'error');
+            }
         }
 
         // Cargar proyecto
         function loadProject(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const project = JSON.parse(e.target.result);
-                    document.getElementById('canvas').innerHTML = project.html;
-
-                    // Re-aplicar eventos a los elementos cargados
-                    const elements = document.querySelectorAll('.canvas-element');
-                    elements.forEach(element => {
-                        element.addEventListener('click', function(e) {
-                            e.stopPropagation();
-                            selectElement(element);
-                        });
-
-                        element.addEventListener('dblclick', function(e) {
-                            e.stopPropagation();
-                            makeElementEditable(element);
-                        });
-
-                        const deleteBtn = element.querySelector('.delete-btn');
-                        if (deleteBtn) {
-                            deleteBtn.onclick = function(e) {
-                                e.stopPropagation();
-                                deleteElement(element);
-                            };
-                        }
+            // Si es un solo archivo JSON, usar el gestor mejorado
+            if (files.length === 1 && files[0].name.endsWith('.json')) {
+                const file = files[0];
+                enhancedProjectManager.importProject(file)
+                    .then(project => {
+                        console.log('Proyecto cargado:', project);
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar proyecto:', error);
+                        showToast('Error al cargar el proyecto', 'error');
                     });
+                return;
+            }
 
-                    showToast('Proyecto cargado');
-                } catch (error) {
-                    alert('Error al cargar el proyecto');
+            // Si es un archivo HTML, usar el parser HTML
+            if (files.length === 1 && (files[0].name.endsWith('.html') || files[0].name.endsWith('.htm'))) {
+                const file = files[0];
+                htmlParser.parseHTMLFile(file)
+                    .then(project => {
+                        const success = enhancedProjectManager.loadProjectToCanvas(project);
+                        if (success) {
+                            showToast('Archivo HTML convertido y cargado');
+                        } else {
+                            showToast('Error al cargar el archivo HTML', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al parsear HTML:', error);
+                        showToast('Error al procesar el archivo HTML', 'error');
+                    });
+                return;
+            }
+
+            // Si son múltiples archivos o directorio, procesarlos con FileLoader
+            if (fileLoader) {
+                // Buscar archivo HTML principal
+                let htmlFile = null;
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
+                        if (file.name.toLowerCase().includes('index') || !htmlFile) {
+                            htmlFile = file;
+                        }
+                    }
                 }
-            };
-            reader.readAsText(file);
+
+                if (htmlFile) {
+                    // Usar el parser HTML para el archivo principal
+                    htmlParser.parseHTMLFile(htmlFile)
+                        .then(project => {
+                            const success = enhancedProjectManager.loadProjectToCanvas(project);
+                            if (success) {
+                                showToast(`Directorio HTML cargado: ${files.length} archivos procesados`);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al procesar directorio:', error);
+                            showToast('Error al procesar el directorio', 'error');
+                        });
+                } else {
+                    showToast('No se encontró archivo HTML en el directorio seleccionado', 'error');
+                }
+            } else {
+                showToast('Selecciona un archivo JSON o HTML individual', 'error');
+            }
+
+            // Limpiar input
+            event.target.value = '';
         }
 
         // Atajos de teclado
@@ -1903,12 +2143,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // ===== NUEVAS FUNCIONES PARA MEJORAS =====
 
-        // Importar archivo HTML
+        // Importar archivo HTML (versión mejorada)
         function importHTMLFile(event) {
             const file = event.target.files[0];
-            if (file && fileLoader) {
-                fileLoader.processFile(file);
+            if (!file) return;
+
+            if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
+                htmlParser.parseHTMLFile(file)
+                    .then(project => {
+                        const success = enhancedProjectManager.loadProjectToCanvas(project);
+                        if (success) {
+                            showToast('Archivo HTML importado y convertido a JSON');
+                        } else {
+                            showToast('Error al importar el archivo HTML', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al importar HTML:', error);
+                        showToast('Error al procesar el archivo HTML', 'error');
+                    });
+            } else {
+                showToast('Por favor selecciona un archivo HTML válido', 'error');
             }
+
             // Limpiar input
             event.target.value = '';
         }
@@ -2191,5 +2448,764 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
         }
+
+        // ===== CLASE HTMLTOJSONPARSER =====
+        
+        class HTMLToJSONParser {
+            constructor() {
+                this.elementIdCounter = 0;
+            }
+
+            // Método principal para procesar archivo HTML
+            async parseHTMLFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const htmlContent = e.target.result;
+                            const jsonProject = this.convertHTMLToJSON(htmlContent);
+                            resolve(jsonProject);
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                    reader.onerror = () => reject(new Error('Error al leer el archivo'));
+                    reader.readAsText(file);
+                });
+            }
+
+            // Convertir HTML string a JSON estructurado
+            convertHTMLToJSON(htmlContent) {
+                // Crear un documento temporal para parsear el HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, 'text/html');
+
+                // Extraer componentes principales
+                const styles = this.extractStyles(doc);
+                const scripts = this.extractScripts(doc);
+                const bodyElements = this.extractBodyElements(doc);
+
+                // Crear estructura JSON del proyecto
+                const project = {
+                    version: "2.0",
+                    metadata: {
+                        title: doc.title || 'Proyecto Importado',
+                        created: new Date().toISOString(),
+                        imported: true,
+                        originalFile: 'imported.html'
+                    },
+                    elements: bodyElements,
+                    styles: styles,
+                    scripts: scripts,
+                    canvas: {
+                        size: 'desktop',
+                        selectedElement: null
+                    }
+                };
+
+                return project;
+            }
+
+            // Extraer estilos CSS del documento
+            extractStyles(doc) {
+                const styles = {
+                    inline: {},
+                    internal: [],
+                    external: []
+                };
+
+                // Estilos internos (tags <style>)
+                const styleTags = doc.querySelectorAll('style');
+                styleTags.forEach((styleTag, index) => {
+                    styles.internal.push({
+                        id: `internal-${index}`,
+                        content: styleTag.textContent
+                    });
+                });
+
+                // Enlaces a CSS externos
+                const linkTags = doc.querySelectorAll('link[rel="stylesheet"]');
+                linkTags.forEach((link, index) => {
+                    styles.external.push({
+                        id: `external-${index}`,
+                        href: link.href,
+                        media: link.media || 'all'
+                    });
+                });
+
+                return styles;
+            }
+
+            // Extraer scripts JavaScript del documento
+            extractScripts(doc) {
+                const scripts = {
+                    inline: [],
+                    external: []
+                };
+
+                const scriptTags = doc.querySelectorAll('script');
+                scriptTags.forEach((script, index) => {
+                    if (script.src) {
+                        // Script externo
+                        scripts.external.push({
+                            id: `external-script-${index}`,
+                            src: script.src,
+                            async: script.async,
+                            defer: script.defer
+                        });
+                    } else if (script.textContent.trim()) {
+                        // Script inline
+                        scripts.inline.push({
+                            id: `inline-script-${index}`,
+                            content: script.textContent
+                        });
+                    }
+                });
+
+                return scripts;
+            }
+
+            // Extraer elementos del body y convertir a estructura JSON
+            extractBodyElements(doc) {
+                const body = doc.body;
+                if (!body) return [];
+
+                const elements = [];
+                Array.from(body.children).forEach(child => {
+                    const element = this.buildElementTree(child);
+                    if (element) {
+                        elements.push(element);
+                    }
+                });
+
+                return elements;
+            }
+
+            // Construir árbol de elementos recursivamente
+            buildElementTree(domElement) {
+                if (!domElement || domElement.nodeType !== Node.ELEMENT_NODE) {
+                    return null;
+                }
+
+                // Generar ID único para el elemento
+                const elementId = `imported-element-${this.elementIdCounter++}`;
+
+                // Extraer estilos computados y inline
+                const computedStyles = window.getComputedStyle ? 
+                    this.getRelevantStyles(domElement) : {};
+                const inlineStyles = this.parseInlineStyles(domElement.style.cssText);
+
+                // Construir objeto elemento
+                const element = {
+                    id: elementId,
+                    tagName: domElement.tagName.toLowerCase(),
+                    textContent: this.getDirectTextContent(domElement),
+                    attributes: this.extractAttributes(domElement),
+                    styles: {
+                        inline: inlineStyles,
+                        computed: computedStyles
+                    },
+                    children: [],
+                    metadata: {
+                        originalId: domElement.id || null,
+                        originalClasses: Array.from(domElement.classList),
+                        canvasElement: true
+                    }
+                };
+
+                // Procesar elementos hijos recursivamente
+                Array.from(domElement.children).forEach(child => {
+                    const childElement = this.buildElementTree(child);
+                    if (childElement) {
+                        element.children.push(childElement);
+                    }
+                });
+
+                return element;
+            }
+
+            // Obtener solo el texto directo del elemento (sin hijos)
+            getDirectTextContent(element) {
+                let text = '';
+                for (let node of element.childNodes) {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        text += node.textContent;
+                    }
+                }
+                return text.trim();
+            }
+
+            // Extraer atributos relevantes del elemento
+            extractAttributes(element) {
+                const attributes = {};
+                const relevantAttrs = ['id', 'class', 'src', 'href', 'alt', 'title', 'data-*', 'aria-*'];
+                
+                Array.from(element.attributes).forEach(attr => {
+                    const name = attr.name;
+                    const value = attr.value;
+                    
+                    // Incluir atributos relevantes
+                    if (relevantAttrs.some(pattern => 
+                        pattern.includes('*') ? name.startsWith(pattern.replace('*', '')) : name === pattern
+                    )) {
+                        attributes[name] = value;
+                    }
+                });
+
+                return attributes;
+            }
+
+            // Parsear estilos inline a objeto
+            parseInlineStyles(cssText) {
+                const styles = {};
+                if (!cssText) return styles;
+
+                cssText.split(';').forEach(declaration => {
+                    const colonIndex = declaration.indexOf(':');
+                    if (colonIndex > 0) {
+                        const property = declaration.substring(0, colonIndex).trim();
+                        const value = declaration.substring(colonIndex + 1).trim();
+                        if (property && value) {
+                            styles[property] = value;
+                        }
+                    }
+                });
+
+                return styles;
+            }
+
+            // Obtener estilos computados relevantes
+            getRelevantStyles(element) {
+                if (!window.getComputedStyle) return {};
+
+                const computed = window.getComputedStyle(element);
+                const relevantProperties = [
+                    'display', 'position', 'top', 'left', 'right', 'bottom',
+                    'width', 'height', 'margin', 'padding', 'border',
+                    'background', 'color', 'font-family', 'font-size', 'font-weight',
+                    'text-align', 'line-height', 'flex', 'grid', 'z-index'
+                ];
+
+                const styles = {};
+                relevantProperties.forEach(prop => {
+                    const value = computed.getPropertyValue(prop);
+                    if (value && value !== 'initial' && value !== 'normal') {
+                        styles[prop] = value;
+                    }
+                });
+
+                return styles;
+            }
+
+            // Convertir proyecto JSON de vuelta a elementos DOM para el canvas
+            jsonToCanvas(projectData) {
+                const canvas = document.getElementById('canvas');
+                if (!canvas) return;
+
+                // Limpiar canvas
+                canvas.innerHTML = '';
+
+                // Crear elementos desde JSON
+                projectData.elements.forEach(elementData => {
+                    const domElement = this.createDOMFromJSON(elementData);
+                    if (domElement) {
+                        canvas.appendChild(domElement);
+                    }
+                });
+
+                // Aplicar estilos internos
+                this.applyInternalStyles(projectData.styles);
+
+                // Re-aplicar eventos a elementos
+                this.reapplyCanvasEvents();
+            }
+
+            // Crear elemento DOM desde datos JSON
+            createDOMFromJSON(elementData) {
+                const element = document.createElement(elementData.tagName);
+                
+                // Aplicar ID y clases para el editor
+                element.id = elementData.id;
+                element.classList.add('canvas-element');
+                
+                // Restaurar clases originales si existen
+                if (elementData.metadata.originalClasses) {
+                    elementData.metadata.originalClasses.forEach(cls => {
+                        element.classList.add(cls);
+                    });
+                }
+
+                // Aplicar atributos
+                Object.entries(elementData.attributes).forEach(([name, value]) => {
+                    if (name !== 'id' && name !== 'class') {
+                        element.setAttribute(name, value);
+                    }
+                });
+
+                // Aplicar estilos inline
+                Object.entries(elementData.styles.inline).forEach(([property, value]) => {
+                    element.style.setProperty(property, value);
+                });
+
+                // Establecer contenido de texto
+                if (elementData.textContent && elementData.children.length === 0) {
+                    element.textContent = elementData.textContent;
+                }
+
+                // Crear elementos hijos recursivamente
+                elementData.children.forEach(childData => {
+                    const childElement = this.createDOMFromJSON(childData);
+                    if (childElement) {
+                        element.appendChild(childElement);
+                    }
+                });
+
+                // Agregar botón de eliminar
+                this.addDeleteButton(element);
+
+                return element;
+            }
+
+            // Aplicar estilos internos al documento
+            applyInternalStyles(stylesData) {
+                // Remover estilos internos previos del editor
+                const existingStyles = document.querySelectorAll('style[data-editor-imported]');
+                existingStyles.forEach(style => style.remove());
+
+                // Agregar nuevos estilos internos
+                stylesData.internal.forEach(styleData => {
+                    const styleElement = document.createElement('style');
+                    styleElement.setAttribute('data-editor-imported', 'true');
+                    styleElement.textContent = styleData.content;
+                    document.head.appendChild(styleElement);
+                });
+            }
+
+            // Agregar botón de eliminar a elemento
+            addDeleteButton(element) {
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    element.remove();
+                    if (selectedElement === element) {
+                        selectedElement = null;
+                        updatePropertiesPanel();
+                    }
+                };
+                element.appendChild(deleteBtn);
+            }
+
+            // Re-aplicar eventos de canvas a elementos importados
+            reapplyCanvasEvents() {
+                const elements = document.querySelectorAll('.canvas-element');
+                elements.forEach(element => {
+                    // Evento de selección
+                    element.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        selectElement(element);
+                    });
+
+                    // Evento de edición de texto
+                    element.addEventListener('dblclick', function(e) {
+                        e.stopPropagation();
+                        makeElementEditable(element);
+                    });
+                });
+            }
+        }
+
+        // Crear instancia global del parser
+        const htmlParser = new HTMLToJSONParser();
+
+        // ===== CLASE PROJECTMANAGER MEJORADA =====
+        
+        class EnhancedProjectManager {
+            constructor() {
+                this.currentProject = null;
+                this.projectHistory = [];
+            }
+
+            // Crear proyecto desde canvas actual
+            createProjectFromCanvas() {
+                const canvas = document.getElementById('canvas');
+                const elements = this.extractElementsFromCanvas(canvas);
+                
+                const project = {
+                    version: "2.0",
+                    metadata: {
+                        title: 'Proyecto Sin Título',
+                        created: new Date().toISOString(),
+                        modified: new Date().toISOString(),
+                        canvasSize: this.getCurrentCanvasSize(),
+                        selectedElement: selectedElement ? selectedElement.id : null
+                    },
+                    elements: elements,
+                    styles: {
+                        inline: {},
+                        internal: this.extractInternalStyles(),
+                        external: []
+                    },
+                    scripts: {
+                        inline: [],
+                        external: []
+                    }
+                };
+
+                return project;
+            }
+
+            // Extraer elementos del canvas recursivamente
+            extractElementsFromCanvas(container) {
+                const elements = [];
+                
+                Array.from(container.children).forEach(child => {
+                    if (child.classList.contains('canvas-element')) {
+                        const element = this.extractElementData(child);
+                        elements.push(element);
+                    }
+                });
+
+                return elements;
+            }
+
+            // Extraer datos de un elemento específico
+            extractElementData(domElement) {
+                const element = {
+                    id: domElement.id,
+                    tagName: domElement.tagName.toLowerCase(),
+                    textContent: this.getDirectTextContent(domElement),
+                    attributes: this.extractElementAttributes(domElement),
+                    styles: {
+                        inline: this.extractInlineStyles(domElement),
+                        computed: {}
+                    },
+                    children: [],
+                    metadata: {
+                        componentType: domElement.getAttribute('data-component-type') || 'custom',
+                        canvasElement: true,
+                        draggable: domElement.draggable
+                    }
+                };
+
+                // Extraer elementos hijos (excluyendo botón de eliminar)
+                Array.from(domElement.children).forEach(child => {
+                    if (!child.classList.contains('delete-btn')) {
+                        if (child.classList.contains('canvas-element')) {
+                            element.children.push(this.extractElementData(child));
+                        } else {
+                            // Para elementos que no son canvas-element pero son contenido
+                            element.children.push({
+                                id: `child-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                                tagName: child.tagName.toLowerCase(),
+                                textContent: child.textContent,
+                                attributes: this.extractElementAttributes(child),
+                                styles: { inline: this.extractInlineStyles(child), computed: {} },
+                                children: [],
+                                metadata: { canvasElement: false }
+                            });
+                        }
+                    }
+                });
+
+                return element;
+            }
+
+            // Obtener texto directo del elemento
+            getDirectTextContent(element) {
+                let text = '';
+                for (let node of element.childNodes) {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        text += node.textContent;
+                    }
+                }
+                return text.trim();
+            }
+
+            // Extraer atributos del elemento
+            extractElementAttributes(element) {
+                const attributes = {};
+                Array.from(element.attributes).forEach(attr => {
+                    if (attr.name !== 'draggable' && attr.name !== 'data-component-type') {
+                        attributes[attr.name] = attr.value;
+                    }
+                });
+                return attributes;
+            }
+
+            // Extraer estilos inline
+            extractInlineStyles(element) {
+                const styles = {};
+                if (element.style.cssText) {
+                    element.style.cssText.split(';').forEach(declaration => {
+                        const colonIndex = declaration.indexOf(':');
+                        if (colonIndex > 0) {
+                            const property = declaration.substring(0, colonIndex).trim();
+                            const value = declaration.substring(colonIndex + 1).trim();
+                            if (property && value) {
+                                styles[property] = value;
+                            }
+                        }
+                    });
+                }
+                return styles;
+            }
+
+            // Extraer estilos internos del documento
+            extractInternalStyles() {
+                const styles = [];
+                const styleTags = document.querySelectorAll('style[data-editor-imported]');
+                styleTags.forEach((styleTag, index) => {
+                    styles.push({
+                        id: `internal-${index}`,
+                        content: styleTag.textContent
+                    });
+                });
+                return styles;
+            }
+
+            // Obtener tamaño actual del canvas
+            getCurrentCanvasSize() {
+                const canvas = document.getElementById('canvas');
+                const activeBtn = document.querySelector('.toolbar-btn.active');
+                
+                if (activeBtn) {
+                    if (activeBtn.id === 'btnDesktop') return 'desktop';
+                    if (activeBtn.id === 'btnTablet') return 'tablet';
+                    if (activeBtn.id === 'btnMobile') return 'mobile';
+                }
+                
+                return 'desktop';
+            }
+
+            // Cargar proyecto al canvas
+            loadProjectToCanvas(projectData) {
+                const canvas = document.getElementById('canvas');
+                
+                // Verificar versión del proyecto
+                if (!projectData.version || projectData.version === "1.0") {
+                    // Formato antiguo - usar método de compatibilidad
+                    return this.loadLegacyProject(projectData);
+                }
+
+                // Limpiar canvas
+                canvas.innerHTML = '';
+
+                // Cargar elementos
+                if (projectData.elements) {
+                    projectData.elements.forEach(elementData => {
+                        const domElement = this.createDOMFromElementData(elementData);
+                        if (domElement) {
+                            canvas.appendChild(domElement);
+                        }
+                    });
+                }
+
+                // Aplicar estilos internos
+                if (projectData.styles && projectData.styles.internal) {
+                    this.applyInternalStyles(projectData.styles.internal);
+                }
+
+                // Restaurar configuración del canvas
+                if (projectData.metadata) {
+                    if (projectData.metadata.canvasSize) {
+                        setCanvasSize(projectData.metadata.canvasSize);
+                    }
+                }
+
+                // Re-aplicar eventos
+                this.reapplyCanvasEvents();
+
+                this.currentProject = projectData;
+                return true;
+            }
+
+            // Crear elemento DOM desde datos JSON
+            createDOMFromElementData(elementData) {
+                const element = document.createElement(elementData.tagName);
+                
+                // Aplicar ID
+                element.id = elementData.id;
+                element.classList.add('canvas-element');
+                
+                // Aplicar atributos
+                Object.entries(elementData.attributes).forEach(([name, value]) => {
+                    if (name !== 'id') {
+                        element.setAttribute(name, value);
+                    }
+                });
+
+                // Aplicar estilos inline
+                Object.entries(elementData.styles.inline).forEach(([property, value]) => {
+                    element.style.setProperty(property, value);
+                });
+
+                // Aplicar metadatos
+                if (elementData.metadata.componentType) {
+                    element.setAttribute('data-component-type', elementData.metadata.componentType);
+                }
+                if (elementData.metadata.draggable) {
+                    element.draggable = true;
+                }
+
+                // Establecer contenido de texto
+                if (elementData.textContent && elementData.children.length === 0) {
+                    element.textContent = elementData.textContent;
+                }
+
+                // Crear elementos hijos
+                elementData.children.forEach(childData => {
+                    const childElement = this.createDOMFromElementData(childData);
+                    if (childElement) {
+                        element.appendChild(childElement);
+                    }
+                });
+
+                // Agregar botón de eliminar solo a elementos canvas
+                if (elementData.metadata.canvasElement !== false) {
+                    this.addDeleteButton(element);
+                    this.addElementEvents(element);
+                }
+
+                return element;
+            }
+
+            // Agregar botón de eliminar
+            addDeleteButton(element) {
+                const deleteBtn = document.createElement('div');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '×';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteElement(element);
+                };
+                element.appendChild(deleteBtn);
+            }
+
+            // Agregar eventos a elemento
+            addElementEvents(element) {
+                element.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectElement(element);
+                });
+
+                element.addEventListener('dblclick', function(e) {
+                    e.stopPropagation();
+                    makeElementEditable(element);
+                });
+
+                setupElementDragAndDrop(element);
+            }
+
+            // Aplicar estilos internos
+            applyInternalStyles(stylesData) {
+                // Remover estilos previos
+                const existingStyles = document.querySelectorAll('style[data-editor-imported]');
+                existingStyles.forEach(style => style.remove());
+
+                // Agregar nuevos estilos
+                stylesData.forEach(styleData => {
+                    const styleElement = document.createElement('style');
+                    styleElement.setAttribute('data-editor-imported', 'true');
+                    styleElement.textContent = styleData.content;
+                    document.head.appendChild(styleElement);
+                });
+            }
+
+            // Re-aplicar eventos del canvas
+            reapplyCanvasEvents() {
+                const elements = document.querySelectorAll('.canvas-element');
+                elements.forEach(element => {
+                    // Los eventos ya se agregan en addElementEvents
+                });
+            }
+
+            // Cargar proyecto en formato legacy (v1.0)
+            loadLegacyProject(projectData) {
+                const canvas = document.getElementById('canvas');
+                canvas.innerHTML = projectData.html;
+
+                // Re-aplicar eventos a elementos legacy
+                const elements = document.querySelectorAll('.canvas-element');
+                elements.forEach(element => {
+                    this.addElementEvents(element);
+                    
+                    const deleteBtn = element.querySelector('.delete-btn');
+                    if (deleteBtn) {
+                        deleteBtn.onclick = function(e) {
+                            e.stopPropagation();
+                            deleteElement(element);
+                        };
+                    }
+                });
+
+                return true;
+            }
+
+            // Guardar proyecto actual
+            saveCurrentProject(filename = 'proyecto.json') {
+                const project = this.createProjectFromCanvas();
+                this.downloadProject(project, filename);
+                this.currentProject = project;
+                return project;
+            }
+
+            // Descargar proyecto como archivo
+            downloadProject(project, filename) {
+                const blob = new Blob([JSON.stringify(project, null, 2)], { 
+                    type: 'application/json' 
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            // Importar proyecto desde archivo
+            async importProject(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const projectData = JSON.parse(e.target.result);
+                            const success = this.loadProjectToCanvas(projectData);
+                            if (success) {
+                                showToast('Proyecto cargado correctamente');
+                                resolve(projectData);
+                            } else {
+                                reject(new Error('Error al cargar el proyecto'));
+                            }
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                    reader.onerror = () => reject(new Error('Error al leer el archivo'));
+                    reader.readAsText(file);
+                });
+            }
+        }
+
+        // Crear instancia global del gestor de proyectos mejorado
+        const enhancedProjectManager = new EnhancedProjectManager();
+
+        // Exportar funciones críticas al scope global para compatibilidad con event handlers inline
+        window.startBlankProject = startBlankProject;
+        window.loadTemplate = loadTemplate;
+        window.filterTemplates = filterTemplates;
+        window.showGallery = showGallery;
+        window.hideGallery = hideGallery;
+        window.newProject = newProject;
+        window.setCanvasSize = setCanvasSize;
+        window.exportHTML = exportHTML;
+        window.exportZip = exportZip;
+        window.showHelp = showHelp;
+        window.saveProject = saveProject;
+        window.importHTMLFile = importHTMLFile;
+        window.showProjectsPanel = showProjectsPanel;
+        window.showComponentsLibrary = showComponentsLibrary;
+        window.toggleCategory = toggleCategory;
 
 if (typeof module !== 'undefined' && module.exports) { module.exports = { createComponent }; }

@@ -343,3 +343,6 @@ class FileLoader {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = FileLoader;
 }
+
+// Exportar globalmente para compatibilidad
+window.FileLoader = FileLoader;

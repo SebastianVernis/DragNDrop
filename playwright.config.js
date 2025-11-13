@@ -1,7 +1,7 @@
 // @ts-check
-const { defineConfig, devices } = require('@playwright/test');
+import { defineConfig, devices } from '@playwright/test';
 
-module.exports = defineConfig({
+export default defineConfig({
   webServer: {
     command: 'npx http-server -p 8080',
     url: 'http://127.0.0.1:8080',

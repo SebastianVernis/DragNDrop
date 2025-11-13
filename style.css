@@ -244,6 +244,43 @@
             display: none;
         }
 
+        /* Estilos para drag & drop de elementos del canvas */
+        .canvas-element.dragging-canvas-element {
+            opacity: 0.5;
+            transform: scale(0.95);
+            outline: 2px dashed #3b82f6 !important;
+        }
+
+        .canvas-element.drop-zone-active {
+            background-color: rgba(59, 130, 246, 0.1);
+            outline: 2px dashed #3b82f6 !important;
+        }
+
+        .canvas-element[draggable="true"]:hover {
+            cursor: move;
+        }
+
+        .canvas-element[draggable="true"].selected:hover {
+            cursor: move;
+        }
+
+        /* Indicador de posición de drop mejorado */
+        .drop-indicator {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            border-radius: 2px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+            animation: pulse-drop 1s infinite;
+        }
+
+        @keyframes pulse-drop {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
         .drop-indicator.active {
             display: block;
         }

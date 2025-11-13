@@ -400,3 +400,6 @@ class ComponentExtractor {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = ComponentExtractor;
 }
+
+// Exportar globalmente para compatibilidad
+window.ComponentExtractor = ComponentExtractor;

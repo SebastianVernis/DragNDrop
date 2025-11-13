@@ -362,3 +362,6 @@ class HTMLParser {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = HTMLParser;
 }
+
+// Exportar globalmente para compatibilidad
+window.HTMLParser = HTMLParser;
