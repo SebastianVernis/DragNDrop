@@ -1,4 +1,5 @@
-module.exports = {
+export default {
   testEnvironment: 'jsdom',
-  testMatch: ['**/*.test.js'],
+  testMatch: ['**/script.test.js'],
+  transform: {}
 };

@@ -25,6 +25,11 @@
             <button class="toolbar-btn" onclick="saveProject()">💾 Guardar</button>
             <button class="toolbar-btn" onclick="document.getElementById('loadProjectInput').click()">📂 Cargar</button>
             <input type="file" id="loadProjectInput" accept=".json" onchange="loadProject(event)">
+            <div class="toolbar-divider"></div>
+            <button class="toolbar-btn" onclick="document.getElementById('importHTMLInput').click()">📄 Importar HTML</button>
+            <input type="file" id="importHTMLInput" accept=".html,.htm" onchange="importHTMLFile(event)">
+            <button class="toolbar-btn" onclick="showProjectsPanel()">📁 Proyectos</button>
+            <button class="toolbar-btn" onclick="showComponentsLibrary()">🧩 Componentes</button>
         </div>
 
         <!-- Contenido principal con 3 paneles -->
@@ -267,6 +272,71 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Panel de Proyectos -->
+    <div class="projects-panel hidden" id="projectsPanel">
+        <div class="panel-overlay" onclick="hideProjectsPanel()"></div>
+        <div class="panel-content">
+            <div class="panel-header">
+                <h2>Gestión de Proyectos</h2>
+                <button class="close-panel-btn" onclick="hideProjectsPanel()">&times;</button>
+            </div>
+            <div class="panel-body">
+                <div class="project-actions">
+                    <button class="action-btn primary" onclick="createNewProjectDialog()">+ Nuevo Proyecto</button>
+                    <button class="action-btn" onclick="document.getElementById('importProjectInput').click()">📂 Importar</button>
+                    <input type="file" id="importProjectInput" accept=".json" onchange="importProjectFile(event)" style="display: none;">
+                </div>
+                <div class="projects-list" id="projectsList">
+                    <!-- Los proyectos se cargan dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Biblioteca de Componentes -->
+    <div class="components-library-panel hidden" id="componentsLibraryPanel">
+        <div class="panel-overlay" onclick="hideComponentsLibrary()"></div>
+        <div class="panel-content">
+            <div class="panel-header">
+                <h2>Biblioteca de Componentes</h2>
+                <button class="close-panel-btn" onclick="hideComponentsLibrary()">&times;</button>
+            </div>
+            <div class="panel-body">
+                <div class="component-search-bar">
+                    <input type="text" id="componentLibrarySearch" placeholder="Buscar componentes..." onkeyup="searchLibraryComponents()">
+                </div>
+                <div class="library-components-list" id="libraryComponentsList">
+                    <!-- Los componentes se cargan dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Nuevo Proyecto -->
+    <div class="modal hidden" id="newProjectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Crear Nuevo Proyecto</h3>
+                <button class="modal-close" onclick="hideNewProjectModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="projectName">Nombre del proyecto:</label>
+                    <input type="text" id="projectName" placeholder="Mi Proyecto Increíble">
+                </div>
+                <div class="modal-actions">
+                    <button class="btn primary" onclick="createNewProjectFromDialog()">Crear</button>
+                    <button class="btn" onclick="hideNewProjectModal()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nuevos módulos -->
+    <script type="module" src="src/components/fileLoader.js"></script>
+    <script type="module" src="src/components/htmlParser.js"></script>
+    <script type="module" src="src/storage/projectManager.js"></script>
+    <script type="module" src="src/utils/componentExtractor.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
