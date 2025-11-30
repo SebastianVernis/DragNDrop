@@ -6,6 +6,12 @@ Un editor HTML visual completo con funcionalidad de arrastrar y soltar para crea
 ![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/Coverage-Expanding-yellow)
 
+## 🌐 Live Demo
+
+**Production:** https://dragndrop-editor.pages.dev
+
+Deployed on Cloudflare Pages with automatic HTTPS and global CDN.
+
 ## 🚀 Inicio Rápido
 
 ```bash
