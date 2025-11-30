@@ -48,3 +48,27 @@
 - E2E tests: Playwright
 - Test files: `*.test.js`, `*.test.ts`, `test_*.py`
 - Coverage reports required for new features
+
+## Module Structure (v2.0)
+
+### Core Modules (`src/core/`)
+- `undoRedo.js` - Undo/Redo system with 50-state history
+- `keyboardShortcuts.js` - 20+ keyboard shortcuts + command palette
+- `responsiveTester.js` - Responsive design testing with 8 devices
+- `livePreview.js` - Real-time preview in separate window
+
+### Components (`src/components/`)
+- `fileLoader.js` - File loading with drag & drop support
+- `htmlParser.js` - HTML to JSON conversion with component detection
+
+### Storage (`src/storage/`)
+- `projectManager.js` - Project management with auto-save (30s)
+
+### Utils (`src/utils/`)
+- `componentExtractor.js` - Component extraction from imported HTML
+
+### Guidelines
+- All modules export globally via `window` object
+- All modules include comprehensive JSDoc
+- Use ES6+ module syntax
+- Follow existing patterns in similar files

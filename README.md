@@ -48,10 +48,12 @@ DragNDrop/
 ## 📚 Documentación
 
 - **[Documentación Principal](./docs/README.md)** - Guía completa del proyecto
+- **[Nuevas Funcionalidades](./docs/NUEVAS_FUNCIONALIDADES.md)** - 🆕 Guía de v2.0
+- **[Implementación Completa](./IMPLEMENTACION_COMPLETA.md)** - 🆕 Resumen técnico
 - **[Guía de Desarrollo](./docs/guides/DEVELOPMENT.md)** - Setup y desarrollo
-- **[API Reference](./docs/api/README.md)** - Documentación de componentes
 - **[Deployment Guide](./docs/deployment/README.md)** - Guías de despliegue
 - **[Testing Guide](./docs/guides/TESTING.md)** - Estrategia de testing
+- **[AGENTS.md](./AGENTS.md)** - Comandos y convenciones
 
 ## 🧪 Testing
 
@@ -97,19 +99,75 @@ npm run deploy:prod
 
 ## 🛠️ Tecnologías
 
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+ Modules)
 - **Build**: Vite
-- **Testing**: Jest, Playwright
+- **Testing**: Jest (Unit), Playwright (E2E)
 - **Deployment**: Vercel, Netlify, GitHub Actions
-- **Development**: ESLint, Prettier
+- **Architecture**: Modular design con 8 módulos core
+- **Development**: JSDoc, ESLint, Prettier
+
+## ✨ Nuevas Funcionalidades (v2.0)
+
+- ✅ **Sistema Undo/Redo**: Historial de 50 estados con navegación completa
+- ✅ **Atajos de Teclado**: 20+ shortcuts para workflow rápido
+- ✅ **Responsive Tester**: Prueba en 8 dispositivos predefinidos
+- ✅ **Live Preview**: Vista previa en tiempo real en ventana separada
+- ✅ **Gestión Avanzada**: Proyectos, componentes y archivos mejorados
+
+## ✨ Nuevas Funcionalidades (v2.1)
+
+- ✨ **Tema Oscuro** - Modo claro/oscuro con detección automática y persistencia
+
+Ver [NUEVAS_FUNCIONALIDADES.md](./docs/NUEVAS_FUNCIONALIDADES.md) para detalles completos.
+
+### Tema Oscuro / Dark Mode
+
+DragNDrop incluye soporte completo para tema oscuro con las siguientes características:
+
+- **Toggle Manual:** Botón en la toolbar para cambiar entre modo claro y oscuro
+- **Keyboard Shortcut:** Presiona `Ctrl+Shift+D` (o `Cmd+Shift+D` en Mac) para alternar
+- **Detección Automática:** Detecta la preferencia de tu sistema operativo
+- **Persistencia:** Tu preferencia se guarda automáticamente
+- **Transiciones Suaves:** Cambios visuales con animación de 0.3s
+
+#### Cómo Usar
+
+1. **Cambiar tema manualmente:**
+   - Click en el botón "🌙 Oscuro" o "☀️ Claro" en la toolbar
+   - O presiona `Ctrl+Shift+D`
+
+2. **Detección automática:**
+   - Al abrir por primera vez, DragNDrop detecta tu preferencia del sistema
+   - Si tu sistema está en dark mode, la app iniciará en dark mode
+
+3. **Persistencia:**
+   - Tu elección se guarda automáticamente
+   - Se aplicará en futuras sesiones
+
+Ver [Guía de Usuario: Tema Oscuro](./docs/USER_GUIDE_THEME.md) para más detalles.
 
 ## 📈 Estado del Proyecto
 
 - ✅ **Core Features**: Completamente implementado
-- ✅ **Documentation**: Documentación completa
-- 🔄 **Testing**: Expandiendo cobertura
+- ✅ **New Features v2.0**: Sistema undo/redo, shortcuts, responsive testing, live preview
+- ✅ **New Features v2.1**: Tema oscuro con detección automática
+- ✅ **Documentation**: Documentación completa y actualizada
+- ✅ **Testing**: Tests unitarios y E2E para módulos críticos
 - 🔄 **CI/CD**: Configurando pipeline
 - ✅ **Deployment**: Múltiples plataformas
+
+## ⌨️ Atajos de Teclado
+
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+Z` | Deshacer |
+| `Ctrl+Y` | Rehacer |
+| `Ctrl+S` | Guardar proyecto |
+| `Ctrl+Shift+P` | Abrir paleta de comandos |
+| `Ctrl+Shift+D` | Alternar tema claro/oscuro |
+| `Delete` | Eliminar elemento seleccionado |
+
+Ver documentación completa de atajos en [NUEVAS_FUNCIONALIDADES.md](./docs/NUEVAS_FUNCIONALIDADES.md).
 
 ## 🤝 Contribuir
 

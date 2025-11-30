@@ -13,14 +13,29 @@
             <button class="toolbar-btn" onclick="showGallery()">🎨 Plantillas</button>
             <button class="toolbar-btn" onclick="newProject()">🗎 Nuevo</button>
             <div class="toolbar-divider"></div>
+            <!-- Undo/Redo -->
+            <button class="toolbar-btn" id="undoBtn" onclick="window.undoRedoManager && window.undoRedoManager.undo()" title="Deshacer (Ctrl+Z)" disabled>↶</button>
+            <button class="toolbar-btn" id="redoBtn" onclick="window.undoRedoManager && window.undoRedoManager.redo()" title="Rehacer (Ctrl+Y)" disabled>↷</button>
+            <div class="toolbar-divider"></div>
+            <!-- Vistas -->
             <button class="toolbar-btn active" id="btnDesktop" onclick="setCanvasSize('desktop')">🖥️ Escritorio</button>
             <button class="toolbar-btn" id="btnTablet" onclick="setCanvasSize('tablet')">📱 Tablet</button>
             <button class="toolbar-btn" id="btnMobile" onclick="setCanvasSize('mobile')">📱 Móvil</button>
+            <button class="toolbar-btn" onclick="openResponsiveTester()">🔍 Responsive</button>
             <div class="toolbar-divider"></div>
+            <!-- Preview -->
+            <button class="toolbar-btn" id="livePreviewBtn" onclick="toggleLivePreview()">👁️ Vista Previa</button>
+            <button class="toolbar-btn" id="themeToggle" onclick="window.themeManager && window.themeManager.toggle()" title="Cambiar tema (Ctrl+Shift+D)">🌙 Oscuro</button>
             <div class="toolbar-divider"></div>
+            <!-- AI Features -->
+            <button class="toolbar-btn" onclick="window.aiCodeGenerator && window.aiCodeGenerator.showGenerateDialog()" title="Generar con AI">🤖 AI Generate</button>
+            <button class="toolbar-btn" onclick="window.aiCodeGenerator && window.aiCodeGenerator.showConfigDialog()" title="Configurar AI">⚙️ AI Config</button>
+            <div class="toolbar-divider"></div>
+            <!-- Exportar -->
             <button class="toolbar-btn primary" onclick="exportHTML()">📥 Exportar HTML</button>
-            <div class="toolbar-divider"></div>
             <button class="toolbar-btn" onclick="exportZip()">📦 Exportar Todo</button>
+            <div class="toolbar-divider"></div>
+            <!-- Proyectos y ayuda -->
             <button class="toolbar-btn" onclick="showHelp()">❓ Ayuda</button>
             <button class="toolbar-btn" onclick="saveProject()">💾 Guardar</button>
             <button class="toolbar-btn" onclick="document.getElementById('loadProjectInput').click()">📂 Cargar Proyecto/Directorio</button>
@@ -332,11 +347,61 @@
         </div>
     </div>
 
-    <!-- Nuevos módulos -->
+    <!-- Módulos del sistema -->
     <script type="module" src="src/components/fileLoader.js"></script>
     <script type="module" src="src/components/htmlParser.js"></script>
     <script type="module" src="src/storage/projectManager.js"></script>
     <script type="module" src="src/utils/componentExtractor.js"></script>
+    
+    <!-- Módulos core -->
+    <script type="module" src="src/core/undoRedo.js"></script>
+    <script type="module" src="src/core/keyboardShortcuts.js"></script>
+    <script type="module" src="src/core/responsiveTester.js"></script>
+    <script type="module" src="src/core/livePreview.js"></script>
+    <script type="module" src="src/core/themeManager.js"></script>
+    <script type="module" src="src/core/aiCodeGenerator.js"></script>
+    
+    <!-- Script principal -->
     <script src="script.js"></script>
+    
+    <!-- Inicialización de nuevos módulos -->
+    <script>
+        // Inicializar módulos cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme Manager (primero para aplicar tema)
+            window.themeManager = new ThemeManager();
+            
+            // AI Code Generator
+            window.aiCodeGenerator = new AICodeGenerator();
+            
+            // Undo/Redo Manager
+            window.undoRedoManager = new UndoRedoManager();
+            window.undoRedoManager.init();
+            
+            // Keyboard Shortcuts Manager
+            window.keyboardShortcutsManager = new KeyboardShortcutsManager();
+            
+            // Responsive Tester
+            window.responsiveTester = new ResponsiveTester();
+            window.responsiveTester.init();
+            
+            // Live Preview
+            window.livePreview = new LivePreview();
+            
+            console.log('✅ Todos los módulos inicializados correctamente');
+        });
+        
+        // Función global para toggle de preview
+        function toggleLivePreview() {
+            if (window.livePreview) {
+                window.livePreview.toggle();
+                
+                const btn = document.getElementById('livePreviewBtn');
+                if (btn) {
+                    btn.classList.toggle('active', window.livePreview.isActive());
+                }
+            }
+        }
+    </script>
 </body>
 </html>

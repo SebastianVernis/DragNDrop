@@ -1,0 +1,39 @@
+Starting up http-server, serving ./
+
+http-server version: 14.1.1
+
+http-server settings: 
+CORS: disabled
+Cache: 3600 seconds
+Connection Timeout: 120 seconds
+Directory Listings: visible
+AutoIndex: visible
+Serve GZIP Files: false
+Serve Brotli Files: false
+Default File Extension: none
+
+Available on:
+  http://127.0.0.1:8080
+  http://100.78.5.25:8080
+  http://192.168.100.87:8080
+Hit CTRL-C to stop the server
+
+[2025-11-13T08:53:26.367Z]  "GET /index.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+[2025-11-13T08:53:26.389Z]  "GET /style.css" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+[2025-11-13T08:53:26.390Z]  "GET /src/components/fileLoader.js" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+[2025-11-13T08:53:26.394Z]  "GET /src/components/htmlParser.js" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+[2025-11-13T08:53:26.397Z]  "GET /src/storage/projectManager.js" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+[2025-11-13T08:53:26.400Z]  "GET /src/utils/componentExtractor.js" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+[2025-11-13T08:53:26.402Z]  "GET /script.js" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+[2025-11-13T08:58:35.317Z]  "GET /" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+[2025-11-13T08:58:35.384Z]  "GET /style.css" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+[2025-11-13T08:58:35.389Z]  "GET /src/components/fileLoader.js" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+[2025-11-13T08:58:35.390Z]  "GET /src/components/htmlParser.js" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+[2025-11-13T08:58:35.391Z]  "GET /src/storage/projectManager.js" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+[2025-11-13T08:58:35.397Z]  "GET /src/utils/componentExtractor.js" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+[2025-11-13T08:58:35.399Z]  "GET /script.js" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+[2025-11-13T08:58:35.643Z]  "GET /favicon.ico" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+[2025-11-13T08:58:35.644Z]  "GET /favicon.ico" Error (404): "Not found"
+[2025-11-13T08:59:46.269Z]  "GET /favicon.ico" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+[2025-11-13T08:59:46.269Z]  "GET /favicon.ico" Error (404): "Not found"
+http-server stopped.

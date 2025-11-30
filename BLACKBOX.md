@@ -17,6 +17,11 @@ The application follows a single-page architecture with three main panels:
 - **Center Panel**: Visual canvas with responsive preview modes
 - **Right Panel**: Dynamic properties editor for selected elements
 
+#### Core Modules
+- `script.js` - Main application logic (1877+ lines)
+- `style.css` - Complete styling with theme support (654+ lines)
+- `src/core/themeManager.js` - Theme system (155 lines)
+
 ## Building and Running
 
 ### Prerequisites
@@ -129,6 +134,17 @@ Dynamic property editor with sections:
 - **Auto-generated IDs**: Unique element identification
 - **CSS Inline Export**: Self-contained HTML export option
 
+### 7. Theme System (Nuevo en v2.1.0)
+- **ThemeManager Class**: Gestión centralizada de temas claro/oscuro
+- **CSS Variables**: 17 variables para theming consistente
+- **Detección del Sistema**: matchMedia API para detectar `prefers-color-scheme`
+- **Persistencia**: localStorage para guardar preferencia del usuario
+- **Keyboard Shortcut**: `Ctrl+Shift+D` para toggle rápido
+- **Auto-detection**: Detecta preferencia del sistema al primer uso
+- **System Watcher**: Observa cambios en preferencia del sistema
+- **Smooth Transitions**: Animaciones de 0.3s entre temas
+- **Toast Feedback**: Notificaciones al cambiar tema
+
 ## Development Conventions
 
 ### Code Structure
@@ -161,6 +177,25 @@ Dynamic property editor with sections:
 - **Responsive Design**: Mobile-first responsive patterns
 - **Custom Properties**: CSS variables for theming
 - **Animation**: Smooth transitions and hover effects
+
+### CSS Variables for Theming
+El proyecto usa CSS variables para un sistema de temas consistente:
+- **Definición**: Variables definidas en `:root` para light mode
+- **Override**: Sobrescritas en `[data-theme="dark"]` para dark mode
+- **17 Variables**: Colores para backgrounds, text, borders, shadows
+- **Best Practice**: Usar variables en lugar de colores hardcoded
+- **Ejemplo**: `background: var(--bg-primary);` en lugar de `background: #fff;`
+
+**Variables disponibles:**
+```css
+--bg-primary, --bg-secondary, --bg-tertiary
+--text-primary, --text-secondary, --text-muted
+--border-color, --border-light
+--shadow-sm, --shadow-md, --shadow-lg
+--accent-color, --accent-hover
+--success-color, --error-color, --warning-color
+--overlay-bg
+```
 
 ### Testing Strategy
 - **Unit Tests**: Jest with jsdom environment
@@ -220,6 +255,10 @@ Two export modes:
 ### Keyboard Shortcuts
 - **Delete**: Remove selected element
 - **Ctrl+S**: Save current project
+- **Ctrl+Shift+D**: Toggle dark/light theme (Nuevo en v2.1.0)
+- **Ctrl+Z**: Undo (v2.0)
+- **Ctrl+Y**: Redo (v2.0)
+- **Ctrl+Shift+P**: Command palette (v2.0)
 
 ### Best Practices
 - Start with a template for faster development

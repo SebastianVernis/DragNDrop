@@ -1,7 +1,7 @@
 {
   "name": "dragndrop-html-editor",
-  "version": "1.0.0",
-  "description": "Editor visual de HTML con funcionalidad de arrastrar y soltar (drag & drop) para crear páginas web de forma intuitiva.",
+  "version": "2.0.0",
+  "description": "Editor visual de HTML con funcionalidad de arrastrar y soltar (drag & drop) para crear páginas web de forma intuitiva. Ahora con sistema Undo/Redo, atajos de teclado, responsive tester y live preview.",
   "main": "index.html",
   "type": "module",
   "scripts": {

@@ -1,0 +1,244 @@
+{
+  "version": "1.0.0",
+  "project": "DragNDrop HTML Editor",
+  "agents": {
+    "dev": {
+      "name": "Developer Agent",
+      "role": "development",
+      "emoji": "👨‍💻",
+      "tools": ["git", "npm", "eslint", "prettier"],
+      "capabilities": [
+        "implement-features",
+        "fix-bugs",
+        "refactor-code",
+        "code-review",
+        "optimize-performance"
+      ],
+      "preferences": {
+        "codeStyle": "airbnb-base",
+        "indentation": 2,
+        "semicolons": true,
+        "quotes": "single",
+        "testFramework": "jest",
+        "editor": "vscode"
+      },
+      "context": {
+        "primaryLanguage": "javascript",
+        "framework": "vanilla",
+        "moduleSystem": "es6"
+      }
+    },
+    "test": {
+      "name": "Tester Agent",
+      "role": "testing",
+      "emoji": "🧪",
+      "tools": ["jest", "playwright", "@testing-library", "coverage"],
+      "capabilities": [
+        "write-unit-tests",
+        "write-e2e-tests",
+        "write-integration-tests",
+        "run-test-suites",
+        "coverage-reports",
+        "regression-testing"
+      ],
+      "preferences": {
+        "coverageTarget": 80,
+        "testStyle": "describe-it-expect",
+        "assertions": "expect",
+        "mockStrategy": "jest.fn",
+        "e2eFramework": "playwright"
+      },
+      "context": {
+        "unitTestPath": "tests/unit/",
+        "e2eTestPath": "tests/e2e/",
+        "coverageThreshold": {
+          "lines": 80,
+          "functions": 80,
+          "branches": 75,
+          "statements": 80
+        }
+      }
+    },
+    "qa": {
+      "name": "QA Agent",
+      "role": "quality-assurance",
+      "emoji": "✅",
+      "tools": ["lighthouse", "axe-core", "browserstack", "webpagetest"],
+      "capabilities": [
+        "manual-testing",
+        "accessibility-audit",
+        "performance-audit",
+        "cross-browser-test",
+        "seo-audit",
+        "security-scan"
+      ],
+      "preferences": {
+        "lighthouseThreshold": 90,
+        "accessibilityStandard": "WCAG2.1-AA",
+        "browsers": ["chrome", "firefox", "safari", "edge"],
+        "devices": ["desktop", "tablet", "mobile"],
+        "performanceBudget": {
+          "fcp": 1800,
+          "lcp": 2500,
+          "tti": 3800,
+          "cls": 0.1
+        }
+      },
+      "context": {
+        "testingChecklist": "TESTING_CHECKLIST.md",
+        "bugTemplate": "tasks/templates/bug.task.md"
+      }
+    },
+    "devops": {
+      "name": "DevOps Agent",
+      "role": "operations",
+      "emoji": "🚀",
+      "tools": ["vercel-cli", "gh-cli", "docker", "sentry-cli"],
+      "capabilities": [
+        "deploy-staging",
+        "deploy-production",
+        "rollback",
+        "health-check",
+        "monitor",
+        "infrastructure",
+        "ci-cd-management"
+      ],
+      "preferences": {
+        "platform": "vercel",
+        "cicd": "github-actions",
+        "monitoring": "sentry",
+        "analytics": "plausible",
+        "deployStrategy": "blue-green",
+        "rollbackStrategy": "instant"
+      },
+      "context": {
+        "stagingUrl": "staging.dragndrop.dev",
+        "productionUrl": "dragndrop.dev",
+        "healthCheckEndpoint": "/health",
+        "deploymentChecklist": "workflows/deployment/checklist.md"
+      }
+    },
+    "docs": {
+      "name": "Documentation Agent",
+      "role": "documentation",
+      "emoji": "📚",
+      "tools": ["markdown", "jsdoc", "mermaid", "pandoc"],
+      "capabilities": [
+        "write-documentation",
+        "generate-api-docs",
+        "create-tutorials",
+        "update-readme",
+        "maintain-changelog",
+        "write-blog-posts"
+      ],
+      "preferences": {
+        "format": "markdown",
+        "style": "conversational-technical",
+        "codeExamples": "required",
+        "diagrams": "mermaid",
+        "apiDocTool": "jsdoc"
+      },
+      "context": {
+        "docsPath": "docs/",
+        "apiPath": "docs/api/",
+        "guidesPath": "docs/guides/",
+        "readmeTemplate": "templates/README.template.md"
+      }
+    }
+  },
+  "workflows": {
+    "feature": {
+      "name": "Feature Development",
+      "sequence": ["@dev", "@test", "@qa", "@docs", "@devops"],
+      "gates": {
+        "afterDev": "code-review",
+        "afterTest": "coverage-check",
+        "afterQA": "approval",
+        "beforeDevOps": "all-checks-pass"
+      }
+    },
+    "bug": {
+      "name": "Bug Fix",
+      "sequence": ["@dev", "@test", "@devops"],
+      "gates": {
+        "afterDev": "quick-review",
+        "afterTest": "regression-pass"
+      },
+      "fastTrack": true
+    },
+    "refactor": {
+      "name": "Code Refactoring",
+      "sequence": ["@dev", "@test"],
+      "gates": {
+        "afterDev": "peer-review",
+        "afterTest": "no-regression"
+      }
+    },
+    "release": {
+      "name": "Release Process",
+      "sequence": ["@test", "@qa", "@docs", "@devops"],
+      "gates": {
+        "afterTest": "full-coverage",
+        "afterQA": "all-audits-pass",
+        "afterDocs": "changelog-ready",
+        "beforeProd": "manual-approval"
+      }
+    },
+    "hotfix": {
+      "name": "Hotfix (Emergency)",
+      "sequence": ["@dev", "@devops"],
+      "gates": {
+        "minimal": true
+      },
+      "fastTrack": true,
+      "priority": "p0"
+    }
+  },
+  "notifications": {
+    "discord": {
+      "enabled": true,
+      "webhook": "${DISCORD_WEBHOOK}",
+      "channels": {
+        "development": "#dev-updates",
+        "testing": "#test-results",
+        "deployment": "#deployments",
+        "errors": "#errors",
+        "metrics": "#metrics"
+      }
+    },
+    "slack": {
+      "enabled": false,
+      "webhook": "${SLACK_WEBHOOK}"
+    },
+    "email": {
+      "enabled": false,
+      "recipients": []
+    }
+  },
+  "integrations": {
+    "github": {
+      "enabled": true,
+      "autoAssignIssues": true,
+      "autoLabelPRs": true,
+      "autoCloseStale": true,
+      "staleDays": 30
+    },
+    "vercel": {
+      "enabled": true,
+      "autoDeployPR": true,
+      "productionBranch": "master",
+      "stagingBranch": "develop"
+    },
+    "sentry": {
+      "enabled": false,
+      "dsn": "${SENTRY_DSN}",
+      "environment": "production"
+    }
+  },
+  "metrics": {
+    "collect": ["users", "performance", "errors", "github", "discord"],
+    "frequency": "daily",
+    "store": "metrics/",
+    "dashboard": "https://dashboard.dragndrop.dev"
+  }
+}
