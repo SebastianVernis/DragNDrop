@@ -1,16 +1,49 @@
-# DragNDrop - Editor HTML Visual
+# DragNDrop - Editor HTML Visual v3.0
 
-Un editor HTML visual completo con funcionalidad de arrastrar y soltar para crear páginas web de forma intuitiva.
+Un editor HTML visual completo con funcionalidad de arrastrar y soltar, redimensionamiento visual, validación con IA, y análisis de proyectos completos.
 
 ![DragNDrop Editor](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 ![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/Coverage-Expanding-yellow)
+![Version](https://img.shields.io/badge/Version-3.0-blue)
 
 ## 🌐 Live Demo
 
 **Production:** https://dragndrop-editor.pages.dev
 
 Deployed on Cloudflare Pages with automatic HTTPS and global CDN.
+
+## ✨ Novedades v3.0
+
+- 🎯 **Drag & Drop Mejorado**: Preview visual, indicadores animados, drag handles
+- 📐 **Redimensionamiento Visual**: 8 handles para cambiar tamaño con feedback en tiempo real
+- 🤖 **Validación con IA**: Corrección automática de sintaxis usando Gemini API (gemini-2.0-flash-lite)
+- 📁 **Análisis de Proyectos**: Carga directorios completos, detecta framework, analiza estructura
+
+[📖 Ver documentación completa de nuevas funcionalidades](./NUEVAS_FUNCIONALIDADES.md) | [🚀 Guía rápida](./GUIA_RAPIDA.md)
+
+---
+
+## 🎯 Plan v1.0 "Best As Possible"
+
+### 📦 **Workflow Documentation Package**
+
+Documentación completa para implementar v1.0 con **4 workflows paralelos** y **13 features MUST-HAVE**.
+
+**📍 Ubicación:** `workflow-docs/`
+
+**🎨 Presentación interactiva:** [workflow-docs/index.html](./workflow-docs/index.html)
+
+**📦 Paquete portable:** `workflow-docs/dragndrop-workflow-docs-20251202.zip` (103 KB)
+
+### Quick Access
+- [🎯 Plan de Implementación](./IMPLEMENTATION_PLAN.md) - Documento maestro
+- [🔧 Especificaciones Técnicas](./TECHNICAL_SPECS.md) - Arquitectura completa
+- [🔄 Guía de Workflows](./WORKFLOW_GUIDE.md) - Timeline día a día
+- [🤖 Opción Multi-Agent](./MULTI_AGENT_OPTION.md) - Acelerar con IA
+- [🔐 Setup Guide](./SETUP_GUIDE.md) - Configurar API keys
+
+**Timeline:** 10-12 semanas | **Features:** 21 (vs 8 actuales) | **Workflows:** 4 paralelos
 
 ## 🚀 Inicio Rápido
 
@@ -53,13 +86,20 @@ DragNDrop/
 
 ## 📚 Documentación
 
-- **[Documentación Principal](./docs/README.md)** - Guía completa del proyecto
-- **[Nuevas Funcionalidades](./docs/NUEVAS_FUNCIONALIDADES.md)** - 🆕 Guía de v2.0
-- **[Implementación Completa](./IMPLEMENTACION_COMPLETA.md)** - 🆕 Resumen técnico
-- **[Guía de Desarrollo](./docs/guides/DEVELOPMENT.md)** - Setup y desarrollo
-- **[Deployment Guide](./docs/deployment/README.md)** - Guías de despliegue
-- **[Testing Guide](./docs/guides/TESTING.md)** - Estrategia de testing
-- **[AGENTS.md](./AGENTS.md)** - Comandos y convenciones
+### 🎯 **[ÍNDICE COMPLETO →](./DOCUMENTATION_INDEX.md)** | Navegación rápida a toda la documentación
+
+### Para Usuarios
+- **[Guía Rápida](./GUIA_RAPIDA.md)** - Tutorial de 5 minutos
+- **[Nuevas Funcionalidades v3.0](./NUEVAS_FUNCIONALIDADES.md)** - Features detalladas
+
+### Para Desarrolladores
+- **[Plan de Implementación v1.0](./IMPLEMENTATION_PLAN.md)** ⭐ **EMPEZAR AQUÍ**
+- **[Guía de Workflows](./WORKFLOW_GUIDE.md)** - Trabajo en paralelo sin conflictos
+- **[Especificaciones Técnicas](./TECHNICAL_SPECS.md)** - Arquitectura y specs completas
+- **[AGENTS.md](./AGENTS.md)** - Guidelines y comandos
+
+### Para Product/Planning
+- **[Roadmap v1.0](./ROADMAP_V1.md)** - 60+ features organizadas y priorizadas
 
 ## 🧪 Testing
 

@@ -424,20 +424,27 @@
         function setupComponentDrag() {
             const components = document.querySelectorAll('.component-item');
             components.forEach(component => {
-                component.addEventListener('dragstart', function(e) {
-                    draggedComponentType = this.getAttribute('data-type');
-                    e.dataTransfer.effectAllowed = 'copy';
-                    this.classList.add('dragging');
-                    
-                    // Agregar efecto visual al arrastrar
-                    const img = document.createElement('img');
-                    img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-                    e.dataTransfer.setDragImage(img, 0, 0); // Imagen transparente
-                });
+                const type = component.getAttribute('data-type');
                 
-                component.addEventListener('dragend', function() {
-                    this.classList.remove('dragging');
-                });
+                // Usar nuevo sistema de drag & drop si está disponible
+                if (window.enhancedDragDrop) {
+                    window.enhancedDragDrop.setupComponentDrag(component, type);
+                } else {
+                    // Fallback al sistema antiguo
+                    component.addEventListener('dragstart', function(e) {
+                        draggedComponentType = type;
+                        e.dataTransfer.effectAllowed = 'copy';
+                        this.classList.add('dragging');
+                        
+                        const img = document.createElement('img');
+                        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                        e.dataTransfer.setDragImage(img, 0, 0);
+                    });
+                    
+                    component.addEventListener('dragend', function() {
+                        this.classList.remove('dragging');
+                    });
+                }
             });
         }
 
@@ -1177,14 +1184,48 @@
             // Deseleccionar anterior
             if (selectedElement) {
                 selectedElement.classList.remove('selected');
+                // Deshabilitar resize
+                if (window.resizeManager) {
+                    window.resizeManager.disableResize(selectedElement);
+                }
             }
 
             // Seleccionar nuevo
             selectedElement = element;
             element.classList.add('selected');
 
+            // Habilitar resize
+            if (window.resizeManager) {
+                window.resizeManager.enableResize(element);
+            }
+
+            // Habilitar drag mejorado
+            if (window.enhancedDragDrop) {
+                window.enhancedDragDrop.setupCanvasElementDrag(element);
+            }
+
+            // Validar sintaxis con Gemini (si está habilitado)
+            if (window.geminiValidator && window.geminiValidator.isEnabled()) {
+                validateElementSyntax(element);
+            }
+
             // Cargar propiedades
             loadProperties(element);
+        }
+        
+        // Validar sintaxis de elemento con Gemini
+        async function validateElementSyntax(element) {
+            try {
+                const result = await window.geminiValidator.validateElement(element, {
+                    parent: element.parentElement?.tagName || 'body'
+                });
+                
+                if (result && result.hasChanges) {
+                    window.geminiValidator.showCorrectionSuggestion(element, result);
+                }
+            } catch (error) {
+                console.error('Error validando sintaxis:', error);
+            }
         }
 
         // Cargar propiedades en el panel
@@ -2073,6 +2114,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } else {
                 showToast('Selecciona un archivo JSON o HTML individual', 'error');
+            }
+
+            // Limpiar input
+            event.target.value = '';
+        }
+
+        // Analizar directorio completo con ProjectAnalyzer
+        async function analyzeDirectory(event) {
+            const files = event.target.files;
+            
+            if (!files || files.length === 0) {
+                return;
+            }
+
+            if (!window.projectAnalyzer) {
+                showToast('⚠️ ProjectAnalyzer no está disponible', 'error');
+                return;
+            }
+
+            try {
+                const project = await window.projectAnalyzer.loadDirectory(files);
+                console.log('✅ Proyecto analizado:', project);
+            } catch (error) {
+                console.error('Error analizando directorio:', error);
             }
 
             // Limpiar input

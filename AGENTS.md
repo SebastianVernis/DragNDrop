@@ -49,13 +49,19 @@
 - Test files: `*.test.js`, `*.test.ts`, `test_*.py`
 - Coverage reports required for new features
 
-## Module Structure (v2.0)
+## Module Structure (v3.0)
 
 ### Core Modules (`src/core/`)
 - `undoRedo.js` - Undo/Redo system with 50-state history
 - `keyboardShortcuts.js` - 20+ keyboard shortcuts + command palette
 - `responsiveTester.js` - Responsive design testing with 8 devices
 - `livePreview.js` - Real-time preview in separate window
+- `themeManager.js` - Dark/Light theme system
+- `aiCodeGenerator.js` - AI code generation features
+- **NEW** `geminiValidator.js` - Syntax validation using Gemini API (gemini-2.0-flash-lite)
+- **NEW** `resizeManager.js` - Visual element resizing with 8 handles
+- **NEW** `enhancedDragDrop.js` - Improved drag & drop with visual feedback
+- **NEW** `projectAnalyzer.js` - Complete project/directory analysis and mapping
 
 ### Components (`src/components/`)
 - `fileLoader.js` - File loading with drag & drop support
@@ -67,8 +73,36 @@
 ### Utils (`src/utils/`)
 - `componentExtractor.js` - Component extraction from imported HTML
 
+### New Features (v3.0)
+1. **Gemini Syntax Validator**:
+   - Real-time syntax correction using Gemini API
+   - Token-optimized prompts (max 512 tokens output)
+   - No direct user interaction, only technical fixes
+   - Requires API key configuration
+
+2. **Visual Resize System**:
+   - 8 resize handles (corners + edges)
+   - Real-time dimension tooltip
+   - Shift to preserve aspect ratio
+   - ESC to cancel
+
+3. **Enhanced Drag & Drop**:
+   - Visual drag preview
+   - Animated drop indicator
+   - Highlighted drop zones
+   - Drag handle UI element
+   - Auto-scroll near edges
+
+4. **Project Analyzer**:
+   - Load complete directories
+   - Detect framework (React, Vue, Angular, etc.)
+   - Identify build tools (Vite, Webpack, etc.)
+   - Parse file tree with size info
+   - Import HTML files to canvas
+
 ### Guidelines
 - All modules export globally via `window` object
 - All modules include comprehensive JSDoc
 - Use ES6+ module syntax
 - Follow existing patterns in similar files
+- New modules use direct fetch() for API calls (no external SDKs)

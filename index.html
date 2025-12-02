@@ -31,6 +31,7 @@
             <!-- AI Features -->
             <button class="toolbar-btn" onclick="window.aiCodeGenerator && window.aiCodeGenerator.showGenerateDialog()" title="Generar con AI">🤖 AI Generate</button>
             <button class="toolbar-btn" onclick="window.aiCodeGenerator && window.aiCodeGenerator.showConfigDialog()" title="Configurar AI">⚙️ AI Config</button>
+            <button class="toolbar-btn" onclick="openGeminiConfig()" title="Configurar Gemini Validator">🔧 Gemini</button>
             <div class="toolbar-divider"></div>
             <!-- Exportar -->
             <button class="toolbar-btn primary" onclick="exportHTML()">📥 Exportar HTML</button>
@@ -39,8 +40,10 @@
             <!-- Proyectos y ayuda -->
             <button class="toolbar-btn" onclick="showHelp()">❓ Ayuda</button>
             <button class="toolbar-btn" onclick="saveProject()">💾 Guardar</button>
-            <button class="toolbar-btn" onclick="document.getElementById('loadProjectInput').click()">📂 Cargar Proyecto/Directorio</button>
-            <input type="file" id="loadProjectInput" accept=".json,.html,.htm" webkitdirectory multiple onchange="loadProject(event)">
+            <button class="toolbar-btn" onclick="document.getElementById('loadProjectInput').click()">📂 Cargar Proyecto</button>
+            <input type="file" id="loadProjectInput" accept=".json,.html,.htm" onchange="loadProject(event)">
+            <button class="toolbar-btn" onclick="document.getElementById('loadDirectoryInput').click()">📁 Analizar Directorio</button>
+            <input type="file" id="loadDirectoryInput" webkitdirectory multiple onchange="analyzeDirectory(event)" style="display: none;">
             <div class="toolbar-divider"></div>
             <button class="toolbar-btn" onclick="document.getElementById('importHTMLInput').click()">📄 Importar HTML</button>
             <input type="file" id="importHTMLInput" accept=".html,.htm" onchange="importHTMLFile(event)">
@@ -362,6 +365,12 @@
     <script type="module" src="src/core/themeManager.js"></script>
     <script type="module" src="src/core/aiCodeGenerator.js"></script>
     
+    <!-- Nuevos módulos mejorados -->
+    <script type="module" src="src/core/geminiValidator.js"></script>
+    <script type="module" src="src/core/resizeManager.js"></script>
+    <script type="module" src="src/core/enhancedDragDrop.js"></script>
+    <script type="module" src="src/core/projectAnalyzer.js"></script>
+    
     <!-- Script principal -->
     <script src="script.js"></script>
     
@@ -389,6 +398,12 @@
             // Live Preview
             window.livePreview = new LivePreview();
             
+            // Nuevos módulos mejorados
+            window.geminiValidator = new GeminiSyntaxValidator();
+            window.resizeManager = new ResizeManager();
+            window.enhancedDragDrop = new EnhancedDragDropManager();
+            window.projectAnalyzer = new ProjectAnalyzer();
+            
             console.log('✅ Todos los módulos inicializados correctamente');
         });
         
@@ -401,6 +416,13 @@
                 if (btn) {
                     btn.classList.toggle('active', window.livePreview.isActive());
                 }
+            }
+        }
+        
+        // Función global para configurar Gemini
+        function openGeminiConfig() {
+            if (window.geminiValidator) {
+                window.geminiValidator.showConfigModal();
             }
         }
     </script>
