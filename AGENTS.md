@@ -61,6 +61,7 @@
 - **NEW** `geminiValidator.js` - Syntax validation using Gemini API (gemini-2.0-flash-lite)
 - **NEW** `resizeManager.js` - Visual element resizing with 8 handles
 - **NEW** `enhancedDragDrop.js` - Improved drag & drop with visual feedback
+- **NEW** `freePositionDragDrop.js` - Free positioning system with absolute coordinates and auto canvas sizing
 - **NEW** `projectAnalyzer.js` - Complete project/directory analysis and mapping
 
 ### Components (`src/components/`)
@@ -93,7 +94,16 @@
    - Drag handle UI element
    - Auto-scroll near edges
 
-4. **Project Analyzer**:
+4. **Free Position Drag & Drop**:
+   - Absolute positioning with free movement
+   - Mouse cursor tracking during drag
+   - Auto canvas height adjustment
+   - Grid snap support (optional)
+   - Layout modes: Free positioning, vertical stack, grid layout
+   - Visual drag ghost with offset
+   - Background grid for reference
+
+5. **Project Analyzer**:
    - Load complete directories
    - Detect framework (React, Vue, Angular, etc.)
    - Identify build tools (Vite, Webpack, etc.)

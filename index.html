@@ -18,6 +18,11 @@
             <button class="toolbar-btn" id="undoBtn" onclick="window.undoRedoManager && window.undoRedoManager.undo()" title="Deshacer (Ctrl+Z)" disabled>↶</button>
             <button class="toolbar-btn" id="redoBtn" onclick="window.undoRedoManager && window.undoRedoManager.redo()" title="Rehacer (Ctrl+Y)" disabled>↷</button>
             <div class="toolbar-divider"></div>
+            <!-- Layout Controls -->
+            <button class="toolbar-btn" onclick="toggleLayoutMode()" id="layoutModeBtn" title="Alternar entre posicionamiento libre y flujo normal">📐 Libre</button>
+            <button class="toolbar-btn" onclick="autoLayoutVertical()" title="Reorganizar verticalmente">↕️ Vertical</button>
+            <button class="toolbar-btn" onclick="autoLayoutGrid()" title="Reorganizar en grid">⊞ Grid</button>
+            <div class="toolbar-divider"></div>
             <!-- Vistas -->
             <button class="toolbar-btn active" id="btnDesktop" onclick="setCanvasSize('desktop')">🖥️ Escritorio</button>
             <button class="toolbar-btn" id="btnTablet" onclick="setCanvasSize('tablet')">📱 Tablet</button>
@@ -369,6 +374,7 @@
     <script type="module" src="src/core/geminiValidator.js"></script>
     <script type="module" src="src/core/resizeManager.js"></script>
     <script type="module" src="src/core/enhancedDragDrop.js"></script>
+    <script type="module" src="src/core/freePositionDragDrop.js"></script>
     <script type="module" src="src/core/projectAnalyzer.js"></script>
     
     <!-- Script principal -->
@@ -401,7 +407,8 @@
             // Nuevos módulos mejorados
             window.geminiValidator = new GeminiSyntaxValidator();
             window.resizeManager = new ResizeManager();
-            window.enhancedDragDrop = new EnhancedDragDropManager();
+            // window.enhancedDragDrop = new EnhancedDragDropManager(); // Deshabilitado en favor del nuevo sistema
+            window.freePositionDragDrop = new FreePositionDragDropManager();
             window.projectAnalyzer = new ProjectAnalyzer();
             
             console.log('✅ Todos los módulos inicializados correctamente');
@@ -423,6 +430,61 @@
         function openGeminiConfig() {
             if (window.geminiValidator) {
                 window.geminiValidator.showConfigModal();
+            }
+        }
+        
+        // Funciones globales para control de layout
+        let layoutMode = 'free'; // 'free' o 'flow'
+        
+        function toggleLayoutMode() {
+            const btn = document.getElementById('layoutModeBtn');
+            const canvas = document.getElementById('canvas');
+            
+            if (layoutMode === 'free') {
+                // Cambiar a modo flujo
+                layoutMode = 'flow';
+                btn.textContent = '📄 Flujo';
+                btn.title = 'Modo flujo normal - click para cambiar a libre';
+                
+                // Remover posicionamiento absoluto
+                canvas.querySelectorAll('.canvas-element').forEach(el => {
+                    el.style.position = 'static';
+                    el.style.left = '';
+                    el.style.top = '';
+                    el.style.width = '';
+                });
+                
+                canvas.style.background = 'white';
+                canvas.style.minHeight = '';
+                
+                if (window.showToast) {
+                    window.showToast('📄 Modo flujo activado');
+                }
+            } else {
+                // Cambiar a modo libre
+                layoutMode = 'free';
+                btn.textContent = '📐 Libre';
+                btn.title = 'Modo posicionamiento libre - click para cambiar a flujo';
+                
+                if (window.freePositionDragDrop) {
+                    window.freePositionDragDrop.convertToAbsolutePositioning();
+                }
+                
+                if (window.showToast) {
+                    window.showToast('📐 Modo libre activado');
+                }
+            }
+        }
+        
+        function autoLayoutVertical() {
+            if (window.freePositionDragDrop) {
+                window.freePositionDragDrop.autoLayout('vertical');
+            }
+        }
+        
+        function autoLayoutGrid() {
+            if (window.freePositionDragDrop) {
+                window.freePositionDragDrop.autoLayout('grid');
             }
         }
     </script>

@@ -2,6 +2,73 @@
 
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 
+## [3.1.0] - 2025-02-12
+
+### ✨ Nuevo: Sistema de Posicionamiento Libre
+
+#### Características Principales
+- **Posicionamiento Absoluto**: Mueve elementos libremente con coordenadas precisas
+- **Seguimiento de Cursor Mejorado**: El cursor mapea correctamente durante el drag con offset calculado
+- **Canvas Dinámico**: Ajuste automático de altura según posición de elementos
+- **Grid Visual**: Cuadrícula de fondo para referencia (20px x 20px)
+- **Múltiples Modos de Layout**:
+  - 📐 **Modo Libre**: Posicionamiento absoluto con movimiento libre
+  - 📄 **Modo Flujo**: Posicionamiento HTML tradicional
+  - ↕️ **Layout Vertical**: Reorganización automática en stack
+  - ⊞ **Layout Grid**: Reorganización en grid de 3 columnas
+
+#### Mejoras Técnicas
+- Nuevo módulo `src/core/freePositionDragDrop.js` (600+ líneas)
+- Ghost element mejorado que sigue el cursor con precisión
+- Handles visuales en elementos seleccionados (⋮⋮)
+- Drop zones con feedback visual animado
+- Snap a grid opcional (configurable)
+- Auto-scroll cuando se arrastra cerca de los bordes
+- Exportación de funciones globales: `createComponent`, `selectElement`, `showToast`
+
+#### Controles del Toolbar
+- **📐 Libre/Flujo**: Alterna entre modo posicionamiento libre y flujo normal
+- **↕️ Vertical**: Reorganiza todos los elementos verticalmente
+- **⊞ Grid**: Reorganiza elementos en grid de 3 columnas
+
+#### API Disponible
+```javascript
+// Cambiar modo de layout
+window.freePositionDragDrop.autoLayout('vertical');
+window.freePositionDragDrop.autoLayout('grid');
+
+// Configurar snap a grid
+window.freePositionDragDrop.setGridSnap(10); // 10px grid
+
+// Convertir elementos a posicionamiento absoluto
+window.freePositionDragDrop.convertToAbsolutePositioning();
+```
+
+#### Eventos Personalizados
+- `freedragdrop:dragstart` - Drag iniciado
+- `freedragdrop:elementMoved` - Elemento movido
+- `freedragdrop:elementCreated` - Elemento creado
+
+#### Documentación
+- Nuevo archivo `docs/FREE_POSITION_SYSTEM.md` con guía completa
+- Actualizado `AGENTS.md` con información del nuevo módulo
+
+### 🐛 Correcciones
+- ✅ Elementos se agregan ahora en la posición exacta del cursor
+- ✅ Cursor mapea correctamente durante el drag con offset
+- ✅ Canvas se adapta automáticamente al agregar elementos
+- ✅ Layout se ajusta dinámicamente sin elementos superpuestos
+
+### 🔧 Configuración
+```javascript
+const manager = new FreePositionDragDropManager();
+manager.canvasMinHeight = 800;    // Altura mínima del canvas
+manager.canvasPadding = 40;       // Padding alrededor
+manager.gridSize = 1;             // Tamaño grid snap
+```
+
+---
+
 ## [2.1.0] - 2025-11-29
 
 ### ✨ Added

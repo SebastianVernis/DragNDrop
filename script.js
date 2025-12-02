@@ -426,8 +426,10 @@
             components.forEach(component => {
                 const type = component.getAttribute('data-type');
                 
-                // Usar nuevo sistema de drag & drop si está disponible
-                if (window.enhancedDragDrop) {
+                // Usar nuevo sistema de posicionamiento libre si está disponible
+                if (window.freePositionDragDrop) {
+                    window.freePositionDragDrop.setupComponentDrag(component, type);
+                } else if (window.enhancedDragDrop) {
                     window.enhancedDragDrop.setupComponentDrag(component, type);
                 } else {
                     // Fallback al sistema antiguo
@@ -870,7 +872,13 @@
             });
 
             // Configurar drag & drop para movimiento de elementos
-            setupElementDragAndDrop(element);
+            if (window.freePositionDragDrop) {
+                window.freePositionDragDrop.setupCanvasElementDrag(element);
+            } else if (window.enhancedDragDrop) {
+                window.enhancedDragDrop.setupCanvasElementDrag(element);
+            } else {
+                setupElementDragAndDrop(element);
+            }
 
             // Manejar eventos especiales para componentes avanzados
             if (type === 'tabs') {
@@ -885,6 +893,9 @@
 
             return element;
         }
+        
+        // Exportar createComponent globalmente para uso de módulos
+        window.createComponent = createComponent;
 
         // ===== SISTEMA DE DRAG & DROP PARA ELEMENTOS DEL CANVAS =====
         
@@ -1200,7 +1211,9 @@
             }
 
             // Habilitar drag mejorado
-            if (window.enhancedDragDrop) {
+            if (window.freePositionDragDrop) {
+                window.freePositionDragDrop.setupCanvasElementDrag(element);
+            } else if (window.enhancedDragDrop) {
                 window.enhancedDragDrop.setupCanvasElementDrag(element);
             }
 
@@ -1212,6 +1225,9 @@
             // Cargar propiedades
             loadProperties(element);
         }
+        
+        // Exportar selectElement globalmente
+        window.selectElement = selectElement;
         
         // Validar sintaxis de elemento con Gemini
         async function validateElementSyntax(element) {
@@ -2187,6 +2203,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 toast.remove();
             }, 3000);
         }
+        
+        // Exportar showToast globalmente
+        window.showToast = showToast;
 
         // Convertir RGB a HEX
         function rgbToHex(rgb) {
