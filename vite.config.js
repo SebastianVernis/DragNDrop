@@ -9,12 +9,25 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: true,
+    sourcemap: process.env.NODE_ENV !== 'production',
     minify: 'terser',
     target: 'es2015',
+    terserOptions: {
+      compress: {
+        drop_console: process.env.NODE_ENV === 'production',
+        drop_debugger: true
+      }
+    },
     rollupOptions: {
       input: {
         main: resolve(process.cwd(), 'index.html')
+      },
+      output: {
+        manualChunks: {
+          'core': ['./src/core/undoRedo.js', './src/core/keyboardShortcuts.js'],
+          'drag-drop': ['./src/core/enhancedDragDrop.js', './src/core/freePositionDragDrop.js'],
+          'ai': ['./src/core/geminiValidator.js', './src/core/aiCodeGenerator.js']
+        }
       }
     }
   },

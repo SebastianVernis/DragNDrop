@@ -7,7 +7,16 @@ server.log
 .env
 .env.local
 .env.production
+.env.production.local
 .env.development
+.env.development.local
+
+# Wrangler
+.wrangler/
+.dev.vars
+
+# Secrets vault es solo documentación, NO contiene valores reales
+# .env.vault se commitea como referencia
 
 # Dev server
 .dev-server.pid
