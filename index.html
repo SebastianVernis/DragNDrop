@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editor HTML Drag &amp; Drop</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./src/styles/deploy.css">
+    <link rel="stylesheet" href="./src/styles/tutorial.css">
     <script type="module" src="./script.js"></script>
+    <script type="module" src="./src/init-workflow4.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -41,6 +44,12 @@
             <!-- Exportar -->
             <button class="toolbar-btn primary" onclick="exportHTML()">📥 Exportar HTML</button>
             <button class="toolbar-btn" onclick="exportZip()">📦 Exportar Todo</button>
+            <div class="toolbar-divider"></div>
+            <!-- Deploy & Integrations (Workflow 4) -->
+            <button class="toolbar-btn" onclick="showDeployModal()" title="Desplegar a Vercel">🚀 Deploy</button>
+            <button class="toolbar-btn" onclick="showGitHubModal()" title="Integración con GitHub">🐙 GitHub</button>
+            <button class="toolbar-btn" onclick="showDeploymentHistory()" title="Historial de deployments">📊 Historial</button>
+            <button class="toolbar-btn" onclick="startTutorial()" title="Tutorial interactivo">📚 Tutorial</button>
             <div class="toolbar-divider"></div>
             <!-- Proyectos y ayuda -->
             <button class="toolbar-btn" onclick="showHelp()">❓ Ayuda</button>
