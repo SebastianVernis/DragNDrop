@@ -5,10 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editor HTML Drag &amp; Drop</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Workflow 4: Deploy & Tutorial -->
     <link rel="stylesheet" href="./src/styles/deploy.css">
     <link rel="stylesheet" href="./src/styles/tutorial.css">
+    <!-- Workflow 2: AI Features -->
+    <link rel="stylesheet" href="src/styles/ai-features.css">
     <script type="module" src="./script.js"></script>
+    <!-- Workflow 4: Deploy & Integrations -->
     <script type="module" src="./src/init-workflow4.js"></script>
+    <!-- Workflow 2: AI Features -->
+    <script type="module" src="./src/ai/tokenTracker.js"></script>
+    <script type="module" src="./src/ai/promptBuilder.js"></script>
+    <script type="module" src="./src/ai/responseParser.js"></script>
+    <script type="module" src="./src/ai/componentGenerator.js"></script>
+    <script type="module" src="./src/ai/wcagRules.js"></script>
+    <script type="module" src="./src/ai/accessibilityFixes.js"></script>
+    <script type="module" src="./src/ai/accessibilityChecker.js"></script>
+    <script type="module" src="./src/ai/seoRules.js"></script>
+    <script type="module" src="./src/ai/seoOptimizer.js"></script>
+    <script type="module" src="./src/components/aiGenerator/GeneratorModal.js"></script>
+    <script type="module" src="./src/components/A11yPanel.js"></script>
+    <script type="module" src="./src/components/SEOPanel.js"></script>
+    <script type="module" src="./src/ai/index.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -37,9 +55,11 @@
             <button class="toolbar-btn" id="themeToggle" onclick="window.themeManager && window.themeManager.toggle()" title="Cambiar tema (Ctrl+Shift+D)">🌙 Oscuro</button>
             <div class="toolbar-divider"></div>
             <!-- AI Features -->
-            <button class="toolbar-btn" onclick="window.aiCodeGenerator && window.aiCodeGenerator.showGenerateDialog()" title="Generar con AI">🤖 AI Generate</button>
-            <button class="toolbar-btn" onclick="window.aiCodeGenerator && window.aiCodeGenerator.showConfigDialog()" title="Configurar AI">⚙️ AI Config</button>
-            <button class="toolbar-btn" onclick="openGeminiConfig()" title="Configurar Gemini Validator">🔧 Gemini</button>
+            <button class="toolbar-btn" onclick="showAIGenerator()" title="Generate component with AI">🤖 AI Generate</button>
+            <button class="toolbar-btn" onclick="showA11yPanel()" title="Accessibility Checker">♿ A11y Check</button>
+            <button class="toolbar-btn" onclick="showSEOPanel()" title="SEO Optimizer">🔍 SEO</button>
+            <button class="toolbar-btn" onclick="showTokenDashboard()" title="Token Usage">📊 Tokens</button>
+            <button class="toolbar-btn" onclick="configureGeminiAPI()" title="Configure Gemini API">⚙️ AI Config</button>
             <div class="toolbar-divider"></div>
             <!-- Exportar -->
             <button class="toolbar-btn primary" onclick="exportHTML()">📥 Exportar HTML</button>
