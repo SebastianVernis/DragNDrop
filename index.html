@@ -204,6 +204,37 @@
         </div>
     </div>
 
+    <!-- Multi-Select Toolbar -->
+    <div class="multiselect-toolbar hidden" id="multiselectToolbar">
+        <span class="multiselect-count" id="multiselectCount">0 seleccionados</span>
+        
+        <div class="alignment-group">
+            <button class="alignment-btn" onclick="window.batchOperations && window.batchOperations.align('left')" title="Alinear izquierda">⬅️</button>
+            <button class="alignment-btn" onclick="window.batchOperations && window.batchOperations.align('center')" title="Alinear centro">↔️</button>
+            <button class="alignment-btn" onclick="window.batchOperations && window.batchOperations.align('right')" title="Alinear derecha">➡️</button>
+            <button class="alignment-btn" onclick="window.batchOperations && window.batchOperations.align('top')" title="Alinear arriba">⬆️</button>
+            <button class="alignment-btn" onclick="window.batchOperations && window.batchOperations.align('middle')" title="Alinear medio">↕️</button>
+            <button class="alignment-btn" onclick="window.batchOperations && window.batchOperations.align('bottom')" title="Alinear abajo">⬇️</button>
+        </div>
+        
+        <div class="alignment-group">
+            <button class="alignment-btn" onclick="window.batchOperations && window.batchOperations.distribute('horizontal')" title="Distribuir horizontal">↔️📏</button>
+            <button class="alignment-btn" onclick="window.batchOperations && window.batchOperations.distribute('vertical')" title="Distribuir vertical">↕️📏</button>
+        </div>
+        
+        <button class="multiselect-btn" onclick="window.batchOperations && window.batchOperations.group()">📦 Agrupar</button>
+        <button class="multiselect-btn" onclick="window.batchOperations && window.batchOperations.ungroup()">📂 Desagrupar</button>
+        <button class="multiselect-btn" onclick="window.batchOperations && window.batchOperations.duplicateSelected()">📋 Duplicar</button>
+        <button class="multiselect-btn danger" onclick="window.batchOperations && window.batchOperations.deleteSelected()">🗑️ Eliminar</button>
+    </div>
+
+    <!-- Selection Info Badge -->
+    <div class="selection-info hidden" id="selectionInfo">
+        <div class="selection-info-title">Selección</div>
+        <div class="selection-info-count" id="selectionInfoCount">0</div>
+        <div class="selection-info-label">elementos</div>
+    </div>
+
     <!-- Documentación -->
     <div class="gallery-screen hidden" id="helpScreen">
         <div class="gallery-container">
@@ -406,6 +437,22 @@
     <script type="module" src="src/core/freePositionDragDrop.js"></script>
     <script type="module" src="src/core/projectAnalyzer.js"></script>
     
+    <!-- Workflow 1: UI/UX Core - Layers, Multi-Select & Inspector -->
+    <script type="module" src="src/core/layersManager.js"></script>
+    <script type="module" src="src/core/multiSelect.js"></script>
+    <script type="module" src="src/core/marqueeSelector.js"></script>
+    <script type="module" src="src/core/alignmentEngine.js"></script>
+    <script type="module" src="src/core/batchOperations.js"></script>
+    <script type="module" src="src/core/groupManager.js"></script>
+    <script type="module" src="src/core/smartGuides.js"></script>
+    <script type="module" src="src/components/layers/LayersPanel.js"></script>
+    <script type="module" src="src/components/AdvancedPropertiesPanel.js"></script>
+    
+    <!-- Styles for new features -->
+    <link rel="stylesheet" href="src/styles/layers.css">
+    <link rel="stylesheet" href="src/styles/multiSelect.css">
+    <link rel="stylesheet" href="src/styles/inspector.css">
+    
     <!-- Script principal -->
     <script src="script.js"></script>
     
@@ -439,6 +486,41 @@
             // window.enhancedDragDrop = new EnhancedDragDropManager(); // Deshabilitado en favor del nuevo sistema
             window.freePositionDragDrop = new FreePositionDragDropManager();
             window.projectAnalyzer = new ProjectAnalyzer();
+            
+            // Workflow 1: UI/UX Core - Layers, Multi-Select & Inspector
+            window.layersManager = new LayersManager();
+            window.groupManager = new GroupManager(window.layersManager);
+            window.multiSelectManager = new MultiSelectManager(window.layersManager);
+            window.alignmentEngine = new AlignmentEngine();
+            window.batchOperations = new BatchOperations(window.multiSelectManager, window.alignmentEngine, window.groupManager);
+            window.smartGuides = new SmartGuides(window.alignmentEngine);
+            window.layersPanel = new LayersPanel(window.layersManager);
+            window.advancedPropertiesPanel = new AdvancedPropertiesPanel();
+            
+            // Build initial layers tree
+            setTimeout(() => {
+                window.layersManager.buildTree();
+                window.layersPanel.render();
+            }, 500);
+            
+            // Listen for multi-select changes
+            window.addEventListener('multiselect:changed', (e) => {
+                const count = e.detail.count;
+                const toolbar = document.getElementById('multiselectToolbar');
+                const countSpan = document.getElementById('multiselectCount');
+                const selectionInfo = document.getElementById('selectionInfo');
+                const selectionInfoCount = document.getElementById('selectionInfoCount');
+                
+                if (count > 1) {
+                    toolbar.classList.remove('hidden');
+                    selectionInfo.classList.remove('hidden');
+                    countSpan.textContent = `${count} seleccionados`;
+                    selectionInfoCount.textContent = count;
+                } else {
+                    toolbar.classList.add('hidden');
+                    selectionInfo.classList.add('hidden');
+                }
+            });
             
             console.log('✅ Todos los módulos inicializados correctamente');
         });
