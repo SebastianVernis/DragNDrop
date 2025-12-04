@@ -1,6 +1,6 @@
 /**
  * Content Security Policy Generator
- * 
+ *
  * Generates CSP headers for secure deployment
  */
 
@@ -27,7 +27,7 @@ class CSPGenerator {
    */
   generate(customPolicy = {}) {
     const policy = { ...this.defaultPolicy, ...customPolicy };
-    
+
     const directives = Object.entries(policy)
       .map(([key, values]) => {
         if (values.length === 0) {
@@ -70,7 +70,7 @@ class CSPGenerator {
    */
   extractExternalDomains(html) {
     const domains = new Set();
-    
+
     // Match src and href attributes
     const urlPattern = /(src|href)\s*=\s*["'](https?:\/\/[^"']+)["']/gi;
     let match;

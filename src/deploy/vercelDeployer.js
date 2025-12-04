@@ -15,7 +15,7 @@ export class VercelDeployer {
     this.deploymentMonitor = null;
     this.deploymentHistory = new DeploymentHistory();
     this.baseURL = 'https://api.vercel.com';
-    
+
     // Load saved token
     this.loadToken();
   }
@@ -30,10 +30,10 @@ export class VercelDeployer {
     this.teamId = teamId;
     this.fileUploader = new FileUploader(token);
     this.deploymentMonitor = new DeploymentMonitor(token);
-    
+
     // Save token to localStorage
     this.saveToken();
-    
+
     this.dispatchEvent('vercel:connected', { token: this.maskToken(token) });
   }
 
@@ -45,10 +45,10 @@ export class VercelDeployer {
     this.teamId = null;
     this.fileUploader = null;
     this.deploymentMonitor = null;
-    
+
     localStorage.removeItem('vercel_token');
     localStorage.removeItem('vercel_team_id');
-    
+
     this.dispatchEvent('vercel:disconnected');
   }
 
@@ -73,14 +73,14 @@ export class VercelDeployer {
     }
 
     const startTime = Date.now();
-    
+
     try {
       // Dispatch start event
       this.dispatchEvent('deploy:start', { projectName });
 
       // Prepare files
       const files = this.fileUploader.prepareFiles(projectData);
-      
+
       // Validate files
       const validation = this.fileUploader.validateFiles(files);
       if (!validation.valid) {
@@ -93,45 +93,42 @@ export class VercelDeployer {
       }
 
       // Upload files
-      this.dispatchEvent('deploy:progress', { 
-        stage: 'uploading', 
-        message: 'Subiendo archivos...' 
+      this.dispatchEvent('deploy:progress', {
+        stage: 'uploading',
+        message: 'Subiendo archivos...',
       });
 
-      const uploadedFiles = await this.fileUploader.uploadFiles(files, (progress) => {
+      const uploadedFiles = await this.fileUploader.uploadFiles(files, progress => {
         this.dispatchEvent('deploy:progress', {
           stage: 'uploading',
           message: `Subiendo ${progress.filename}...`,
-          progress: progress.percentage
+          progress: progress.percentage,
         });
       });
 
       // Create deployment
-      this.dispatchEvent('deploy:progress', { 
-        stage: 'creating', 
-        message: 'Creando deployment...' 
+      this.dispatchEvent('deploy:progress', {
+        stage: 'creating',
+        message: 'Creando deployment...',
       });
 
       const deployment = await this.createDeployment(projectName, uploadedFiles, options);
 
       // Monitor deployment
-      this.dispatchEvent('deploy:progress', { 
-        stage: 'building', 
-        message: 'Construyendo proyecto...' 
+      this.dispatchEvent('deploy:progress', {
+        stage: 'building',
+        message: 'Construyendo proyecto...',
       });
 
-      const result = await this.deploymentMonitor.monitorDeployment(
-        deployment.id,
-        (status) => {
-          const stateInfo = this.deploymentMonitor.formatState(status.readyState);
-          this.dispatchEvent('deploy:progress', {
-            stage: 'monitoring',
-            message: `${stateInfo.label}... (${status.elapsed}s)`,
-            readyState: status.readyState,
-            elapsed: status.elapsed
-          });
-        }
-      );
+      const result = await this.deploymentMonitor.monitorDeployment(deployment.id, status => {
+        const stateInfo = this.deploymentMonitor.formatState(status.readyState);
+        this.dispatchEvent('deploy:progress', {
+          stage: 'monitoring',
+          message: `${stateInfo.label}... (${status.elapsed}s)`,
+          readyState: status.readyState,
+          elapsed: status.elapsed,
+        });
+      });
 
       // Calculate duration
       const duration = Math.round((Date.now() - startTime) / 1000);
@@ -144,7 +141,7 @@ export class VercelDeployer {
         status: 'READY',
         duration,
         filesCount: files.length,
-        size: files.reduce((sum, f) => sum + new Blob([f.content]).size, 0)
+        size: files.reduce((sum, f) => sum + new Blob([f.content]).size, 0),
       });
 
       // Dispatch success event
@@ -153,7 +150,7 @@ export class VercelDeployer {
         url: result.url,
         deploymentId: result.deploymentId,
         duration,
-        historyId: historyRecord.id
+        historyId: historyRecord.id,
       });
 
       return {
@@ -161,24 +158,23 @@ export class VercelDeployer {
         url: result.url,
         deploymentId: result.deploymentId,
         duration,
-        historyId: historyRecord.id
+        historyId: historyRecord.id,
       };
-
     } catch (error) {
       console.error('Deployment error:', error);
-      
+
       // Save failed deployment to history
       this.deploymentHistory.addDeployment({
         projectName,
         status: 'ERROR',
         error: error.message,
-        duration: Math.round((Date.now() - startTime) / 1000)
+        duration: Math.round((Date.now() - startTime) / 1000),
       });
 
       // Dispatch error event
       this.dispatchEvent('deploy:error', {
         projectName,
-        error: error.message
+        error: error.message,
       });
 
       throw error;
@@ -198,28 +194,28 @@ export class VercelDeployer {
       files: files.map(f => ({
         file: f.file,
         sha: f.sha,
-        size: f.size
+        size: f.size,
       })),
       target: options.target || 'production',
       projectSettings: {
         framework: null,
         buildCommand: null,
-        outputDirectory: null
-      }
+        outputDirectory: null,
+      },
     };
 
     // Add team ID if available
-    const url = this.teamId 
+    const url = this.teamId
       ? `${this.baseURL}/v13/deployments?teamId=${this.teamId}`
       : `${this.baseURL}/v13/deployments`;
 
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${this.token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(deploymentData)
+      body: JSON.stringify(deploymentData),
     });
 
     if (!response.ok) {
@@ -260,8 +256,8 @@ export class VercelDeployer {
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+        Authorization: `Bearer ${this.token}`,
+      },
     });
 
     if (!response.ok) {
@@ -330,7 +326,7 @@ export class VercelDeployer {
   loadToken() {
     const token = localStorage.getItem('vercel_token');
     const teamId = localStorage.getItem('vercel_team_id');
-    
+
     if (token) {
       this.connect(token, teamId);
     }

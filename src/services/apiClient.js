@@ -1,6 +1,6 @@
 /**
  * API Client
- * 
+ *
  * Wrapper for backend API requests
  * Handles authentication, error handling, and retries
  */
@@ -23,7 +23,7 @@ class APIClient {
    */
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    
+
     const config = {
       ...options,
       headers: {
