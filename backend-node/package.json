@@ -1,0 +1,48 @@
+{
+  "name": "dragndrop-backend",
+  "version": "1.0.0",
+  "description": "Backend API for DragNDrop HTML Editor with Better Auth",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:push": "drizzle-kit push",
+    "test": "NODE_ENV=test jest --coverage",
+    "test:watch": "NODE_ENV=test jest --watch",
+    "test:integration": "NODE_ENV=test jest --testPathPattern=tests/integration"
+  },
+  "keywords": [
+    "express",
+    "better-auth",
+    "drizzle-orm",
+    "postgresql",
+    "rest-api"
+  ],
+  "author": "Sebastian Vernis",
+  "license": "MIT",
+  "dependencies": {
+    "better-auth": "^1.0.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.36.4",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "postgres": "^3.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.28.1",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
