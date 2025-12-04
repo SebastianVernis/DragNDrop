@@ -1,6 +1,6 @@
 /**
  * Session Manager
- * 
+ *
  * Manages user session state and provides reactive updates
  */
 

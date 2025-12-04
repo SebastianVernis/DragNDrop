@@ -1,27 +1,27 @@
 /**
  * SEO Panel - v1.0
- * 
+ *
  * UI panel for displaying SEO analysis results and AI-powered optimizations.
  */
 
 class SEOPanel {
-    constructor() {
-        this.panel = null;
+  constructor() {
+    this.panel = null;
+  }
+
+  /**
+   * Show SEO panel
+   */
+  show(results = null) {
+    if (this.panel) {
+      this.panel.remove();
     }
 
-    /**
-     * Show SEO panel
-     */
-    show(results = null) {
-        if (this.panel) {
-            this.panel.remove();
-        }
+    const analysisResults = results || window.seoOptimizer.getLastAnalysis();
 
-        const analysisResults = results || window.seoOptimizer.getLastAnalysis();
-
-        this.panel = document.createElement('div');
-        this.panel.className = 'seo-panel';
-        this.panel.innerHTML = `
+    this.panel = document.createElement('div');
+    this.panel.className = 'seo-panel';
+    this.panel.innerHTML = `
             <div class="panel-header">
                 <h3>🔍 SEO Optimizer</h3>
                 <button class="panel-close-btn">×</button>
@@ -31,17 +31,17 @@ class SEOPanel {
             </div>
         `;
 
-        document.body.appendChild(this.panel);
-        this.attachEventListeners();
-    }
+    document.body.appendChild(this.panel);
+    this.attachEventListeners();
+  }
 
-    /**
-     * Render analysis results
-     */
-    renderResults(results) {
-        const { score, summary, issues, grouped, recommendations } = results;
+  /**
+   * Render analysis results
+   */
+  renderResults(results) {
+    const { score, summary, issues, grouped, recommendations } = results;
 
-        return `
+    return `
             <div class="score-card ${summary.status}">
                 <div class="score-value">${score}</div>
                 <div class="score-label">SEO Score</div>
@@ -71,47 +71,63 @@ class SEOPanel {
                 </div>
             </div>
 
-            ${recommendations.length > 0 ? `
+            ${
+              recommendations.length > 0
+                ? `
                 <div class="recommendations">
                     <h4>Recommendations</h4>
-                    ${recommendations.map(rec => `
+                    ${recommendations
+                      .map(
+                        rec => `
                         <div class="recommendation-item ${rec.priority}">
                             <div class="rec-priority">${rec.priority}</div>
                             <div class="rec-message">${rec.message}</div>
                             ${rec.action ? `<div class="rec-action">${rec.action}</div>` : ''}
                         </div>
-                    `).join('')}
+                    `
+                      )
+                      .join('')}
                 </div>
-            ` : ''}
+            `
+                : ''
+            }
 
             <div class="issues-by-category">
                 <h4>Issues by Category</h4>
-                ${Object.entries(grouped.byCategory).map(([category, categoryIssues]) => `
+                ${Object.entries(grouped.byCategory)
+                  .map(
+                    ([category, categoryIssues]) => `
                     <div class="category-section">
                         <div class="category-header" onclick="this.parentElement.classList.toggle('expanded')">
                             <span class="category-name">${category}</span>
                             <span class="category-count">${categoryIssues.length}</span>
                         </div>
                         <div class="category-issues">
-                            ${categoryIssues.map(issue => `
+                            ${categoryIssues
+                              .map(
+                                issue => `
                                 <div class="issue-item ${issue.severity}">
                                     <div class="issue-title">${issue.ruleName}</div>
                                     <div class="issue-message">${issue.message}</div>
                                     <div class="issue-fix"><strong>Fix:</strong> ${issue.fix}</div>
                                 </div>
-                            `).join('')}
+                            `
+                              )
+                              .join('')}
                         </div>
                     </div>
-                `).join('')}
+                `
+                  )
+                  .join('')}
             </div>
         `;
-    }
+  }
 
-    /**
-     * Render no results state
-     */
-    renderNoResults() {
-        return `
+  /**
+   * Render no results state
+   */
+  renderNoResults() {
+    return `
             <div class="no-results">
                 <div class="no-results-icon">🔍</div>
                 <h4>No Analysis Results</h4>
@@ -121,36 +137,36 @@ class SEOPanel {
                 </button>
             </div>
         `;
+  }
+
+  /**
+   * Run SEO analysis
+   */
+  async runAnalysis() {
+    try {
+      if (window.showToast) {
+        window.showToast('🔍 Analyzing SEO...');
+      }
+
+      const results = window.seoOptimizer.analyze();
+      this.show(results);
+
+      if (window.showToast) {
+        window.showToast(`✅ Analysis complete! Score: ${results.score}/100`);
+      }
+    } catch (error) {
+      console.error('Analysis error:', error);
+      alert(`Error running analysis: ${error.message}`);
     }
+  }
 
-    /**
-     * Run SEO analysis
-     */
-    async runAnalysis() {
-        try {
-            if (window.showToast) {
-                window.showToast('🔍 Analyzing SEO...');
-            }
-
-            const results = window.seoOptimizer.analyze();
-            this.show(results);
-
-            if (window.showToast) {
-                window.showToast(`✅ Analysis complete! Score: ${results.score}/100`);
-            }
-        } catch (error) {
-            console.error('Analysis error:', error);
-            alert(`Error running analysis: ${error.message}`);
-        }
-    }
-
-    /**
-     * Show AI optimizer modal
-     */
-    showAIOptimizer() {
-        const modal = document.createElement('div');
-        modal.className = 'seo-ai-modal';
-        modal.innerHTML = `
+  /**
+   * Show AI optimizer modal
+   */
+  showAIOptimizer() {
+    const modal = document.createElement('div');
+    modal.className = 'seo-ai-modal';
+    modal.innerHTML = `
             <div class="modal-overlay"></div>
             <div class="modal-content">
                 <div class="modal-header">
@@ -186,147 +202,150 @@ class SEOPanel {
             </div>
         `;
 
-        document.body.appendChild(modal);
-        
-        modal.querySelector('.modal-close-btn').addEventListener('click', () => modal.remove());
-        modal.querySelector('.modal-overlay').addEventListener('click', () => modal.remove());
+    document.body.appendChild(modal);
 
-        this.aiModal = modal;
+    modal.querySelector('.modal-close-btn').addEventListener('click', () => modal.remove());
+    modal.querySelector('.modal-overlay').addEventListener('click', () => modal.remove());
+
+    this.aiModal = modal;
+  }
+
+  /**
+   * Generate title with AI
+   */
+  async generateTitle() {
+    try {
+      if (window.showToast) {
+        window.showToast('🤖 Generating title...');
+      }
+
+      const result = await window.seoOptimizer.generateTitle();
+
+      if (result.success) {
+        this.showAIResult('Title Tag', `<title>${result.title}</title>`);
+        this.generatedContent = { type: 'title', content: result.title };
+      }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
     }
+  }
 
-    /**
-     * Generate title with AI
-     */
-    async generateTitle() {
-        try {
-            if (window.showToast) {
-                window.showToast('🤖 Generating title...');
-            }
+  /**
+   * Generate meta description with AI
+   */
+  async generateDescription() {
+    try {
+      if (window.showToast) {
+        window.showToast('🤖 Generating description...');
+      }
 
-            const result = await window.seoOptimizer.generateTitle();
-            
-            if (result.success) {
-                this.showAIResult('Title Tag', `<title>${result.title}</title>`);
-                this.generatedContent = { type: 'title', content: result.title };
-            }
-        } catch (error) {
-            alert(`Error: ${error.message}`);
-        }
+      const result = await window.seoOptimizer.generateMetaDescription();
+
+      if (result.success) {
+        this.showAIResult(
+          'Meta Description',
+          `<meta name="description" content="${result.description}">`
+        );
+        this.generatedContent = { type: 'description', content: result.description };
+      }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
     }
+  }
 
-    /**
-     * Generate meta description with AI
-     */
-    async generateDescription() {
-        try {
-            if (window.showToast) {
-                window.showToast('🤖 Generating description...');
-            }
+  /**
+   * Generate OG tags with AI
+   */
+  async generateOGTags() {
+    try {
+      if (window.showToast) {
+        window.showToast('🤖 Generating OG tags...');
+      }
 
-            const result = await window.seoOptimizer.generateMetaDescription();
-            
-            if (result.success) {
-                this.showAIResult('Meta Description', `<meta name="description" content="${result.description}">`);
-                this.generatedContent = { type: 'description', content: result.description };
-            }
-        } catch (error) {
-            alert(`Error: ${error.message}`);
-        }
+      const result = await window.seoOptimizer.generateOGTags();
+
+      if (result.success) {
+        const tags = Object.entries(result.metaTags.og || {})
+          .map(([key, value]) => `<meta property="${key}" content="${value}">`)
+          .join('\n');
+
+        this.showAIResult('Open Graph Tags', tags);
+        this.generatedContent = { type: 'og', content: result.metaTags.og };
+      }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
     }
+  }
 
-    /**
-     * Generate OG tags with AI
-     */
-    async generateOGTags() {
-        try {
-            if (window.showToast) {
-                window.showToast('🤖 Generating OG tags...');
-            }
+  /**
+   * Generate structured data
+   */
+  generateStructuredData() {
+    const result = window.seoOptimizer.generateStructuredData('WebPage', {
+      name: document.title || 'My Page',
+      description: document.querySelector('meta[name="description"]')?.content || '',
+    });
 
-            const result = await window.seoOptimizer.generateOGTags();
-            
-            if (result.success) {
-                const tags = Object.entries(result.metaTags.og || {})
-                    .map(([key, value]) => `<meta property="${key}" content="${value}">`)
-                    .join('\n');
-                
-                this.showAIResult('Open Graph Tags', tags);
-                this.generatedContent = { type: 'og', content: result.metaTags.og };
-            }
-        } catch (error) {
-            alert(`Error: ${error.message}`);
-        }
-    }
+    this.showAIResult('Structured Data (JSON-LD)', result.script);
+    this.generatedContent = { type: 'structured', content: result.script };
+  }
 
-    /**
-     * Generate structured data
-     */
-    generateStructuredData() {
-        const result = window.seoOptimizer.generateStructuredData('WebPage', {
-            name: document.title || 'My Page',
-            description: document.querySelector('meta[name="description"]')?.content || ''
-        });
+  /**
+   * Show AI result
+   */
+  showAIResult(title, content) {
+    const resultDiv = this.aiModal.querySelector('#ai-result');
+    const contentDiv = resultDiv.querySelector('.ai-result-content');
 
-        this.showAIResult('Structured Data (JSON-LD)', result.script);
-        this.generatedContent = { type: 'structured', content: result.script };
-    }
-
-    /**
-     * Show AI result
-     */
-    showAIResult(title, content) {
-        const resultDiv = this.aiModal.querySelector('#ai-result');
-        const contentDiv = resultDiv.querySelector('.ai-result-content');
-        
-        contentDiv.innerHTML = `
+    contentDiv.innerHTML = `
             <h5>${title}</h5>
             <pre><code>${this.escapeHtml(content)}</code></pre>
         `;
-        
-        resultDiv.style.display = 'block';
+
+    resultDiv.style.display = 'block';
+  }
+
+  /**
+   * Apply generated content
+   */
+  applyGenerated() {
+    if (!this.generatedContent) return;
+
+    // This would apply the generated content to the page
+    // Implementation depends on how the editor manages head content
+
+    if (window.showToast) {
+      window.showToast('✅ Content applied to page');
     }
 
-    /**
-     * Apply generated content
-     */
-    applyGenerated() {
-        if (!this.generatedContent) return;
+    this.aiModal?.remove();
+  }
 
-        // This would apply the generated content to the page
-        // Implementation depends on how the editor manages head content
-        
-        if (window.showToast) {
-            window.showToast('✅ Content applied to page');
-        }
+  /**
+   * Escape HTML
+   */
+  escapeHtml(html) {
+    const div = document.createElement('div');
+    div.textContent = html;
+    return div.innerHTML;
+  }
 
-        this.aiModal?.remove();
+  /**
+   * Attach event listeners
+   */
+  attachEventListeners() {
+    this.panel.querySelector('.panel-close-btn').addEventListener('click', () => this.close());
+  }
+
+  /**
+   * Close panel
+   */
+  close() {
+    if (this.panel) {
+      this.panel.remove();
+      this.panel = null;
     }
-
-    /**
-     * Escape HTML
-     */
-    escapeHtml(html) {
-        const div = document.createElement('div');
-        div.textContent = html;
-        return div.innerHTML;
-    }
-
-    /**
-     * Attach event listeners
-     */
-    attachEventListeners() {
-        this.panel.querySelector('.panel-close-btn').addEventListener('click', () => this.close());
-    }
-
-    /**
-     * Close panel
-     */
-    close() {
-        if (this.panel) {
-            this.panel.remove();
-            this.panel = null;
-        }
-    }
+  }
 }
 
 // Export globally

@@ -8,7 +8,7 @@ export class GitIntegration {
     this.token = null;
     this.user = null;
     this.baseURL = 'https://api.github.com';
-    
+
     // Load saved token
     this.loadToken();
   }
@@ -19,16 +19,16 @@ export class GitIntegration {
    */
   async connect(token) {
     this.token = token;
-    
+
     try {
       // Verify token by getting user info
       this.user = await this.getCurrentUser();
-      
+
       // Save token
       this.saveToken();
-      
+
       this.dispatchEvent('github:connected', { user: this.user });
-      
+
       return this.user;
     } catch (error) {
       this.token = null;
@@ -43,10 +43,10 @@ export class GitIntegration {
   disconnect() {
     this.token = null;
     this.user = null;
-    
+
     localStorage.removeItem('github_token');
     localStorage.removeItem('github_user');
-    
+
     this.dispatchEvent('github:disconnected');
   }
 
@@ -77,7 +77,7 @@ export class GitIntegration {
       sort: options.sort || 'updated',
       direction: options.direction || 'desc',
       per_page: options.perPage || 30,
-      page: options.page || 1
+      page: options.page || 1,
     });
 
     return await this.request('GET', `/user/repos?${params}`);
@@ -106,13 +106,13 @@ export class GitIntegration {
       private: options.private || false,
       auto_init: options.autoInit || false,
       gitignore_template: options.gitignoreTemplate || null,
-      license_template: options.licenseTemplate || null
+      license_template: options.licenseTemplate || null,
     };
 
     const repo = await this.request('POST', '/user/repos', data);
-    
+
     this.dispatchEvent('github:repo:created', { repo });
-    
+
     return repo;
   }
 
@@ -124,7 +124,7 @@ export class GitIntegration {
    */
   async deleteRepository(owner, repo) {
     await this.request('DELETE', `/repos/${owner}/${repo}`);
-    
+
     this.dispatchEvent('github:repo:deleted', { owner, repo });
   }
 
@@ -158,17 +158,17 @@ export class GitIntegration {
    * @returns {Promise<Object>} File data
    */
   async getFileContent(owner, repo, path, ref = null) {
-    const url = ref 
+    const url = ref
       ? `/repos/${owner}/${repo}/contents/${path}?ref=${ref}`
       : `/repos/${owner}/${repo}/contents/${path}`;
-    
+
     const response = await this.request('GET', url);
-    
+
     // Decode base64 content
     if (response.content) {
       response.decodedContent = atob(response.content.replace(/\n/g, ''));
     }
-    
+
     return response;
   }
 
@@ -208,14 +208,14 @@ export class GitIntegration {
     }
 
     const url = endpoint.startsWith('http') ? endpoint : `${this.baseURL}${endpoint}`;
-    
+
     const options = {
       method,
       headers: {
-        'Authorization': `Bearer ${this.token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      }
+        Authorization: `Bearer ${this.token}`,
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
     };
 
     if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
@@ -229,7 +229,9 @@ export class GitIntegration {
       const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
       if (rateLimitRemaining === '0') {
         const resetTime = response.headers.get('X-RateLimit-Reset');
-        throw new Error(`GitHub API rate limit exceeded. Resets at ${new Date(resetTime * 1000).toLocaleString()}`);
+        throw new Error(
+          `GitHub API rate limit exceeded. Resets at ${new Date(resetTime * 1000).toLocaleString()}`
+        );
       }
     }
 
@@ -264,7 +266,7 @@ export class GitIntegration {
   loadToken() {
     const token = localStorage.getItem('github_token');
     const userStr = localStorage.getItem('github_user');
-    
+
     if (token && userStr) {
       this.token = token;
       try {

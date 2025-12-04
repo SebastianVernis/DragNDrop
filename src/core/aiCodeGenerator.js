@@ -3,113 +3,113 @@
  * @module AICodeGenerator
  */
 class AICodeGenerator {
-    constructor() {
-        this.apiKey = null;
-        this.endpoint = 'https://api.blackbox.ai/v1/chat/completions';
-        this.model = 'blackbox'; // o 'claude-3-sonnet' cuando esté disponible
-        this.isConfigured = false;
-        this.maxTokens = 4000;
-        this.temperature = 0.7;
-        
-        this.init();
+  constructor() {
+    this.apiKey = null;
+    this.endpoint = 'https://api.blackbox.ai/v1/chat/completions';
+    this.model = 'blackbox'; // o 'claude-3-sonnet' cuando esté disponible
+    this.isConfigured = false;
+    this.maxTokens = 4000;
+    this.temperature = 0.7;
+
+    this.init();
+  }
+
+  /**
+   * Inicializa el generador
+   */
+  init() {
+    this.loadApiKey();
+    this.setupUI();
+  }
+
+  /**
+   * Carga API key desde localStorage
+   */
+  loadApiKey() {
+    const stored = localStorage.getItem('dragndrop_blackbox_api_key');
+    if (stored) {
+      this.apiKey = stored;
+      this.isConfigured = true;
+    }
+  }
+
+  /**
+   * Guarda API key
+   * @param {string} apiKey - API key de Blackbox
+   */
+  saveApiKey(apiKey) {
+    this.apiKey = apiKey;
+    localStorage.setItem('dragndrop_blackbox_api_key', apiKey);
+    this.isConfigured = true;
+
+    if (window.showToast) {
+      window.showToast('API Key guardada correctamente');
+    }
+  }
+
+  /**
+   * Configura UI para AI features
+   */
+  setupUI() {
+    // UI se agregará en index.html
+  }
+
+  /**
+   * Genera código HTML desde descripción en lenguaje natural
+   * @param {string} description - Descripción del componente/página
+   * @param {Object} options - Opciones adicionales
+   * @returns {Promise<Object>} Código generado
+   */
+  async generateFromDescription(description, options = {}) {
+    if (!this.isConfigured) {
+      throw new Error('API Key no configurada. Configure primero en Settings.');
     }
 
-    /**
-     * Inicializa el generador
-     */
-    init() {
-        this.loadApiKey();
-        this.setupUI();
+    const prompt = this.buildPrompt(description, options);
+
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      return this.parseResponse(response);
+    } catch (error) {
+      console.error('Error generando código:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Genera código desde screenshot/imagen del canvas
+   * @param {string} imageData - Base64 image data
+   * @param {Object} options - Opciones
+   * @returns {Promise<Object>} Código generado
+   */
+  async generateFromImage(imageData, options = {}) {
+    if (!this.isConfigured) {
+      throw new Error('API Key no configurada');
     }
 
-    /**
-     * Carga API key desde localStorage
-     */
-    loadApiKey() {
-        const stored = localStorage.getItem('dragndrop_blackbox_api_key');
-        if (stored) {
-            this.apiKey = stored;
-            this.isConfigured = true;
-        }
+    const prompt = this.buildImagePrompt(imageData, options);
+
+    try {
+      const response = await this.callBlackboxAPI(prompt, { includeImage: true, imageData });
+      return this.parseResponse(response);
+    } catch (error) {
+      console.error('Error generando desde imagen:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Mejora código existente
+   * @param {string} code - Código HTML actual
+   * @param {string} instruction - Qué mejorar
+   * @returns {Promise<Object>} Código mejorado
+   */
+  async improveCode(code, instruction) {
+    if (!this.isConfigured) {
+      throw new Error('API Key no configurada');
     }
 
-    /**
-     * Guarda API key
-     * @param {string} apiKey - API key de Blackbox
-     */
-    saveApiKey(apiKey) {
-        this.apiKey = apiKey;
-        localStorage.setItem('dragndrop_blackbox_api_key', apiKey);
-        this.isConfigured = true;
-        
-        if (window.showToast) {
-            window.showToast('API Key guardada correctamente');
-        }
-    }
-
-    /**
-     * Configura UI para AI features
-     */
-    setupUI() {
-        // UI se agregará en index.html
-    }
-
-    /**
-     * Genera código HTML desde descripción en lenguaje natural
-     * @param {string} description - Descripción del componente/página
-     * @param {Object} options - Opciones adicionales
-     * @returns {Promise<Object>} Código generado
-     */
-    async generateFromDescription(description, options = {}) {
-        if (!this.isConfigured) {
-            throw new Error('API Key no configurada. Configure primero en Settings.');
-        }
-
-        const prompt = this.buildPrompt(description, options);
-        
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            return this.parseResponse(response);
-        } catch (error) {
-            console.error('Error generando código:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * Genera código desde screenshot/imagen del canvas
-     * @param {string} imageData - Base64 image data
-     * @param {Object} options - Opciones
-     * @returns {Promise<Object>} Código generado
-     */
-    async generateFromImage(imageData, options = {}) {
-        if (!this.isConfigured) {
-            throw new Error('API Key no configurada');
-        }
-
-        const prompt = this.buildImagePrompt(imageData, options);
-        
-        try {
-            const response = await this.callBlackboxAPI(prompt, { includeImage: true, imageData });
-            return this.parseResponse(response);
-        } catch (error) {
-            console.error('Error generando desde imagen:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * Mejora código existente
-     * @param {string} code - Código HTML actual
-     * @param {string} instruction - Qué mejorar
-     * @returns {Promise<Object>} Código mejorado
-     */
-    async improveCode(code, instruction) {
-        if (!this.isConfigured) {
-            throw new Error('API Key no configurada');
-        }
-
-        const prompt = `Mejora este código HTML/CSS siguiendo esta instrucción: "${instruction}"
+    const prompt = `Mejora este código HTML/CSS siguiendo esta instrucción: "${instruction}"
 
 Código actual:
 \`\`\`html
@@ -119,23 +119,23 @@ ${code}
 Retorna el código mejorado manteniendo la estructura general pero aplicando la mejora solicitada.
 Solo retorna el código, sin explicaciones.`;
 
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            return this.parseResponse(response);
-        } catch (error) {
-            console.error('Error mejorando código:', error);
-            throw error;
-        }
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      return this.parseResponse(response);
+    } catch (error) {
+      console.error('Error mejorando código:', error);
+      throw error;
     }
+  }
 
-    /**
-     * Genera componente desde descripción
-     * @param {string} description - Descripción del componente
-     * @param {string} type - Tipo de componente (navbar, hero, card, etc)
-     * @returns {Promise<Object>} Componente generado
-     */
-    async generateComponent(description, type = 'custom') {
-        const prompt = `Genera un componente ${type} en HTML/CSS vanilla basado en esta descripción:
+  /**
+   * Genera componente desde descripción
+   * @param {string} description - Descripción del componente
+   * @param {string} type - Tipo de componente (navbar, hero, card, etc)
+   * @returns {Promise<Object>} Componente generado
+   */
+  async generateComponent(description, type = 'custom') {
+    const prompt = `Genera un componente ${type} en HTML/CSS vanilla basado en esta descripción:
 
 "${description}"
 
@@ -150,38 +150,38 @@ Requisitos:
 
 Retorna solo el código HTML del componente, listo para insertar en el editor.`;
 
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            const parsed = this.parseResponse(response);
-            
-            return {
-                type: type,
-                html: parsed.code,
-                description: description,
-                generated: new Date().toISOString()
-            };
-        } catch (error) {
-            console.error('Error generando componente:', error);
-            throw error;
-        }
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      const parsed = this.parseResponse(response);
+
+      return {
+        type: type,
+        html: parsed.code,
+        description: description,
+        generated: new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error('Error generando componente:', error);
+      throw error;
     }
+  }
 
-    /**
-     * Construye prompt optimizado para Blackbox
-     * @param {string} description - Descripción del usuario
-     * @param {Object} options - Opciones
-     * @returns {string} Prompt construido
-     */
-    buildPrompt(description, options = {}) {
-        const {
-            framework = 'vanilla',
-            responsive = true,
-            accessibility = true,
-            includeJS = false,
-            style = 'modern'
-        } = options;
+  /**
+   * Construye prompt optimizado para Blackbox
+   * @param {string} description - Descripción del usuario
+   * @param {Object} options - Opciones
+   * @returns {string} Prompt construido
+   */
+  buildPrompt(description, options = {}) {
+    const {
+      framework = 'vanilla',
+      responsive = true,
+      accessibility = true,
+      includeJS = false,
+      style = 'modern',
+    } = options;
 
-        return `Genera código HTML/CSS profesional para:
+    return `Genera código HTML/CSS profesional para:
 
 "${description}"
 
@@ -206,16 +206,16 @@ Formato de respuesta:
 \`\`\`
 
 Genera código production-ready, limpio y bien estructurado.`;
-    }
+  }
 
-    /**
-     * Construye prompt para análisis de imagen
-     * @param {string} imageData - Base64 image
-     * @param {Object} options - Opciones
-     * @returns {string} Prompt
-     */
-    buildImagePrompt(imageData, options = {}) {
-        return `Analiza esta imagen de diseño web y genera el código HTML/CSS exacto para replicarla.
+  /**
+   * Construye prompt para análisis de imagen
+   * @param {string} imageData - Base64 image
+   * @param {Object} options - Opciones
+   * @returns {string} Prompt
+   */
+  buildImagePrompt(imageData, options = {}) {
+    return `Analiza esta imagen de diseño web y genera el código HTML/CSS exacto para replicarla.
 
 Imagen adjunta: [imagen en base64]
 
@@ -229,96 +229,99 @@ Instrucciones:
 - Sin frameworks
 
 Retorna el código completo listo para usar.`;
+  }
+
+  /**
+   * Llama a Blackbox AI API
+   * @param {string} prompt - Prompt a enviar
+   * @param {Object} options - Opciones adicionales
+   * @returns {Promise<Object>} Respuesta de la API
+   */
+  async callBlackboxAPI(prompt, options = {}) {
+    const requestBody = {
+      model: this.model,
+      messages: [
+        {
+          role: 'system',
+          content:
+            'Eres un experto en desarrollo web. Generas código HTML, CSS y JavaScript limpio, semántico y production-ready. Siempre sigues best practices y estándares web modernos.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      max_tokens: this.maxTokens,
+      temperature: this.temperature,
+      stream: false,
+    };
+
+    // Si incluye imagen, agregar al mensaje
+    if (options.includeImage && options.imageData) {
+      requestBody.messages[1].content = [
+        {
+          type: 'text',
+          text: prompt,
+        },
+        {
+          type: 'image_url',
+          image_url: {
+            url: options.imageData,
+          },
+        },
+      ];
     }
 
-    /**
-     * Llama a Blackbox AI API
-     * @param {string} prompt - Prompt a enviar
-     * @param {Object} options - Opciones adicionales
-     * @returns {Promise<Object>} Respuesta de la API
-     */
-    async callBlackboxAPI(prompt, options = {}) {
-        const requestBody = {
-            model: this.model,
-            messages: [
-                {
-                    role: 'system',
-                    content: 'Eres un experto en desarrollo web. Generas código HTML, CSS y JavaScript limpio, semántico y production-ready. Siempre sigues best practices y estándares web modernos.'
-                },
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ],
-            max_tokens: this.maxTokens,
-            temperature: this.temperature,
-            stream: false
-        };
+    const response = await fetch(this.endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.apiKey}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
 
-        // Si incluye imagen, agregar al mensaje
-        if (options.includeImage && options.imageData) {
-            requestBody.messages[1].content = [
-                {
-                    type: 'text',
-                    text: prompt
-                },
-                {
-                    type: 'image_url',
-                    image_url: {
-                        url: options.imageData
-                    }
-                }
-            ];
-        }
-
-        const response = await fetch(this.endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.apiKey}`
-            },
-            body: JSON.stringify(requestBody)
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(`Blackbox API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
-        }
-
-        return await response.json();
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        `Blackbox API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`
+      );
     }
 
-    /**
-     * Parsea respuesta de Blackbox API
-     * @param {Object} response - Respuesta de API
-     * @returns {Object} Código parseado
-     */
-    parseResponse(response) {
-        const content = response.choices?.[0]?.message?.content || '';
-        
-        // Extraer bloques de código
-        const htmlMatch = content.match(/```html\n([\s\S]*?)```/);
-        const cssMatch = content.match(/```css\n([\s\S]*?)```/);
-        const jsMatch = content.match(/```javascript\n([\s\S]*?)```/);
+    return await response.json();
+  }
 
-        return {
-            html: htmlMatch ? htmlMatch[1].trim() : content.trim(),
-            css: cssMatch ? cssMatch[1].trim() : null,
-            js: jsMatch ? jsMatch[1].trim() : null,
-            raw: content
-        };
-    }
+  /**
+   * Parsea respuesta de Blackbox API
+   * @param {Object} response - Respuesta de API
+   * @returns {Object} Código parseado
+   */
+  parseResponse(response) {
+    const content = response.choices?.[0]?.message?.content || '';
 
-    /**
-     * Genera código desde elemento seleccionado en canvas
-     * @param {HTMLElement} element - Elemento del canvas
-     * @param {string} instruction - Qué hacer con el elemento
-     * @returns {Promise<Object>} Código generado
-     */
-    async modifyElement(element, instruction) {
-        const currentHTML = element.outerHTML;
-        
-        const prompt = `Modifica este elemento HTML según la instrucción:
+    // Extraer bloques de código
+    const htmlMatch = content.match(/```html\n([\s\S]*?)```/);
+    const cssMatch = content.match(/```css\n([\s\S]*?)```/);
+    const jsMatch = content.match(/```javascript\n([\s\S]*?)```/);
+
+    return {
+      html: htmlMatch ? htmlMatch[1].trim() : content.trim(),
+      css: cssMatch ? cssMatch[1].trim() : null,
+      js: jsMatch ? jsMatch[1].trim() : null,
+      raw: content,
+    };
+  }
+
+  /**
+   * Genera código desde elemento seleccionado en canvas
+   * @param {HTMLElement} element - Elemento del canvas
+   * @param {string} instruction - Qué hacer con el elemento
+   * @returns {Promise<Object>} Código generado
+   */
+  async modifyElement(element, instruction) {
+    const currentHTML = element.outerHTML;
+
+    const prompt = `Modifica este elemento HTML según la instrucción:
 
 Instrucción: "${instruction}"
 
@@ -330,23 +333,23 @@ ${currentHTML}
 Retorna el HTML modificado manteniendo la estructura general.
 Solo el código, sin explicaciones.`;
 
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            return this.parseResponse(response);
-        } catch (error) {
-            console.error('Error modificando elemento:', error);
-            throw error;
-        }
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      return this.parseResponse(response);
+    } catch (error) {
+      console.error('Error modificando elemento:', error);
+      throw error;
     }
+  }
 
-    /**
-     * Genera página completa desde descripción
-     * @param {string} description - Descripción de la página
-     * @param {string} pageType - Tipo de página (landing, blog, portfolio, etc)
-     * @returns {Promise<Object>} Página generada
-     */
-    async generateFullPage(description, pageType = 'landing') {
-        const prompt = `Genera una página web completa tipo "${pageType}" basada en:
+  /**
+   * Genera página completa desde descripción
+   * @param {string} description - Descripción de la página
+   * @param {string} pageType - Tipo de página (landing, blog, portfolio, etc)
+   * @returns {Promise<Object>} Página generada
+   */
+  async generateFullPage(description, pageType = 'landing') {
+    const prompt = `Genera una página web completa tipo "${pageType}" basada en:
 
 "${description}"
 
@@ -382,39 +385,41 @@ Formato de respuesta:
 
 Genera código production-ready.`;
 
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            return this.parseResponse(response);
-        } catch (error) {
-            console.error('Error generando página:', error);
-            throw error;
-        }
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      return this.parseResponse(response);
+    } catch (error) {
+      console.error('Error generando página:', error);
+      throw error;
     }
+  }
 
-    /**
-     * Obtiene secciones típicas por tipo de página
-     * @param {string} pageType - Tipo de página
-     * @returns {string} Descripción de secciones
-     */
-    getTypicalSections(pageType) {
-        const sections = {
-            'landing': '- Hero con CTA\n  - Features (3-6 items)\n  - Social proof\n  - CTA final\n  - Footer',
-            'blog': '- Header con navegación\n  - Hero article\n  - Artículos recientes\n  - Sidebar\n  - Footer',
-            'portfolio': '- Hero personal\n  - Proyectos destacados\n  - Skills\n  - Contacto\n  - Footer',
-            'ecommerce': '- Header con carrito\n  - Hero/Banner\n  - Productos destacados\n  - Categorías\n  - Footer',
-            'saas': '- Navbar\n  - Hero con demo\n  - Features\n  - Pricing\n  - Testimonials\n  - CTA\n  - Footer'
-        };
+  /**
+   * Obtiene secciones típicas por tipo de página
+   * @param {string} pageType - Tipo de página
+   * @returns {string} Descripción de secciones
+   */
+  getTypicalSections(pageType) {
+    const sections = {
+      landing:
+        '- Hero con CTA\n  - Features (3-6 items)\n  - Social proof\n  - CTA final\n  - Footer',
+      blog: '- Header con navegación\n  - Hero article\n  - Artículos recientes\n  - Sidebar\n  - Footer',
+      portfolio: '- Hero personal\n  - Proyectos destacados\n  - Skills\n  - Contacto\n  - Footer',
+      ecommerce:
+        '- Header con carrito\n  - Hero/Banner\n  - Productos destacados\n  - Categorías\n  - Footer',
+      saas: '- Navbar\n  - Hero con demo\n  - Features\n  - Pricing\n  - Testimonials\n  - CTA\n  - Footer',
+    };
 
-        return sections[pageType] || sections['landing'];
-    }
+    return sections[pageType] || sections['landing'];
+  }
 
-    /**
-     * Optimiza código generado
-     * @param {Object} code - Código generado {html, css, js}
-     * @returns {Promise<Object>} Código optimizado
-     */
-    async optimizeCode(code) {
-        const prompt = `Optimiza este código para performance y best practices:
+  /**
+   * Optimiza código generado
+   * @param {Object} code - Código generado {html, css, js}
+   * @returns {Promise<Object>} Código optimizado
+   */
+  async optimizeCode(code) {
+    const prompt = `Optimiza este código para performance y best practices:
 
 HTML:
 \`\`\`html
@@ -435,32 +440,32 @@ Optimizaciones a aplicar:
 
 Retorna el código optimizado en el mismo formato.`;
 
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            return this.parseResponse(response);
-        } catch (error) {
-            console.error('Error optimizando código:', error);
-            throw error;
-        }
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      return this.parseResponse(response);
+    } catch (error) {
+      console.error('Error optimizando código:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Convierte diseño del canvas actual a código limpio
+   * @returns {Promise<Object>} Código del canvas
+   */
+  async canvasToCode() {
+    const canvas = document.getElementById('canvas');
+    if (!canvas) {
+      throw new Error('Canvas no encontrado');
     }
 
-    /**
-     * Convierte diseño del canvas actual a código limpio
-     * @returns {Promise<Object>} Código del canvas
-     */
-    async canvasToCode() {
-        const canvas = document.getElementById('canvas');
-        if (!canvas) {
-            throw new Error('Canvas no encontrado');
-        }
+    // Capturar HTML actual del canvas
+    const currentHTML = canvas.innerHTML;
 
-        // Capturar HTML actual del canvas
-        const currentHTML = canvas.innerHTML;
-        
-        // Crear screenshot del canvas para contexto visual
-        const screenshot = await this.captureCanvasScreenshot();
+    // Crear screenshot del canvas para contexto visual
+    const screenshot = await this.captureCanvasScreenshot();
 
-        const prompt = `Analiza este HTML generado por un editor visual y conviértelo a código production-ready limpio:
+    const prompt = `Analiza este HTML generado por un editor visual y conviértelo a código production-ready limpio:
 
 HTML actual (generado por editor):
 \`\`\`html
@@ -480,53 +485,53 @@ Instrucciones:
 
 Retorna HTML completo production-ready.`;
 
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            const parsed = this.parseResponse(response);
-            
-            return {
-                ...parsed,
-                screenshot: screenshot,
-                original: currentHTML
-            };
-        } catch (error) {
-            console.error('Error convirtiendo canvas:', error);
-            throw error;
-        }
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      const parsed = this.parseResponse(response);
+
+      return {
+        ...parsed,
+        screenshot: screenshot,
+        original: currentHTML,
+      };
+    } catch (error) {
+      console.error('Error convirtiendo canvas:', error);
+      throw error;
     }
+  }
 
-    /**
-     * Captura screenshot del canvas
-     * @returns {Promise<string>} Base64 image data
-     */
-    async captureCanvasScreenshot() {
-        const canvas = document.getElementById('canvas');
-        if (!canvas) return null;
+  /**
+   * Captura screenshot del canvas
+   * @returns {Promise<string>} Base64 image data
+   */
+  async captureCanvasScreenshot() {
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return null;
 
-        // Si html2canvas está disponible
-        if (typeof html2canvas !== 'undefined') {
-            try {
-                const canvasElement = await html2canvas(canvas);
-                return canvasElement.toDataURL('image/png');
-            } catch (error) {
-                console.error('Error capturando screenshot:', error);
-                return null;
-            }
-        }
-
+    // Si html2canvas está disponible
+    if (typeof html2canvas !== 'undefined') {
+      try {
+        const canvasElement = await html2canvas(canvas);
+        return canvasElement.toDataURL('image/png');
+      } catch (error) {
+        console.error('Error capturando screenshot:', error);
         return null;
+      }
     }
 
-    /**
-     * Genera variaciones de un componente
-     * @param {HTMLElement} element - Elemento base
-     * @param {number} count - Número de variaciones
-     * @returns {Promise<Array>} Array de variaciones
-     */
-    async generateVariations(element, count = 3) {
-        const baseHTML = element.outerHTML;
-        
-        const prompt = `Genera ${count} variaciones de este componente HTML:
+    return null;
+  }
+
+  /**
+   * Genera variaciones de un componente
+   * @param {HTMLElement} element - Elemento base
+   * @param {number} count - Número de variaciones
+   * @returns {Promise<Array>} Array de variaciones
+   */
+  async generateVariations(element, count = 3) {
+    const baseHTML = element.outerHTML;
+
+    const prompt = `Genera ${count} variaciones de este componente HTML:
 
 \`\`\`html
 ${baseHTML}
@@ -540,44 +545,45 @@ Cada variación debe:
 
 Retorna las ${count} variaciones separadas por "---VARIATION---".`;
 
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            const content = response.choices?.[0]?.message?.content || '';
-            
-            // Separar variaciones
-            const variations = content.split('---VARIATION---')
-                .map(v => v.trim())
-                .filter(v => v.length > 0)
-                .map((html, index) => ({
-                    id: `variation-${index}`,
-                    html: this.extractCodeBlock(html),
-                    index: index
-                }));
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      const content = response.choices?.[0]?.message?.content || '';
 
-            return variations;
-        } catch (error) {
-            console.error('Error generando variaciones:', error);
-            throw error;
-        }
+      // Separar variaciones
+      const variations = content
+        .split('---VARIATION---')
+        .map(v => v.trim())
+        .filter(v => v.length > 0)
+        .map((html, index) => ({
+          id: `variation-${index}`,
+          html: this.extractCodeBlock(html),
+          index: index,
+        }));
+
+      return variations;
+    } catch (error) {
+      console.error('Error generando variaciones:', error);
+      throw error;
     }
+  }
 
-    /**
-     * Extrae bloque de código de markdown
-     * @param {string} text - Texto con código
-     * @returns {string} Código extraído
-     */
-    extractCodeBlock(text) {
-        const match = text.match(/```(?:html)?\n([\s\S]*?)```/);
-        return match ? match[1].trim() : text.trim();
-    }
+  /**
+   * Extrae bloque de código de markdown
+   * @param {string} text - Texto con código
+   * @returns {string} Código extraído
+   */
+  extractCodeBlock(text) {
+    const match = text.match(/```(?:html)?\n([\s\S]*?)```/);
+    return match ? match[1].trim() : text.trim();
+  }
 
-    /**
-     * Corrige errores de HTML
-     * @param {string} html - HTML con posibles errores
-     * @returns {Promise<Object>} HTML corregido
-     */
-    async fixHTMLErrors(html) {
-        const prompt = `Corrige errores de sintaxis y estructura en este HTML:
+  /**
+   * Corrige errores de HTML
+   * @param {string} html - HTML con posibles errores
+   * @returns {Promise<Object>} HTML corregido
+   */
+  async fixHTMLErrors(html) {
+    const prompt = `Corrige errores de sintaxis y estructura en este HTML:
 
 \`\`\`html
 ${html}
@@ -592,22 +598,22 @@ Correcciones a aplicar:
 
 Retorna HTML corregido.`;
 
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            return this.parseResponse(response);
-        } catch (error) {
-            console.error('Error corrigiendo HTML:', error);
-            throw error;
-        }
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      return this.parseResponse(response);
+    } catch (error) {
+      console.error('Error corrigiendo HTML:', error);
+      throw error;
     }
+  }
 
-    /**
-     * Genera sugerencias de mejora para código
-     * @param {string} code - Código a analizar
-     * @returns {Promise<Array>} Array de sugerencias
-     */
-    async suggestImprovements(code) {
-        const prompt = `Analiza este código HTML/CSS y sugiere mejoras:
+  /**
+   * Genera sugerencias de mejora para código
+   * @param {string} code - Código a analizar
+   * @returns {Promise<Array>} Array de sugerencias
+   */
+  async suggestImprovements(code) {
+    const prompt = `Analiza este código HTML/CSS y sugiere mejoras:
 
 \`\`\`html
 ${code}
@@ -624,44 +630,45 @@ Analiza:
 Retorna lista de sugerencias en formato:
 1. [Mejora] - [Razón] - [Prioridad: Alta/Media/Baja]`;
 
-        try {
-            const response = await this.callBlackboxAPI(prompt);
-            const content = response.choices?.[0]?.message?.content || '';
-            
-            // Parsear sugerencias
-            const suggestions = content.split('\n')
-                .filter(line => /^\d+\./.test(line))
-                .map(line => {
-                    const parts = line.split(' - ');
-                    return {
-                        improvement: parts[0]?.replace(/^\d+\.\s*/, ''),
-                        reason: parts[1] || '',
-                        priority: parts[2] || 'Media'
-                    };
-                });
+    try {
+      const response = await this.callBlackboxAPI(prompt);
+      const content = response.choices?.[0]?.message?.content || '';
 
-            return suggestions;
-        } catch (error) {
-            console.error('Error generando sugerencias:', error);
-            throw error;
-        }
+      // Parsear sugerencias
+      const suggestions = content
+        .split('\n')
+        .filter(line => /^\d+\./.test(line))
+        .map(line => {
+          const parts = line.split(' - ');
+          return {
+            improvement: parts[0]?.replace(/^\d+\.\s*/, ''),
+            reason: parts[1] || '',
+            priority: parts[2] || 'Media',
+          };
+        });
+
+      return suggestions;
+    } catch (error) {
+      console.error('Error generando sugerencias:', error);
+      throw error;
     }
+  }
 
-    /**
-     * Verifica si está configurado
-     * @returns {boolean} True si tiene API key
-     */
-    isReady() {
-        return this.isConfigured && this.apiKey !== null;
-    }
+  /**
+   * Verifica si está configurado
+   * @returns {boolean} True si tiene API key
+   */
+  isReady() {
+    return this.isConfigured && this.apiKey !== null;
+  }
 
-    /**
-     * Muestra diálogo de configuración
-     */
-    showConfigDialog() {
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = `
+  /**
+   * Muestra diálogo de configuración
+   */
+  showConfigDialog() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
             <div class="modal-content">
                 <div class="modal-header">
                     <h3>⚙️ Configurar AI Code Generator</h3>
@@ -690,45 +697,45 @@ Retorna lista de sugerencias en formato:
                 </div>
             </div>
         `;
-        
-        document.body.appendChild(modal);
+
+    document.body.appendChild(modal);
+  }
+
+  /**
+   * Guarda configuración desde diálogo
+   */
+  saveConfig() {
+    const apiKey = document.getElementById('blackboxApiKey')?.value;
+    const model = document.getElementById('aiModel')?.value;
+
+    if (apiKey && apiKey.trim()) {
+      this.saveApiKey(apiKey.trim());
+      this.model = model || 'blackbox';
+
+      // Cerrar modal
+      const modal = document.querySelector('.modal');
+      if (modal) modal.remove();
+
+      if (window.showToast) {
+        window.showToast('Configuración guardada. AI Code Generator listo!');
+      }
+    } else {
+      alert('Por favor ingresa una API key válida');
+    }
+  }
+
+  /**
+   * Muestra diálogo de generación de componente
+   */
+  showGenerateDialog() {
+    if (!this.isReady()) {
+      this.showConfigDialog();
+      return;
     }
 
-    /**
-     * Guarda configuración desde diálogo
-     */
-    saveConfig() {
-        const apiKey = document.getElementById('blackboxApiKey')?.value;
-        const model = document.getElementById('aiModel')?.value;
-
-        if (apiKey && apiKey.trim()) {
-            this.saveApiKey(apiKey.trim());
-            this.model = model || 'blackbox';
-            
-            // Cerrar modal
-            const modal = document.querySelector('.modal');
-            if (modal) modal.remove();
-            
-            if (window.showToast) {
-                window.showToast('Configuración guardada. AI Code Generator listo!');
-            }
-        } else {
-            alert('Por favor ingresa una API key válida');
-        }
-    }
-
-    /**
-     * Muestra diálogo de generación de componente
-     */
-    showGenerateDialog() {
-        if (!this.isReady()) {
-            this.showConfigDialog();
-            return;
-        }
-
-        const modal = document.createElement('div');
-        modal.className = 'modal ai-generate-modal';
-        modal.innerHTML = `
+    const modal = document.createElement('div');
+    modal.className = 'modal ai-generate-modal';
+    modal.innerHTML = `
             <div class="modal-content" style="max-width: 700px;">
                 <div class="modal-header">
                     <h3>🤖 Generar con AI</h3>
@@ -769,131 +776,131 @@ Retorna lista de sugerencias en formato:
                 </div>
             </div>
         `;
-        
-        document.body.appendChild(modal);
+
+    document.body.appendChild(modal);
+  }
+
+  /**
+   * Ejecuta generación desde diálogo
+   */
+  async executeGeneration() {
+    const prompt = document.getElementById('aiPrompt')?.value;
+    const type = document.getElementById('aiComponentType')?.value;
+    const btn = document.getElementById('generateBtn');
+
+    if (!prompt || !prompt.trim()) {
+      alert('Por favor describe lo que quieres crear');
+      return;
     }
 
-    /**
-     * Ejecuta generación desde diálogo
-     */
-    async executeGeneration() {
-        const prompt = document.getElementById('aiPrompt')?.value;
-        const type = document.getElementById('aiComponentType')?.value;
-        const btn = document.getElementById('generateBtn');
-
-        if (!prompt || !prompt.trim()) {
-            alert('Por favor describe lo que quieres crear');
-            return;
-        }
-
-        if (btn) {
-            btn.disabled = true;
-            btn.textContent = '⏳ Generando...';
-        }
-
-        try {
-            const result = await this.generateComponent(prompt.trim(), type);
-            
-            // Mostrar resultado
-            const resultDiv = document.getElementById('aiGenerationResult');
-            const codeEl = document.getElementById('generatedCode');
-            
-            if (resultDiv && codeEl) {
-                codeEl.textContent = result.html;
-                resultDiv.style.display = 'block';
-                this.lastGenerated = result.html;
-            }
-
-            if (window.showToast) {
-                window.showToast('Código generado con AI');
-            }
-        } catch (error) {
-            alert(`Error generando código: ${error.message}`);
-            console.error(error);
-        } finally {
-            if (btn) {
-                btn.disabled = false;
-                btn.textContent = '✨ Generar';
-            }
-        }
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '⏳ Generando...';
     }
 
-    /**
-     * Inserta código generado en canvas
-     */
-    insertGeneratedCode() {
-        if (!this.lastGenerated) return;
+    try {
+      const result = await this.generateComponent(prompt.trim(), type);
 
-        const canvas = document.getElementById('canvas');
-        if (!canvas) return;
+      // Mostrar resultado
+      const resultDiv = document.getElementById('aiGenerationResult');
+      const codeEl = document.getElementById('generatedCode');
 
-        // Crear elemento temporal
-        const temp = document.createElement('div');
-        temp.innerHTML = this.lastGenerated;
-        const element = temp.firstElementChild;
+      if (resultDiv && codeEl) {
+        codeEl.textContent = result.html;
+        resultDiv.style.display = 'block';
+        this.lastGenerated = result.html;
+      }
 
-        if (element) {
-            // Agregar ID y clases del editor
-            element.id = 'element-' + (window.elementIdCounter++);
-            element.classList.add('canvas-element');
+      if (window.showToast) {
+        window.showToast('Código generado con AI');
+      }
+    } catch (error) {
+      alert(`Error generando código: ${error.message}`);
+      console.error(error);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = '✨ Generar';
+      }
+    }
+  }
 
-            // Agregar funcionalidad del editor
-            const deleteBtn = document.createElement('div');
-            deleteBtn.className = 'delete-btn';
-            deleteBtn.textContent = '×';
-            deleteBtn.onclick = (e) => {
-                e.stopPropagation();
-                if (window.deleteElement) {
-                    window.deleteElement(element);
-                }
-            };
-            element.appendChild(deleteBtn);
+  /**
+   * Inserta código generado en canvas
+   */
+  insertGeneratedCode() {
+    if (!this.lastGenerated) return;
 
-            // Eventos
-            element.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (window.selectElement) {
-                    window.selectElement(element);
-                }
-            });
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return;
 
-            element.addEventListener('dblclick', (e) => {
-                e.stopPropagation();
-                if (window.makeElementEditable) {
-                    window.makeElementEditable(element);
-                }
-            });
+    // Crear elemento temporal
+    const temp = document.createElement('div');
+    temp.innerHTML = this.lastGenerated;
+    const element = temp.firstElementChild;
 
-            // Agregar al canvas
-            canvas.appendChild(element);
+    if (element) {
+      // Agregar ID y clases del editor
+      element.id = 'element-' + window.elementIdCounter++;
+      element.classList.add('canvas-element');
 
-            // Cerrar modal
-            const modal = document.querySelector('.ai-generate-modal');
-            if (modal) modal.remove();
-
-            if (window.showToast) {
-                window.showToast('Componente AI insertado en canvas');
-            }
+      // Agregar funcionalidad del editor
+      const deleteBtn = document.createElement('div');
+      deleteBtn.className = 'delete-btn';
+      deleteBtn.textContent = '×';
+      deleteBtn.onclick = e => {
+        e.stopPropagation();
+        if (window.deleteElement) {
+          window.deleteElement(element);
         }
-    }
+      };
+      element.appendChild(deleteBtn);
 
-    /**
-     * Muestra estado de configuración
-     * @returns {Object} Estado
-     */
-    getStatus() {
-        return {
-            configured: this.isConfigured,
-            model: this.model,
-            endpoint: this.endpoint,
-            hasApiKey: this.apiKey !== null
-        };
+      // Eventos
+      element.addEventListener('click', e => {
+        e.stopPropagation();
+        if (window.selectElement) {
+          window.selectElement(element);
+        }
+      });
+
+      element.addEventListener('dblclick', e => {
+        e.stopPropagation();
+        if (window.makeElementEditable) {
+          window.makeElementEditable(element);
+        }
+      });
+
+      // Agregar al canvas
+      canvas.appendChild(element);
+
+      // Cerrar modal
+      const modal = document.querySelector('.ai-generate-modal');
+      if (modal) modal.remove();
+
+      if (window.showToast) {
+        window.showToast('Componente AI insertado en canvas');
+      }
     }
+  }
+
+  /**
+   * Muestra estado de configuración
+   * @returns {Object} Estado
+   */
+  getStatus() {
+    return {
+      configured: this.isConfigured,
+      model: this.model,
+      endpoint: this.endpoint,
+      hasApiKey: this.apiKey !== null,
+    };
+  }
 }
 
 // Exportar
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = AICodeGenerator;
+  module.exports = AICodeGenerator;
 }
 
 window.AICodeGenerator = AICodeGenerator;

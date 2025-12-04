@@ -1,30 +1,30 @@
 /**
  * Generator Modal - v1.0
- * 
+ *
  * UI modal for AI component generation.
  * Provides interface for description input, style selection, and preview.
  */
 
 class GeneratorModal {
-    constructor() {
-        this.modal = null;
-        this.currentGeneration = null;
-        this.isGenerating = false;
+  constructor() {
+    this.modal = null;
+    this.currentGeneration = null;
+    this.isGenerating = false;
+  }
+
+  /**
+   * Show the generator modal
+   */
+  show() {
+    if (this.modal) {
+      this.modal.remove();
     }
 
-    /**
-     * Show the generator modal
-     */
-    show() {
-        if (this.modal) {
-            this.modal.remove();
-        }
+    const stylePresets = window.promptBuilder.getStylePresets();
 
-        const stylePresets = window.promptBuilder.getStylePresets();
-
-        this.modal = document.createElement('div');
-        this.modal.className = 'ai-generator-modal';
-        this.modal.innerHTML = `
+    this.modal = document.createElement('div');
+    this.modal.className = 'ai-generator-modal';
+    this.modal.innerHTML = `
             <div class="modal-overlay"></div>
             <div class="modal-content">
                 <div class="modal-header">
@@ -49,12 +49,16 @@ class GeneratorModal {
                         <div class="form-group">
                             <label>Style Preset</label>
                             <div class="style-presets">
-                                ${Object.entries(stylePresets).map(([key, preset]) => `
+                                ${Object.entries(stylePresets)
+                                  .map(
+                                    ([key, preset]) => `
                                     <div class="style-preset-card ${key === 'modern' ? 'active' : ''}" data-style="${key}">
                                         <div class="preset-name">${preset.name}</div>
                                         <div class="preset-description">${preset.description}</div>
                                     </div>
-                                `).join('')}
+                                `
+                                  )
+                                  .join('')}
                             </div>
                         </div>
 
@@ -108,137 +112,144 @@ class GeneratorModal {
             </div>
         `;
 
-        document.body.appendChild(this.modal);
-        this.attachEventListeners();
+    document.body.appendChild(this.modal);
+    this.attachEventListeners();
+  }
+
+  /**
+   * Attach event listeners
+   */
+  attachEventListeners() {
+    // Close modal
+    const closeModal = () => this.close();
+    this.modal.querySelector('.modal-close-btn').addEventListener('click', closeModal);
+    this.modal.querySelector('.modal-overlay').addEventListener('click', closeModal);
+    this.modal.querySelector('#btn-cancel').addEventListener('click', closeModal);
+
+    // Description input
+    const descriptionInput = this.modal.querySelector('#component-description');
+    descriptionInput.addEventListener('input', () => this.updateCharCount());
+
+    // Style preset selection
+    this.modal.querySelectorAll('.style-preset-card').forEach(card => {
+      card.addEventListener('click', () => {
+        this.modal
+          .querySelectorAll('.style-preset-card')
+          .forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      });
+    });
+
+    // Generate button
+    this.modal.querySelector('#btn-generate').addEventListener('click', () => this.generate());
+
+    // Preview actions
+    this.modal.querySelector('#btn-regenerate')?.addEventListener('click', () => this.generate());
+    this.modal
+      .querySelector('#btn-variations')
+      ?.addEventListener('click', () => this.generateVariations());
+    this.modal.querySelector('#btn-insert')?.addEventListener('click', () => this.insertToCanvas());
+  }
+
+  /**
+   * Update character count
+   */
+  updateCharCount() {
+    const description = this.modal.querySelector('#component-description').value;
+    const charCount = description.length;
+
+    this.modal.querySelector('#char-count').textContent = charCount;
+
+    // Estimate tokens
+    if (charCount > 0) {
+      const activeStyle = this.modal.querySelector('.style-preset-card.active').dataset.style;
+      const estimation = window.aiComponentGenerator.estimateTokens(description, activeStyle);
+
+      const estimateEl = this.modal.querySelector('#token-estimate');
+      estimateEl.textContent = `≈ ${estimation.estimated} tokens`;
+      estimateEl.className = estimation.canAfford ? 'token-ok' : 'token-warning';
+    }
+  }
+
+  /**
+   * Generate component
+   */
+  async generate() {
+    if (this.isGenerating) return;
+
+    const description = this.modal.querySelector('#component-description').value.trim();
+    if (!description) {
+      alert('Please describe the component you want to generate');
+      return;
     }
 
-    /**
-     * Attach event listeners
-     */
-    attachEventListeners() {
-        // Close modal
-        const closeModal = () => this.close();
-        this.modal.querySelector('.modal-close-btn').addEventListener('click', closeModal);
-        this.modal.querySelector('.modal-overlay').addEventListener('click', closeModal);
-        this.modal.querySelector('#btn-cancel').addEventListener('click', closeModal);
+    const activeStyle = this.modal.querySelector('.style-preset-card.active').dataset.style;
+    const options = {
+      style: activeStyle,
+      responsive: this.modal.querySelector('#opt-responsive').checked,
+      accessible: this.modal.querySelector('#opt-accessible').checked,
+      includeJS: this.modal.querySelector('#opt-javascript').checked,
+    };
 
-        // Description input
-        const descriptionInput = this.modal.querySelector('#component-description');
-        descriptionInput.addEventListener('input', () => this.updateCharCount());
+    this.isGenerating = true;
+    this.showLoading();
 
-        // Style preset selection
-        this.modal.querySelectorAll('.style-preset-card').forEach(card => {
-            card.addEventListener('click', () => {
-                this.modal.querySelectorAll('.style-preset-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-            });
-        });
+    try {
+      const result = await window.aiComponentGenerator.generate(description, options);
 
-        // Generate button
-        this.modal.querySelector('#btn-generate').addEventListener('click', () => this.generate());
+      if (result.success) {
+        this.currentGeneration = result;
+        this.showPreview(result);
 
-        // Preview actions
-        this.modal.querySelector('#btn-regenerate')?.addEventListener('click', () => this.generate());
-        this.modal.querySelector('#btn-variations')?.addEventListener('click', () => this.generateVariations());
-        this.modal.querySelector('#btn-insert')?.addEventListener('click', () => this.insertToCanvas());
-    }
-
-    /**
-     * Update character count
-     */
-    updateCharCount() {
-        const description = this.modal.querySelector('#component-description').value;
-        const charCount = description.length;
-        
-        this.modal.querySelector('#char-count').textContent = charCount;
-
-        // Estimate tokens
-        if (charCount > 0) {
-            const activeStyle = this.modal.querySelector('.style-preset-card.active').dataset.style;
-            const estimation = window.aiComponentGenerator.estimateTokens(description, activeStyle);
-            
-            const estimateEl = this.modal.querySelector('#token-estimate');
-            estimateEl.textContent = `≈ ${estimation.estimated} tokens`;
-            estimateEl.className = estimation.canAfford ? 'token-ok' : 'token-warning';
+        if (window.showToast) {
+          window.showToast('✅ Component generated successfully!');
         }
+      } else {
+        throw new Error('Generation failed');
+      }
+    } catch (error) {
+      console.error('Generation error:', error);
+      alert(`Error generating component: ${error.message}`);
+      this.hideLoading();
+    } finally {
+      this.isGenerating = false;
     }
+  }
 
-    /**
-     * Generate component
-     */
-    async generate() {
-        if (this.isGenerating) return;
+  /**
+   * Generate variations
+   */
+  async generateVariations() {
+    if (!this.currentGeneration || this.isGenerating) return;
 
-        const description = this.modal.querySelector('#component-description').value.trim();
-        if (!description) {
-            alert('Please describe the component you want to generate');
-            return;
-        }
+    this.isGenerating = true;
+    this.showLoading();
 
-        const activeStyle = this.modal.querySelector('.style-preset-card.active').dataset.style;
-        const options = {
-            style: activeStyle,
-            responsive: this.modal.querySelector('#opt-responsive').checked,
-            accessible: this.modal.querySelector('#opt-accessible').checked,
-            includeJS: this.modal.querySelector('#opt-javascript').checked
-        };
+    try {
+      const result = await window.aiComponentGenerator.generateVariations(
+        this.currentGeneration.html,
+        3
+      );
 
-        this.isGenerating = true;
-        this.showLoading();
-
-        try {
-            const result = await window.aiComponentGenerator.generate(description, options);
-
-            if (result.success) {
-                this.currentGeneration = result;
-                this.showPreview(result);
-                
-                if (window.showToast) {
-                    window.showToast('✅ Component generated successfully!');
-                }
-            } else {
-                throw new Error('Generation failed');
-            }
-        } catch (error) {
-            console.error('Generation error:', error);
-            alert(`Error generating component: ${error.message}`);
-            this.hideLoading();
-        } finally {
-            this.isGenerating = false;
-        }
+      if (result.success) {
+        this.showVariationsModal(result.variations);
+      }
+    } catch (error) {
+      console.error('Variations error:', error);
+      alert(`Error generating variations: ${error.message}`);
+    } finally {
+      this.isGenerating = false;
+      this.hideLoading();
     }
+  }
 
-    /**
-     * Generate variations
-     */
-    async generateVariations() {
-        if (!this.currentGeneration || this.isGenerating) return;
-
-        this.isGenerating = true;
-        this.showLoading();
-
-        try {
-            const result = await window.aiComponentGenerator.generateVariations(this.currentGeneration.html, 3);
-
-            if (result.success) {
-                this.showVariationsModal(result.variations);
-            }
-        } catch (error) {
-            console.error('Variations error:', error);
-            alert(`Error generating variations: ${error.message}`);
-        } finally {
-            this.isGenerating = false;
-            this.hideLoading();
-        }
-    }
-
-    /**
-     * Show variations modal
-     */
-    showVariationsModal(variations) {
-        const variationsModal = document.createElement('div');
-        variationsModal.className = 'variations-modal';
-        variationsModal.innerHTML = `
+  /**
+   * Show variations modal
+   */
+  showVariationsModal(variations) {
+    const variationsModal = document.createElement('div');
+    variationsModal.className = 'variations-modal';
+    variationsModal.innerHTML = `
             <div class="modal-overlay"></div>
             <div class="modal-content">
                 <div class="modal-header">
@@ -247,7 +258,9 @@ class GeneratorModal {
                 </div>
                 <div class="modal-body">
                     <div class="variations-grid">
-                        ${variations.map((variation, index) => `
+                        ${variations
+                          .map(
+                            (variation, index) => `
                             <div class="variation-card" data-index="${index}">
                                 <div class="variation-preview">
                                     <iframe srcdoc="${this.escapeHtml(variation.html)}"></iframe>
@@ -259,134 +272,136 @@ class GeneratorModal {
                                     </button>
                                 </div>
                             </div>
-                        `).join('')}
+                        `
+                          )
+                          .join('')}
                     </div>
                 </div>
             </div>
         `;
 
-        document.body.appendChild(variationsModal);
-        
-        variationsModal.querySelector('.modal-close-btn').addEventListener('click', () => {
-            variationsModal.remove();
-        });
-        variationsModal.querySelector('.modal-overlay').addEventListener('click', () => {
-            variationsModal.remove();
-        });
+    document.body.appendChild(variationsModal);
 
-        // Store variations for selection
-        this.currentVariations = variations;
+    variationsModal.querySelector('.modal-close-btn').addEventListener('click', () => {
+      variationsModal.remove();
+    });
+    variationsModal.querySelector('.modal-overlay').addEventListener('click', () => {
+      variationsModal.remove();
+    });
+
+    // Store variations for selection
+    this.currentVariations = variations;
+  }
+
+  /**
+   * Select variation
+   */
+  selectVariation(index) {
+    if (this.currentVariations && this.currentVariations[index]) {
+      this.currentGeneration.html = this.currentVariations[index].html;
+      this.showPreview(this.currentGeneration);
+      document.querySelector('.variations-modal')?.remove();
+    }
+  }
+
+  /**
+   * Show loading state
+   */
+  showLoading() {
+    this.modal.querySelector('.generator-form').style.display = 'none';
+    this.modal.querySelector('.generation-preview').style.display = 'none';
+    this.modal.querySelector('.generation-loading').style.display = 'block';
+    this.modal.querySelector('#btn-generate').disabled = true;
+  }
+
+  /**
+   * Hide loading state
+   */
+  hideLoading() {
+    this.modal.querySelector('.generation-loading').style.display = 'none';
+    this.modal.querySelector('.generator-form').style.display = 'block';
+    this.modal.querySelector('#btn-generate').disabled = false;
+  }
+
+  /**
+   * Show preview
+   */
+  showPreview(result) {
+    this.modal.querySelector('.generator-form').style.display = 'none';
+    this.modal.querySelector('.generation-loading').style.display = 'none';
+    this.modal.querySelector('.generation-preview').style.display = 'block';
+
+    // Update iframe
+    const iframe = this.modal.querySelector('#preview-iframe');
+    iframe.srcdoc = result.html;
+
+    // Update stats
+    this.modal.querySelector('#preview-tokens').textContent =
+      `Tokens used: ${result.tokens.total} (${result.tokens.input} in, ${result.tokens.output} out)`;
+
+    const validationStatus = result.validation.valid ? '✅ Valid HTML' : '⚠️ Validation issues';
+    this.modal.querySelector('#preview-validation').textContent = validationStatus;
+  }
+
+  /**
+   * Insert to canvas
+   */
+  insertToCanvas() {
+    if (!this.currentGeneration) return;
+
+    const canvas = document.getElementById('canvas');
+    if (!canvas) {
+      alert('Canvas not found');
+      return;
     }
 
-    /**
-     * Select variation
-     */
-    selectVariation(index) {
-        if (this.currentVariations && this.currentVariations[index]) {
-            this.currentGeneration.html = this.currentVariations[index].html;
-            this.showPreview(this.currentGeneration);
-            document.querySelector('.variations-modal')?.remove();
+    // Create temporary container
+    const temp = document.createElement('div');
+    temp.innerHTML = this.currentGeneration.html;
+    const element = temp.firstElementChild;
+
+    if (element) {
+      // Add canvas element class
+      element.classList.add('canvas-element');
+      element.id = `element-${Date.now()}`;
+
+      // Make it selectable
+      element.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (window.selectElement) {
+          window.selectElement(this);
         }
+      });
+
+      canvas.appendChild(element);
+
+      if (window.showToast) {
+        window.showToast('✅ Component inserted to canvas');
+      }
+
+      this.close();
     }
+  }
 
-    /**
-     * Show loading state
-     */
-    showLoading() {
-        this.modal.querySelector('.generator-form').style.display = 'none';
-        this.modal.querySelector('.generation-preview').style.display = 'none';
-        this.modal.querySelector('.generation-loading').style.display = 'block';
-        this.modal.querySelector('#btn-generate').disabled = true;
+  /**
+   * Escape HTML for srcdoc
+   */
+  escapeHtml(html) {
+    return html.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  /**
+   * Close modal
+   */
+  close() {
+    if (this.modal) {
+      this.modal.remove();
+      this.modal = null;
     }
-
-    /**
-     * Hide loading state
-     */
-    hideLoading() {
-        this.modal.querySelector('.generation-loading').style.display = 'none';
-        this.modal.querySelector('.generator-form').style.display = 'block';
-        this.modal.querySelector('#btn-generate').disabled = false;
-    }
-
-    /**
-     * Show preview
-     */
-    showPreview(result) {
-        this.modal.querySelector('.generator-form').style.display = 'none';
-        this.modal.querySelector('.generation-loading').style.display = 'none';
-        this.modal.querySelector('.generation-preview').style.display = 'block';
-
-        // Update iframe
-        const iframe = this.modal.querySelector('#preview-iframe');
-        iframe.srcdoc = result.html;
-
-        // Update stats
-        this.modal.querySelector('#preview-tokens').textContent = 
-            `Tokens used: ${result.tokens.total} (${result.tokens.input} in, ${result.tokens.output} out)`;
-
-        const validationStatus = result.validation.valid ? '✅ Valid HTML' : '⚠️ Validation issues';
-        this.modal.querySelector('#preview-validation').textContent = validationStatus;
-    }
-
-    /**
-     * Insert to canvas
-     */
-    insertToCanvas() {
-        if (!this.currentGeneration) return;
-
-        const canvas = document.getElementById('canvas');
-        if (!canvas) {
-            alert('Canvas not found');
-            return;
-        }
-
-        // Create temporary container
-        const temp = document.createElement('div');
-        temp.innerHTML = this.currentGeneration.html;
-        const element = temp.firstElementChild;
-
-        if (element) {
-            // Add canvas element class
-            element.classList.add('canvas-element');
-            element.id = `element-${Date.now()}`;
-
-            // Make it selectable
-            element.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (window.selectElement) {
-                    window.selectElement(this);
-                }
-            });
-
-            canvas.appendChild(element);
-
-            if (window.showToast) {
-                window.showToast('✅ Component inserted to canvas');
-            }
-
-            this.close();
-        }
-    }
-
-    /**
-     * Escape HTML for srcdoc
-     */
-    escapeHtml(html) {
-        return html.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    }
-
-    /**
-     * Close modal
-     */
-    close() {
-        if (this.modal) {
-            this.modal.remove();
-            this.modal = null;
-        }
-        this.currentGeneration = null;
-        this.currentVariations = null;
-        this.isGenerating = false;
-    }
+    this.currentGeneration = null;
+    this.currentVariations = null;
+    this.isGenerating = false;
+  }
 }
 
 // Export globally

@@ -1,6 +1,6 @@
 /**
  * Authentication Service
- * 
+ *
  * Frontend client for Better Auth
  * Provides authentication methods and session management
  */
@@ -153,7 +153,7 @@ class AuthService {
   async signOut() {
     try {
       await authClient.signOut();
-      
+
       this.user = null;
       this.session = null;
       this.notifyListeners('logout');
@@ -195,7 +195,7 @@ class AuthService {
    */
   async refreshSession() {
     const session = await this.getSession();
-    
+
     if (session) {
       this.notifyListeners('session-update');
     }
@@ -272,12 +272,14 @@ class AuthService {
     });
 
     // Dispatch custom events
-    window.dispatchEvent(new CustomEvent(`auth:${event}`, {
-      detail: {
-        user: this.user,
-        session: this.session,
-      },
-    }));
+    window.dispatchEvent(
+      new CustomEvent(`auth:${event}`, {
+        detail: {
+          user: this.user,
+          session: this.session,
+        },
+      })
+    );
   }
 }
 

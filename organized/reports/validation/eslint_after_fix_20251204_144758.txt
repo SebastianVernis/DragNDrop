@@ -1,0 +1,971 @@
+
+/vercel/sandbox/src/ai/accessibilityChecker.js
+   51:51   error    Unexpected trailing comma                comma-dangle
+   58:32   error    Unexpected trailing comma                comma-dangle
+   69:37   error    Unexpected trailing comma                comma-dangle
+   84:19   error    Unexpected trailing comma                comma-dangle
+  117:56   error    Unexpected trailing comma                comma-dangle
+  126:57   error    Unexpected trailing comma                comma-dangle
+  133:27   warning  'levelCounts' is defined but never used  no-unused-vars
+  165:69   error    Unexpected trailing comma                comma-dangle
+  166:10   error    Unexpected trailing comma                comma-dangle
+  173:65   error    Unexpected trailing comma                comma-dangle
+  199:65   error    Unexpected trailing comma                comma-dangle
+  214:52   error    Unexpected trailing comma                comma-dangle
+  233:20   error    Unexpected trailing comma                comma-dangle
+  239:42   error    Unexpected trailing comma                comma-dangle
+  249:70   error    Unexpected trailing comma                comma-dangle
+  252:32   error    Unexpected trailing comma                comma-dangle
+  269:102  error    Unexpected trailing comma                comma-dangle
+  282:42   warning  'ruleId' is defined but never used       no-unused-vars
+  286:92   error    Unexpected trailing comma                comma-dangle
+  295:76   error    Unexpected trailing comma                comma-dangle
+
+/vercel/sandbox/src/ai/accessibilityFixes.js
+  161:20  error    Unexpected trailing comma            comma-dangle
+  301:23  warning  'element' is defined but never used  no-unused-vars
+  336:8   error    Unexpected trailing comma            comma-dangle
+  349:61  error    Unexpected trailing comma            comma-dangle
+  357:18  error    Unexpected trailing comma            comma-dangle
+  362:56  error    Unexpected trailing comma            comma-dangle
+  379:20  error    Unexpected trailing comma            comma-dangle
+  388:14  error    Unexpected trailing comma            comma-dangle
+
+/vercel/sandbox/src/ai/componentGenerator.js
+   61:24  error    Unexpected trailing comma     comma-dangle
+   75:17  error    Unexpected trailing comma     comma-dangle
+   89:48  error    Unexpected trailing comma     comma-dangle
+   97:25  error    Unexpected trailing comma     comma-dangle
+  117:63  error    Unexpected trailing comma     comma-dangle
+  125:38  error    Unexpected trailing comma     comma-dangle
+  130:43  error    Unexpected trailing comma     comma-dangle
+  155:25  error    Unexpected trailing comma     comma-dangle
+  173:30  error    Unexpected trailing comma     comma-dangle
+  198:25  error    Unexpected trailing comma     comma-dangle
+  216:30  error    Unexpected trailing comma     comma-dangle
+  242:27  error    Unexpected trailing comma     comma-dangle
+  243:14  error    Unexpected trailing comma     comma-dangle
+  244:12  error    Unexpected trailing comma     comma-dangle
+  245:10  error    Unexpected trailing comma     comma-dangle
+  252:26  error    Unexpected trailing comma     comma-dangle
+  257:34  error    Unexpected trailing comma     comma-dangle
+  261:34  error    Unexpected trailing comma     comma-dangle
+  265:34  error    Unexpected trailing comma     comma-dangle
+  269:34  error    Unexpected trailing comma     comma-dangle
+  270:10  error    Unexpected trailing comma     comma-dangle
+  271:8   error    Unexpected trailing comma     comma-dangle
+  278:45  error    Unexpected trailing comma     comma-dangle
+  280:42  error    Unexpected trailing comma     comma-dangle
+  293:9   warning  Unexpected console statement  no-console
+
+/vercel/sandbox/src/ai/index.js
+   28:3  warning  Unexpected console statement                   no-console
+   33:5  warning  Unexpected console statement                   no-console
+   35:5  warning  Unexpected console statement                   no-console
+   52:3  warning  Unexpected console statement                   no-console
+   61:5  warning  Unexpected console statement                   no-console
+   65:5  warning  Unexpected console statement                   no-console
+   69:5  warning  Unexpected console statement                   no-console
+   74:5  warning  Unexpected console statement                   no-console
+   78:5  warning  Unexpected console statement                   no-console
+   83:5  warning  Unexpected console statement                   no-console
+   88:5  warning  Unexpected console statement                   no-console
+   97:5  warning  Unexpected console statement                   no-console
+  108:5  warning  Unexpected console statement                   no-console
+  119:5  warning  Unexpected console statement                   no-console
+  130:5  warning  Unexpected console statement                   no-console
+  170:1  error    Expected indentation of 2 spaces but found 22  indent
+  171:1  error    Expected indentation of 4 spaces but found 24  indent
+  172:1  error    Expected indentation of 4 spaces but found 24  indent
+  173:1  error    Expected indentation of 0 spaces but found 20  indent
+  179:1  error    Expected indentation of 2 spaces but found 18  indent
+  180:1  error    Expected indentation of 4 spaces but found 20  indent
+  181:1  error    Expected indentation of 4 spaces but found 20  indent
+  182:1  error    Expected indentation of 0 spaces but found 16  indent
+
+/vercel/sandbox/src/ai/promptBuilder.js
+   14:79  error  Unexpected trailing comma  comma-dangle
+   19:77  error  Unexpected trailing comma  comma-dangle
+   24:79  error  Unexpected trailing comma  comma-dangle
+   29:71  error  Unexpected trailing comma  comma-dangle
+   34:74  error  Unexpected trailing comma  comma-dangle
+   35:8   error  Unexpected trailing comma  comma-dangle
+  250:39  error  Unexpected trailing comma  comma-dangle
+
+/vercel/sandbox/src/ai/responseParser.js
+   38:52  error    Unexpected trailing comma        comma-dangle
+   40:59  error    Unexpected trailing comma        comma-dangle
+   47:50  error    Unexpected trailing comma        comma-dangle
+   88:14  warning  'e' is defined but never used    no-unused-vars
+   94:18  warning  'err' is defined but never used  no-unused-vars
+  104:18  warning  'err' is defined but never used  no-unused-vars
+  126:63  error    Unexpected trailing comma        comma-dangle
+  168:49  error    Unexpected trailing comma        comma-dangle
+  177:40  error    Unexpected trailing comma        comma-dangle
+  190:53  error    Unexpected trailing comma        comma-dangle
+  197:31  error    Unexpected trailing comma        comma-dangle
+  203:13  error    Unexpected trailing comma        comma-dangle
+  225:23  error    Unexpected trailing comma        comma-dangle
+  243:30  error    Unexpected trailing comma        comma-dangle
+  251:23  error    Unexpected trailing comma        comma-dangle
+  269:30  error    Unexpected trailing comma        comma-dangle
+  279:23  error    Unexpected trailing comma        comma-dangle
+  297:30  error    Unexpected trailing comma        comma-dangle
+  305:37  error    Unexpected trailing comma        comma-dangle
+  308:23  error    Unexpected trailing comma        comma-dangle
+  326:30  error    Unexpected trailing comma        comma-dangle
+  337:36  error    Unexpected trailing comma        comma-dangle
+  340:23  error    Unexpected trailing comma        comma-dangle
+
+/vercel/sandbox/src/ai/seoOptimizer.js
+   61:51   error    Unexpected trailing comma          comma-dangle
+   67:34   error    Unexpected trailing comma          comma-dangle
+   80:55   error    Unexpected trailing comma          comma-dangle
+  113:44   error    Unexpected trailing comma          comma-dangle
+  135:35   warning  'score' is defined but never used  no-unused-vars
+  144:42   error    Unexpected trailing comma          comma-dangle
+  154:57   error    Unexpected trailing comma          comma-dangle
+  163:49   error    Unexpected trailing comma          comma-dangle
+  172:70   error    Unexpected trailing comma          comma-dangle
+  220:30   error    Unexpected trailing comma          comma-dangle
+  268:30   error    Unexpected trailing comma          comma-dangle
+  305:30   error    Unexpected trailing comma          comma-dangle
+  319:14   error    Unexpected trailing comma          comma-dangle
+  334:107  error    Unexpected trailing comma          comma-dangle
+  349:49   error    Unexpected trailing comma          comma-dangle
+  368:20   error    Unexpected trailing comma          comma-dangle
+  373:43   error    Unexpected trailing comma          comma-dangle
+  382:23   error    Unexpected trailing comma          comma-dangle
+  388:45   error    Unexpected trailing comma          comma-dangle
+  389:10   error    Unexpected trailing comma          comma-dangle
+  420:27   error    Unexpected trailing comma          comma-dangle
+  421:14   error    Unexpected trailing comma          comma-dangle
+  422:12   error    Unexpected trailing comma          comma-dangle
+  423:10   error    Unexpected trailing comma          comma-dangle
+  429:24   error    Unexpected trailing comma          comma-dangle
+  430:8    error    Unexpected trailing comma          comma-dangle
+  436:43   error    Unexpected trailing comma          comma-dangle
+  438:40   error    Unexpected trailing comma          comma-dangle
+
+/vercel/sandbox/src/ai/seoRules.js
+   30:59  error    Unexpected trailing comma                        comma-dangle
+   38:59  error    Unexpected trailing comma                        comma-dangle
+   44:57  error    Unexpected trailing comma                        comma-dangle
+   50:10  error    Unexpected trailing comma                        comma-dangle
+   64:63  error    Unexpected trailing comma                        comma-dangle
+   74:52  error    Unexpected trailing comma                        comma-dangle
+   80:53  error    Unexpected trailing comma                        comma-dangle
+   86:10  error    Unexpected trailing comma                        comma-dangle
+  100:56  error    Unexpected trailing comma                        comma-dangle
+  106:46  error    Unexpected trailing comma                        comma-dangle
+  111:10  error    Unexpected trailing comma                        comma-dangle
+  125:60  error    Unexpected trailing comma                        comma-dangle
+  130:10  error    Unexpected trailing comma                        comma-dangle
+  154:60  error    Unexpected trailing comma                        comma-dangle
+  162:82  error    Unexpected trailing comma                        comma-dangle
+  167:10  error    Unexpected trailing comma                        comma-dangle
+  194:66  error    Unexpected trailing comma                        comma-dangle
+  199:10  error    Unexpected trailing comma                        comma-dangle
+  216:71  error    Unexpected trailing comma                        comma-dangle
+  222:10  error    Unexpected trailing comma                        comma-dangle
+  238:66  error    Unexpected trailing comma                        comma-dangle
+  244:10  error    Unexpected trailing comma                        comma-dangle
+  258:74  error    Unexpected trailing comma                        comma-dangle
+  263:10  error    Unexpected trailing comma                        comma-dangle
+  277:88  error    Unexpected trailing comma                        comma-dangle
+  282:10  error    Unexpected trailing comma                        comma-dangle
+  296:94  error    Unexpected trailing comma                        comma-dangle
+  301:10  error    Unexpected trailing comma                        comma-dangle
+  316:64  error    Unexpected trailing comma                        comma-dangle
+  321:10  error    Unexpected trailing comma                        comma-dangle
+  335:67  error    Unexpected trailing comma                        comma-dangle
+  340:10  error    Unexpected trailing comma                        comma-dangle
+  356:64  error    Unexpected trailing comma                        comma-dangle
+  362:10  error    Unexpected trailing comma                        comma-dangle
+  377:63  error    Unexpected trailing comma                        comma-dangle
+  385:50  error    Unexpected trailing comma                        comma-dangle
+  390:10  error    Unexpected trailing comma                        comma-dangle
+  391:8   error    Unexpected trailing comma                        comma-dangle
+  430:21  error    Unexpected trailing comma                        comma-dangle
+  434:9   warning  Unexpected console statement                     no-console
+  445:11  warning  'totalRules' is assigned a value but never used  no-unused-vars
+
+/vercel/sandbox/src/ai/tokenTracker.js
+   15:23  error    Unexpected trailing comma                      comma-dangle
+   21:29  error    Unexpected trailing comma                      comma-dangle
+   42:7   warning  Unexpected console statement                   no-console
+   59:59  error    Unexpected trailing comma                      comma-dangle
+   70:7   warning  Unexpected console statement                   no-console
+  118:15  error    Unexpected trailing comma                      comma-dangle
+  131:69  error    Unexpected trailing comma                      comma-dangle
+  160:83  error    Unexpected trailing comma                      comma-dangle
+  165:95  error    Unexpected trailing comma                      comma-dangle
+  166:8   error    Unexpected trailing comma                      comma-dangle
+  184:33  error    Unexpected trailing comma                      comma-dangle
+  191:33  error    Unexpected trailing comma                      comma-dangle
+  200:35  error    Unexpected trailing comma                      comma-dangle
+  207:35  error    Unexpected trailing comma                      comma-dangle
+  214:87  error    Unexpected trailing comma                      comma-dangle
+  229:94  error    Unexpected trailing comma                      comma-dangle
+  230:8   error    Unexpected trailing comma                      comma-dangle
+  274:21  error    Unexpected trailing comma                      comma-dangle
+  321:1   error    Expected indentation of 4 spaces but found 26  indent
+  322:1   error    Expected indentation of 6 spaces but found 28  indent
+  329:1   error    Expected indentation of 4 spaces but found 26  indent
+  330:1   error    Expected indentation of 4 spaces but found 26  indent
+
+/vercel/sandbox/src/ai/wcagRules.js
+   27:32  warning  'index' is defined but never used            no-unused-vars
+   32:30  error    Unexpected trailing comma                    comma-dangle
+   38:10  error    Unexpected trailing comma                    comma-dangle
+   61:54  error    Unexpected trailing comma                    comma-dangle
+   67:10  error    Unexpected trailing comma                    comma-dangle
+   86:51  error    Unexpected trailing comma                    comma-dangle
+   94:10  error    Unexpected trailing comma                    comma-dangle
+  113:58  error    Unexpected trailing comma                    comma-dangle
+  119:49  error    Unexpected trailing comma                    comma-dangle
+  125:10  error    Unexpected trailing comma                    comma-dangle
+  146:50  error    Unexpected trailing comma                    comma-dangle
+  152:10  error    Unexpected trailing comma                    comma-dangle
+  176:67  error    Unexpected trailing comma                    comma-dangle
+  182:10  error    Unexpected trailing comma                    comma-dangle
+  197:31  error    Unexpected trailing comma                    comma-dangle
+  202:10  error    Unexpected trailing comma                    comma-dangle
+  223:22  error    Unexpected trailing comma                    comma-dangle
+  233:63  error    Unexpected trailing comma                    comma-dangle
+  239:10  error    Unexpected trailing comma                    comma-dangle
+  257:61  error    Unexpected trailing comma                    comma-dangle
+  263:10  error    Unexpected trailing comma                    comma-dangle
+  279:50  error    Unexpected trailing comma                    comma-dangle
+  284:10  error    Unexpected trailing comma                    comma-dangle
+  303:59  error    Unexpected trailing comma                    comma-dangle
+  309:10  error    Unexpected trailing comma                    comma-dangle
+  327:69  error    Unexpected trailing comma                    comma-dangle
+  333:10  error    Unexpected trailing comma                    comma-dangle
+  350:74  error    Unexpected trailing comma                    comma-dangle
+  355:10  error    Unexpected trailing comma                    comma-dangle
+  365:17  warning  'hasNav' is assigned a value but never used  no-unused-vars
+  371:55  error    Unexpected trailing comma                    comma-dangle
+  376:10  error    Unexpected trailing comma                    comma-dangle
+  383:16  warning  'element' is defined but never used          no-unused-vars
+  391:63  error    Unexpected trailing comma                    comma-dangle
+  396:10  error    Unexpected trailing comma                    comma-dangle
+  397:8   error    Unexpected trailing comma                    comma-dangle
+  437:21  error    Unexpected trailing comma                    comma-dangle
+  441:9   warning  Unexpected console statement                 no-console
+
+/vercel/sandbox/src/components/A11yPanel.js
+   78:1  error    Expected indentation of 4 spaces but found 18  indent
+   79:1  error    Expected indentation of 6 spaces but found 20  indent
+   91:1  error    Expected indentation of 2 spaces but found 26  indent
+   92:1  error    Expected indentation of 4 spaces but found 28  indent
+   97:1  error    Expected indentation of 4 spaces but found 28  indent
+   98:1  error    Expected indentation of 0 spaces but found 24  indent
+  101:1  error    Expected indentation of 4 spaces but found 18  indent
+  102:1  error    Expected indentation of 4 spaces but found 18  indent
+  139:7  warning  Unexpected console statement                   no-console
+  161:7  warning  Unexpected console statement                   no-console
+  179:7  warning  Unexpected console statement                   no-console
+
+/vercel/sandbox/src/components/AdvancedPropertiesPanel.js
+   17:5   warning  Unexpected console statement          no-console
+  118:12  error    Unexpected trailing comma             comma-dangle
+  213:44  error    Unexpected trailing comma             comma-dangle
+  220:49  error    Unexpected trailing comma             comma-dangle
+  227:45  error    Unexpected trailing comma             comma-dangle
+  342:28  warning  'property' is defined but never used  no-unused-vars
+
+/vercel/sandbox/src/components/DeployModal.js
+  413:20  error  Unexpected trailing comma  comma-dangle
+
+/vercel/sandbox/src/components/SEOPanel.js
+   42:29  warning  'issues' is assigned a value but never used    no-unused-vars
+   75:1   error    Expected indentation of 2 spaces but found 14  indent
+   76:1   error    Expected indentation of 4 spaces but found 16  indent
+   80:1   error    Expected indentation of 4 spaces but found 22  indent
+   81:1   error    Expected indentation of 6 spaces but found 24  indent
+   88:1   error    Expected indentation of 4 spaces but found 22  indent
+   89:1   error    Expected indentation of 4 spaces but found 22  indent
+   92:1   error    Expected indentation of 4 spaces but found 16  indent
+   93:1   error    Expected indentation of 0 spaces but found 12  indent
+   98:1   error    Expected indentation of 4 spaces but found 18  indent
+   99:1   error    Expected indentation of 6 spaces but found 20  indent
+  107:1   error    Expected indentation of 4 spaces but found 30  indent
+  108:1   error    Expected indentation of 6 spaces but found 32  indent
+  115:1   error    Expected indentation of 4 spaces but found 30  indent
+  116:1   error    Expected indentation of 4 spaces but found 30  indent
+  120:1   error    Expected indentation of 4 spaces but found 18  indent
+  121:1   error    Expected indentation of 4 spaces but found 18  indent
+  158:7   warning  Unexpected console statement                   no-console
+  286:85  error    Unexpected trailing comma                      comma-dangle
+
+/vercel/sandbox/src/components/fileLoader.js
+   21:15  error    Unexpected trailing comma                      comma-dangle
+   22:8   error    Unexpected trailing comma                      comma-dangle
+   57:13  warning  'e' is defined but never used                  no-unused-vars
+   62:15  warning  'e' is defined but never used                  no-unused-vars
+   98:1   error    Expected indentation of 6 spaces but found 8   indent
+   99:1   error    Expected indentation of 8 spaces but found 10  indent
+  100:1   error    Expected indentation of 8 spaces but found 10  indent
+  101:1   error    Expected indentation of 6 spaces but found 8   indent
+  102:1   error    Expected indentation of 8 spaces but found 10  indent
+  103:1   error    Expected indentation of 8 spaces but found 10  indent
+  104:1   error    Expected indentation of 6 spaces but found 8   indent
+  105:1   error    Expected indentation of 8 spaces but found 10  indent
+  106:1   error    Expected indentation of 8 spaces but found 10  indent
+  107:1   error    Expected indentation of 6 spaces but found 8   indent
+  108:1   error    Expected indentation of 8 spaces but found 10  indent
+  109:1   error    Expected indentation of 8 spaces but found 10  indent
+  110:1   error    Expected indentation of 6 spaces but found 8   indent
+  111:1   error    Expected indentation of 8 spaces but found 10  indent
+  310:24  warning  'e' is defined but never used                  no-unused-vars
+  322:24  warning  'e' is defined but never used                  no-unused-vars
+  341:7   warning  Unexpected console statement                   no-console
+  352:7   warning  Unexpected console statement                   no-console
+
+/vercel/sandbox/src/components/htmlParser.js
+   32:19  error    Unexpected trailing comma     comma-dangle
+  118:24  error    Unexpected trailing comma     comma-dangle
+  125:40  error    Unexpected trailing comma     comma-dangle
+  344:7   warning  Unexpected console statement  no-console
+  355:7   warning  Unexpected console statement  no-console
+
+/vercel/sandbox/src/core/aiCodeGenerator.js
+   74:7    warning  Unexpected console statement                  no-console
+   96:7    warning  Unexpected console statement                  no-console
+  126:7    warning  Unexpected console statement                  no-console
+  161:44   error    Unexpected trailing comma                     comma-dangle
+  164:7    warning  Unexpected console statement                  no-console
+  181:23   error    Unexpected trailing comma                     comma-dangle
+  217:31   warning  'options' is assigned a value but never used  no-unused-vars
+  247:182  error    Unexpected trailing comma                     comma-dangle
+  251:26   error    Unexpected trailing comma                     comma-dangle
+  252:10   error    Unexpected trailing comma                     comma-dangle
+  256:20   error    Unexpected trailing comma                     comma-dangle
+  264:23   error    Unexpected trailing comma                     comma-dangle
+  269:35   error    Unexpected trailing comma                     comma-dangle
+  270:12   error    Unexpected trailing comma                     comma-dangle
+  271:10   error    Unexpected trailing comma                     comma-dangle
+  279:47   error    Unexpected trailing comma                     comma-dangle
+  281:40   error    Unexpected trailing comma                     comma-dangle
+  311:19   error    Unexpected trailing comma                     comma-dangle
+  340:7    warning  Unexpected console statement                  no-console
+  392:7    warning  Unexpected console statement                  no-console
+  410:108  error    Unexpected trailing comma                     comma-dangle
+  447:7    warning  Unexpected console statement                  no-console
+  495:30   error    Unexpected trailing comma                     comma-dangle
+  498:7    warning  Unexpected console statement                  no-console
+  517:9    warning  Unexpected console statement                  no-console
+  560:23   error    Unexpected trailing comma                     comma-dangle
+  565:7    warning  Unexpected console statement                  no-console
+  605:7    warning  Unexpected console statement                  no-console
+  646:42   error    Unexpected trailing comma                     comma-dangle
+  652:7    warning  Unexpected console statement                  no-console
+  819:7    warning  Unexpected console statement                  no-console
+  896:38   error    Unexpected trailing comma                     comma-dangle
+
+/vercel/sandbox/src/core/alignmentEngine.js
+    9:5   warning  Unexpected console statement                  no-console
+   17:7   warning  Unexpected console statement                  no-console
+   24:1   error    Expected indentation of 4 spaces but found 6  indent
+   25:1   error    Expected indentation of 6 spaces but found 8  indent
+   26:1   error    Expected indentation of 6 spaces but found 8  indent
+   27:1   error    Expected indentation of 4 spaces but found 6  indent
+   28:1   error    Expected indentation of 4 spaces but found 6  indent
+   29:1   error    Expected indentation of 6 spaces but found 8  indent
+   30:1   error    Expected indentation of 6 spaces but found 8  indent
+   31:1   error    Expected indentation of 4 spaces but found 6  indent
+   32:1   error    Expected indentation of 6 spaces but found 8  indent
+   33:1   error    Expected indentation of 6 spaces but found 8  indent
+   34:1   error    Expected indentation of 4 spaces but found 6  indent
+   35:1   error    Expected indentation of 6 spaces but found 8  indent
+   36:1   error    Expected indentation of 6 spaces but found 8  indent
+   37:1   error    Expected indentation of 4 spaces but found 6  indent
+   38:1   error    Expected indentation of 4 spaces but found 6  indent
+   39:1   error    Expected indentation of 6 spaces but found 8  indent
+   40:1   error    Expected indentation of 6 spaces but found 8  indent
+   41:1   error    Expected indentation of 4 spaces but found 6  indent
+   42:1   error    Expected indentation of 6 spaces but found 8  indent
+   43:1   error    Expected indentation of 6 spaces but found 8  indent
+   44:1   error    Expected indentation of 4 spaces but found 6  indent
+   45:1   error    Expected indentation of 6 spaces but found 8  indent
+   45:9   warning  Unexpected console statement                  no-console
+   53:31  error    Unexpected trailing comma                     comma-dangle
+   54:10  error    Unexpected trailing comma                     comma-dangle
+   63:29  error    Unexpected trailing comma                     comma-dangle
+   73:7   warning  Unexpected console statement                  no-console
+   88:31  error    Unexpected trailing comma                     comma-dangle
+   89:10  error    Unexpected trailing comma                     comma-dangle
+   98:29  error    Unexpected trailing comma                     comma-dangle
+  115:89  error    Unexpected trailing comma                     comma-dangle
+  314:11  warning  'rect' is assigned a value but never used     no-unused-vars
+  317:12  error    Unexpected trailing comma                     comma-dangle
+
+/vercel/sandbox/src/core/batchOperations.js
+   12:5   warning  Unexpected console statement  no-console
+  134:21  error    Unexpected trailing comma     comma-dangle
+
+/vercel/sandbox/src/core/enhancedDragDrop.js
+   32:5   warning  Unexpected console statement                 no-console
+  222:31  error    Unexpected trailing comma                    comma-dangle
+  245:17  warning  'e' is defined but never used                no-unused-vars
+  253:11  warning  'canvas' is assigned a value but never used  no-unused-vars
+  262:34  error    Unexpected trailing comma                    comma-dangle
+  273:28  error    Unexpected trailing comma                    comma-dangle
+  322:34  error    Unexpected trailing comma                    comma-dangle
+  375:7   warning  Unexpected console statement                 no-console
+  529:20  error    Unexpected trailing comma                    comma-dangle
+  674:5   warning  Unexpected console statement                 no-console
+
+/vercel/sandbox/src/core/freePositionDragDrop.js
+   34:5   warning  Unexpected console statement                     no-console
+   98:50  warning  'e' is defined but never used                    no-unused-vars
+  130:41  warning  'e' is defined but never used                    no-unused-vars
+  168:11  warning  'canvasRect' is assigned a value but never used  no-unused-vars
+  346:7   warning  Unexpected console statement                     no-console
+  369:24  error    Unexpected trailing comma                        comma-dangle
+  397:17  warning  'e' is defined but never used                    no-unused-vars
+  431:5   warning  Unexpected console statement                     no-console
+  510:20  error    Unexpected trailing comma                        comma-dangle
+  619:5   warning  Unexpected console statement                     no-console
+
+/vercel/sandbox/src/core/geminiValidator.js
+   42:5   warning  Unexpected console statement                   no-console
+   52:5   warning  Unexpected console statement                   no-console
+   91:7   warning  Unexpected console statement                   no-console
+  131:9   warning  Unexpected console statement                   no-console
+  151:27  error    Unexpected trailing comma                      comma-dangle
+  152:14  error    Unexpected trailing comma                      comma-dangle
+  153:12  error    Unexpected trailing comma                      comma-dangle
+  154:10  error    Unexpected trailing comma                      comma-dangle
+  161:26  error    Unexpected trailing comma                      comma-dangle
+  166:34  error    Unexpected trailing comma                      comma-dangle
+  170:34  error    Unexpected trailing comma                      comma-dangle
+  174:34  error    Unexpected trailing comma                      comma-dangle
+  178:34  error    Unexpected trailing comma                      comma-dangle
+  179:10  error    Unexpected trailing comma                      comma-dangle
+  180:8   error    Unexpected trailing comma                      comma-dangle
+  187:45  error    Unexpected trailing comma                      comma-dangle
+  189:42  error    Unexpected trailing comma                      comma-dangle
+  207:30  error    Unexpected trailing comma                      comma-dangle
+  212:9   warning  Unexpected console statement                   no-console
+  245:7   warning  Unexpected console statement                   no-console
+  277:7   warning  Unexpected console statement                   no-console
+  280:7   warning  Unexpected console statement                   no-console
+  360:1   error    Expected indentation of 2 spaces but found 26  indent
+  361:1   error    Expected indentation of 4 spaces but found 28  indent
+  362:1   error    Expected indentation of 4 spaces but found 28  indent
+  363:1   error    Expected indentation of 0 spaces but found 24  indent
+  369:1   error    Expected indentation of 2 spaces but found 22  indent
+  370:1   error    Expected indentation of 4 spaces but found 24  indent
+  371:1   error    Expected indentation of 4 spaces but found 24  indent
+  372:1   error    Expected indentation of 0 spaces but found 20  indent
+
+/vercel/sandbox/src/core/groupManager.js
+   12:5   warning  Unexpected console statement                    no-console
+   20:7   warning  Unexpected console statement                    no-console
+   78:26  error    Unexpected trailing comma                       comma-dangle
+   91:35  error    Unexpected trailing comma                       comma-dangle
+  100:57  error    Unexpected trailing comma                       comma-dangle
+  113:7   warning  Unexpected console statement                    no-console
+  119:11  warning  'groupRect' is assigned a value but never used  no-unused-vars
+  154:28  error    Unexpected trailing comma                       comma-dangle
+  162:25  error    Unexpected trailing comma                       comma-dangle
+  221:32  error    Unexpected trailing comma                       comma-dangle
+  238:37  error    Unexpected trailing comma                       comma-dangle
+
+/vercel/sandbox/src/core/keyboardShortcuts.js
+  185:33  error    Unexpected trailing comma             comma-dangle
+  297:11  warning  'shortcut' is defined but never used  no-unused-vars
+  316:11  warning  'shortcut' is defined but never used  no-unused-vars
+  369:55  warning  'shortcut' is defined but never used  no-unused-vars
+  371:36  error    Unexpected trailing comma             comma-dangle
+
+/vercel/sandbox/src/core/layersManager.js
+   20:5   warning  Unexpected console statement  no-console
+   35:7   warning  Unexpected console statement  no-console
+   94:58  error    Unexpected trailing comma     comma-dangle
+  138:7   warning  Unexpected console statement  no-console
+  143:7   warning  Unexpected console statement  no-console
+  161:19  error    Unexpected trailing comma     comma-dangle
+  190:48  error    Unexpected trailing comma     comma-dangle
+  240:21  error    Unexpected trailing comma     comma-dangle
+  268:22  error    Unexpected trailing comma     comma-dangle
+  294:21  error    Unexpected trailing comma     comma-dangle
+  320:22  error    Unexpected trailing comma     comma-dangle
+  344:25  error    Unexpected trailing comma     comma-dangle
+  386:27  error    Unexpected trailing comma     comma-dangle
+  399:7   warning  Unexpected console statement  no-console
+  425:27  error    Unexpected trailing comma     comma-dangle
+  459:26  error    Unexpected trailing comma     comma-dangle
+  507:20  error    Unexpected trailing comma     comma-dangle
+
+/vercel/sandbox/src/core/livePreview.js
+  102:7   warning  Unexpected console statement       no-console
+  171:58  warning  'index' is defined but never used  no-unused-vars
+  289:28  error    Unexpected trailing comma          comma-dangle
+
+/vercel/sandbox/src/core/marqueeSelector.js
+  18:5  warning  Unexpected console statement  no-console
+
+/vercel/sandbox/src/core/multiSelect.js
+   21:5   warning  Unexpected console statement                     no-console
+  254:19  error    Unexpected trailing comma                        comma-dangle
+  293:14  warning  'e' is defined but never used                    no-unused-vars
+  313:11  warning  'canvasRect' is assigned a value but never used  no-unused-vars
+  352:44  error    Unexpected trailing comma                        comma-dangle
+  353:10  error    Unexpected trailing comma                        comma-dangle
+
+/vercel/sandbox/src/core/projectAnalyzer.js
+   29:5   warning  Unexpected console statement                   no-console
+   59:30  error    Unexpected trailing comma                      comma-dangle
+   70:7   warning  Unexpected console statement                   no-console
+   88:16  error    Unexpected trailing comma                      comma-dangle
+  100:9   warning  Unexpected console statement                   no-console
+  118:40  error    Unexpected trailing comma                      comma-dangle
+  143:18  error    Unexpected trailing comma                      comma-dangle
+  158:24  warning  'e' is defined but never used                  no-unused-vars
+  180:22  error    Unexpected trailing comma                      comma-dangle
+  181:8   error    Unexpected trailing comma                      comma-dangle
+  199:18  warning  'e' is defined but never used                  no-unused-vars
+  200:11  warning  Unexpected console statement                   no-console
+  222:37  error    Unexpected trailing comma                      comma-dangle
+  241:37  error    Unexpected trailing comma                      comma-dangle
+  279:17  error    Unexpected trailing comma                      comma-dangle
+  350:16  warning  'e' is defined but never used                  no-unused-vars
+  485:1   error    Expected indentation of 2 spaces but found 30  indent
+  486:1   error    Expected indentation of 4 spaces but found 32  indent
+  492:1   error    Expected indentation of 4 spaces but found 32  indent
+  493:1   error    Expected indentation of 0 spaces but found 28  indent
+  505:1   error    Expected indentation of 2 spaces but found 22  indent
+  506:1   error    Expected indentation of 4 spaces but found 24  indent
+  511:1   error    Expected indentation of 4 spaces but found 30  indent
+  512:1   error    Expected indentation of 6 spaces but found 32  indent
+  519:1   error    Expected indentation of 4 spaces but found 30  indent
+  520:1   error    Expected indentation of 4 spaces but found 30  indent
+  524:1   error    Expected indentation of 4 spaces but found 24  indent
+  525:1   error    Expected indentation of 0 spaces but found 20  indent
+  530:1   error    Expected indentation of 2 spaces but found 22  indent
+  531:1   error    Expected indentation of 4 spaces but found 24  indent
+  536:1   error    Expected indentation of 4 spaces but found 24  indent
+  537:1   error    Expected indentation of 0 spaces but found 20  indent
+  611:18  error    Unexpected trailing comma                      comma-dangle
+
+/vercel/sandbox/src/core/resizeManager.js
+   30:65  error    Unexpected trailing comma                     comma-dangle
+   48:5   warning  Unexpected console statement                  no-console
+  127:31  error    Unexpected trailing comma                     comma-dangle
+  149:1   error    Expected indentation of 4 spaces but found 6  indent
+  150:1   error    Expected indentation of 6 spaces but found 8  indent
+  151:1   error    Expected indentation of 6 spaces but found 8  indent
+  152:1   error    Expected indentation of 4 spaces but found 6  indent
+  153:1   error    Expected indentation of 6 spaces but found 8  indent
+  154:1   error    Expected indentation of 6 spaces but found 8  indent
+  155:1   error    Expected indentation of 4 spaces but found 6  indent
+  156:1   error    Expected indentation of 6 spaces but found 8  indent
+  157:1   error    Expected indentation of 6 spaces but found 8  indent
+  158:1   error    Expected indentation of 4 spaces but found 6  indent
+  159:1   error    Expected indentation of 6 spaces but found 8  indent
+  160:1   error    Expected indentation of 6 spaces but found 8  indent
+  161:1   error    Expected indentation of 4 spaces but found 6  indent
+  162:1   error    Expected indentation of 6 spaces but found 8  indent
+  163:1   error    Expected indentation of 6 spaces but found 8  indent
+  164:1   error    Expected indentation of 6 spaces but found 8  indent
+  165:1   error    Expected indentation of 4 spaces but found 6  indent
+  166:1   error    Expected indentation of 6 spaces but found 8  indent
+  167:1   error    Expected indentation of 6 spaces but found 8  indent
+  168:1   error    Expected indentation of 6 spaces but found 8  indent
+  169:1   error    Expected indentation of 4 spaces but found 6  indent
+  170:1   error    Expected indentation of 6 spaces but found 8  indent
+  171:1   error    Expected indentation of 6 spaces but found 8  indent
+  172:1   error    Expected indentation of 6 spaces but found 8  indent
+  173:1   error    Expected indentation of 4 spaces but found 6  indent
+  174:1   error    Expected indentation of 6 spaces but found 8  indent
+  175:1   error    Expected indentation of 6 spaces but found 8  indent
+  176:1   error    Expected indentation of 6 spaces but found 8  indent
+  203:24  error    Unexpected trailing comma                     comma-dangle
+  210:17  warning  'e' is defined but never used                 no-unused-vars
+  227:28  error    Unexpected trailing comma                     comma-dangle
+  315:13  error    Unexpected trailing comma                     comma-dangle
+  349:20  error    Unexpected trailing comma                     comma-dangle
+  497:5   warning  Unexpected console statement                  no-console
+
+/vercel/sandbox/src/core/responsiveTester.js
+   11:19  error    Unexpected trailing comma                          comma-dangle
+   17:19  error    Unexpected trailing comma                          comma-dangle
+   23:19  error    Unexpected trailing comma                          comma-dangle
+   29:19  error    Unexpected trailing comma                          comma-dangle
+   35:19  error    Unexpected trailing comma                          comma-dangle
+   41:19  error    Unexpected trailing comma                          comma-dangle
+   47:20  error    Unexpected trailing comma                          comma-dangle
+   53:20  error    Unexpected trailing comma                          comma-dangle
+   54:8   error    Unexpected trailing comma                          comma-dangle
+  299:7   warning  Unexpected console statement                       no-console
+  364:14  warning  'error' is defined but never used                  no-unused-vars
+  371:10  warning  'openResponsiveTester' is defined but never used   no-unused-vars
+  386:10  warning  'closeResponsiveTester' is defined but never used  no-unused-vars
+  393:10  warning  'setDeviceSize' is defined but never used          no-unused-vars
+  399:10  warning  'setOrientation' is defined but never used         no-unused-vars
+  405:10  warning  'applyCustomSize' is defined but never used        no-unused-vars
+  411:10  warning  'takeScreenshot' is defined but never used         no-unused-vars
+  417:10  warning  'testAllSizes' is defined but never used           no-unused-vars
+  423:10  warning  'resetCanvas' is defined but never used            no-unused-vars
+
+/vercel/sandbox/src/core/smartGuides.js
+   22:5   warning  Unexpected console statement                      no-console
+   66:33  warning  'position' is defined but never used              no-unused-vars
+  211:55  error    Unexpected trailing comma                         comma-dangle
+  227:11  warning  'elementRect' is assigned a value but never used  no-unused-vars
+
+/vercel/sandbox/src/core/undoRedo.js
+   28:38  error    Unexpected trailing comma     comma-dangle
+   49:44  error    Unexpected trailing comma     comma-dangle
+   50:8   error    Unexpected trailing comma     comma-dangle
+  172:50  error    Unexpected trailing comma     comma-dangle
+  182:28  error    Unexpected trailing comma     comma-dangle
+  217:60  error    Unexpected trailing comma     comma-dangle
+  250:7   warning  Unexpected console statement  no-console
+
+/vercel/sandbox/src/deploy/deploymentHistory.js
+   30:20  error    Unexpected trailing comma     comma-dangle
+   53:7   warning  Unexpected console statement  no-console
+   83:28  error    Unexpected trailing comma     comma-dangle
+  145:21  error    Unexpected trailing comma     comma-dangle
+  160:67  error    Unexpected trailing comma     comma-dangle
+  187:7   warning  Unexpected console statement  no-console
+  200:7   warning  Unexpected console statement  no-console
+  224:58  error    Unexpected trailing comma     comma-dangle
+  265:20  error    Unexpected trailing comma     comma-dangle
+  281:26  error    Unexpected trailing comma     comma-dangle
+
+/vercel/sandbox/src/deploy/deploymentMonitor.js
+   23:48  error    Unexpected trailing comma     comma-dangle
+   24:10  error    Unexpected trailing comma     comma-dangle
+   33:7   warning  Unexpected console statement  no-console
+   68:19  error    Unexpected trailing comma     comma-dangle
+   79:48  error    Unexpected trailing comma     comma-dangle
+   97:9   warning  Unexpected console statement  no-console
+  112:48  error    Unexpected trailing comma     comma-dangle
+  113:10  error    Unexpected trailing comma     comma-dangle
+  122:7   warning  Unexpected console statement  no-console
+  136:48  error    Unexpected trailing comma     comma-dangle
+  137:10  error    Unexpected trailing comma     comma-dangle
+  146:7   warning  Unexpected console statement  no-console
+  161:48  error    Unexpected trailing comma     comma-dangle
+  162:10  error    Unexpected trailing comma     comma-dangle
+  171:7   warning  Unexpected console statement  no-console
+  199:65  error    Unexpected trailing comma     comma-dangle
+
+/vercel/sandbox/src/deploy/fileUploader.js
+   42:53  error    Unexpected trailing comma     comma-dangle
+   44:22  error    Unexpected trailing comma     comma-dangle
+   57:13  error    Unexpected trailing comma     comma-dangle
+   60:7   warning  Unexpected console statement  no-console
+   83:58  error    Unexpected trailing comma     comma-dangle
+  107:34  error    Unexpected trailing comma     comma-dangle
+  115:33  error    Unexpected trailing comma     comma-dangle
+  123:32  error    Unexpected trailing comma     comma-dangle
+  132:32  error    Unexpected trailing comma     comma-dangle
+  181:29  error    Unexpected trailing comma     comma-dangle
+
+/vercel/sandbox/src/deploy/vercelDeployer.js
+   92:9   warning  Unexpected console statement  no-console
+   98:40  error    Unexpected trailing comma     comma-dangle
+  105:40  error    Unexpected trailing comma     comma-dangle
+  112:41  error    Unexpected trailing comma     comma-dangle
+  120:44  error    Unexpected trailing comma     comma-dangle
+  129:34  error    Unexpected trailing comma     comma-dangle
+  144:76  error    Unexpected trailing comma     comma-dangle
+  153:36  error    Unexpected trailing comma     comma-dangle
+  161:36  error    Unexpected trailing comma     comma-dangle
+  164:7   warning  Unexpected console statement  no-console
+  171:62  error    Unexpected trailing comma     comma-dangle
+  177:29  error    Unexpected trailing comma     comma-dangle
+  197:21  error    Unexpected trailing comma     comma-dangle
+  203:30  error    Unexpected trailing comma     comma-dangle
+  204:8   error    Unexpected trailing comma     comma-dangle
+  216:43  error    Unexpected trailing comma     comma-dangle
+  218:43  error    Unexpected trailing comma     comma-dangle
+  259:46  error    Unexpected trailing comma     comma-dangle
+  260:8   error    Unexpected trailing comma     comma-dangle
+
+/vercel/sandbox/src/integrations/gitIntegration.js
+   80:30  error    Unexpected trailing comma      comma-dangle
+  109:56  error    Unexpected trailing comma      comma-dangle
+  217:43  error    Unexpected trailing comma      comma-dangle
+  218:8   error    Unexpected trailing comma      comma-dangle
+  274:16  warning  'e' is defined but never used  no-unused-vars
+
+/vercel/sandbox/src/integrations/repoManager.js
+    6:10  warning  'GitIntegration' is defined but never used  no-unused-vars
+   45:24  error    Unexpected trailing comma                   comma-dangle
+   72:23  error    Unexpected trailing comma                   comma-dangle
+   79:11  error    Unexpected trailing comma                   comma-dangle
+  108:26  error    Unexpected trailing comma                   comma-dangle
+  130:12  error    Unexpected trailing comma                   comma-dangle
+  174:33  error    Unexpected trailing comma                   comma-dangle
+  182:71  error    Unexpected trailing comma                   comma-dangle
+  185:7   warning  Unexpected console statement                no-console
+  203:25  error    Unexpected trailing comma                   comma-dangle
+  219:23  error    Unexpected trailing comma                   comma-dangle
+  226:27  error    Unexpected trailing comma                   comma-dangle
+  229:7   warning  Unexpected console statement                no-console
+  250:7   warning  Unexpected console statement                no-console
+  296:15  error    Unexpected trailing comma                   comma-dangle
+  302:39  error    Unexpected trailing comma                   comma-dangle
+  305:7   warning  Unexpected console statement                no-console
+  335:17  error    Unexpected trailing comma                   comma-dangle
+  341:32  error    Unexpected trailing comma                   comma-dangle
+  344:7   warning  Unexpected console statement                no-console
+
+/vercel/sandbox/src/security/cspGenerator.js
+   10:23  error    Strings must use singlequote                     quotes
+   11:22  error    Strings must use singlequote                     quotes
+   12:21  error    Strings must use singlequote                     quotes
+   12:31  error    Strings must use singlequote                     quotes
+   13:19  error    Strings must use singlequote                     quotes
+   14:20  error    Strings must use singlequote                     quotes
+   15:23  error    Strings must use singlequote                     quotes
+   16:21  error    Strings must use singlequote                     quotes
+   17:22  error    Strings must use singlequote                     quotes
+   18:20  error    Strings must use singlequote                     quotes
+   19:23  error    Strings must use singlequote                     quotes
+   20:27  error    Strings must use singlequote                     quotes
+   21:38  error    Unexpected trailing comma                        comma-dangle
+   46:42  warning  'cssContent' is assigned a value but never used  no-unused-vars
+   62:33  error    Strings must use singlequote                     quotes
+   82:16  warning  'e' is defined but never used                    no-unused-vars
+  106:43  error    Strings must use singlequote                     quotes
+  109:48  error    Unexpected trailing comma                        comma-dangle
+  118:53  error    Unexpected trailing comma                        comma-dangle
+
+/vercel/sandbox/src/security/securityChecker.js
+   24:26  error  Unexpected trailing comma  comma-dangle
+   34:26  error  Unexpected trailing comma  comma-dangle
+   41:50  error  Unexpected trailing comma  comma-dangle
+   48:13  error  Unexpected trailing comma  comma-dangle
+   49:8   error  Unexpected trailing comma  comma-dangle
+   57:19  error  Unexpected trailing comma  comma-dangle
+   76:38  error  Unexpected trailing comma  comma-dangle
+   90:38  error  Unexpected trailing comma  comma-dangle
+  113:38  error  Unexpected trailing comma  comma-dangle
+  134:45  error  Unexpected trailing comma  comma-dangle
+  145:29  error  Unexpected trailing comma  comma-dangle
+  159:33  error  Unexpected trailing comma  comma-dangle
+  187:22  error  Unexpected trailing comma  comma-dangle
+  189:65  error  Unexpected trailing comma  comma-dangle
+  205:78  error  Unexpected trailing comma  comma-dangle
+  212:68  error  Unexpected trailing comma  comma-dangle
+  219:63  error  Unexpected trailing comma  comma-dangle
+  226:70  error  Unexpected trailing comma  comma-dangle
+  233:53  error  Unexpected trailing comma  comma-dangle
+  273:27  error  Unexpected trailing comma  comma-dangle
+  282:24  error  Unexpected trailing comma  comma-dangle
+
+/vercel/sandbox/src/services/apiClient.js
+   17:41  error    Unexpected trailing comma     comma-dangle
+   31:27  error    Unexpected trailing comma     comma-dangle
+   33:29  error    Unexpected trailing comma     comma-dangle
+   52:16  error    Unexpected trailing comma     comma-dangle
+   55:7   warning  Unexpected console statement  no-console
+   58:29  error    Unexpected trailing comma     comma-dangle
+   71:20  error    Unexpected trailing comma     comma-dangle
+   81:11  error    Unexpected trailing comma     comma-dangle
+   91:11  error    Unexpected trailing comma     comma-dangle
+  100:23  error    Unexpected trailing comma     comma-dangle
+
+/vercel/sandbox/src/services/authService.js
+   15:24  error    Unexpected trailing comma                      comma-dangle
+   39:7   warning  Unexpected console statement                   no-console
+   51:13  error    Unexpected trailing comma                      comma-dangle
+   63:24  error    Unexpected trailing comma                      comma-dangle
+   66:7   warning  Unexpected console statement                   no-console
+   69:29  error    Unexpected trailing comma                      comma-dangle
+   81:17  error    Unexpected trailing comma                      comma-dangle
+   93:24  error    Unexpected trailing comma                      comma-dangle
+   96:7   warning  Unexpected console statement                   no-console
+   99:29  error    Unexpected trailing comma                      comma-dangle
+  109:13  warning  'response' is assigned a value but never used  no-unused-vars
+  111:63  error    Unexpected trailing comma                      comma-dangle
+  116:22  error    Unexpected trailing comma                      comma-dangle
+  119:7   warning  Unexpected console statement                   no-console
+  122:29  error    Unexpected trailing comma                      comma-dangle
+  132:13  warning  'response' is assigned a value but never used  no-unused-vars
+  134:63  error    Unexpected trailing comma                      comma-dangle
+  139:22  error    Unexpected trailing comma                      comma-dangle
+  142:7   warning  Unexpected console statement                   no-console
+  145:29  error    Unexpected trailing comma                      comma-dangle
+  162:22  error    Unexpected trailing comma                      comma-dangle
+  165:7   warning  Unexpected console statement                   no-console
+  168:29  error    Unexpected trailing comma                      comma-dangle
+  188:7   warning  Unexpected console statement                   no-console
+  222:24  error    Unexpected trailing comma                      comma-dangle
+  225:7   warning  Unexpected console statement                   no-console
+  228:29  error    Unexpected trailing comma                      comma-dangle
+  267:32  error    Unexpected trailing comma                      comma-dangle
+  270:9   warning  Unexpected console statement                   no-console
+  279:32  error    Unexpected trailing comma                      comma-dangle
+  280:10  error    Unexpected trailing comma                      comma-dangle
+
+/vercel/sandbox/src/services/cloudSync.js
+   66:7   warning  Unexpected console statement                   no-console
+  101:40  error    Unexpected trailing comma                      comma-dangle
+  106:7   warning  Unexpected console statement                   no-console
+  109:34  error    Unexpected trailing comma                      comma-dangle
+  127:28  error    Unexpected trailing comma                      comma-dangle
+  133:23  error    Unexpected trailing comma                      comma-dangle
+  159:32  error    Unexpected trailing comma                      comma-dangle
+  167:44  error    Unexpected trailing comma                      comma-dangle
+  174:7   warning  Unexpected console statement                   no-console
+  179:29  error    Unexpected trailing comma                      comma-dangle
+  193:40  error    Unexpected trailing comma                      comma-dangle
+  211:7   warning  Unexpected console statement                   no-console
+  214:29  error    Unexpected trailing comma                      comma-dangle
+  248:7   warning  Unexpected console statement                   no-console
+  251:29  error    Unexpected trailing comma                      comma-dangle
+  259:30  warning  'localData' is defined but never used          no-unused-vars
+  277:42  error    Unexpected trailing comma                      comma-dangle
+  282:1   error    Expected indentation of 4 spaces but found 6   indent
+  283:1   error    Expected indentation of 6 spaces but found 8   indent
+  284:1   error    Expected indentation of 6 spaces but found 8   indent
+  285:1   error    Expected indentation of 6 spaces but found 8   indent
+  286:1   error    Expected indentation of 8 spaces but found 10  indent
+  287:1   error    Expected indentation of 8 spaces but found 10  indent
+  288:1   error    Expected indentation of 8 spaces but found 10  indent
+  288:34  error    Unexpected trailing comma                      comma-dangle
+  289:1   error    Expected indentation of 6 spaces but found 8   indent
+  291:1   error    Expected indentation of 4 spaces but found 6   indent
+  292:1   error    Expected indentation of 6 spaces but found 8   indent
+  293:1   error    Expected indentation of 6 spaces but found 8   indent
+  295:1   error    Expected indentation of 4 spaces but found 6   indent
+  296:1   error    Expected indentation of 6 spaces but found 8   indent
+  297:1   error    Expected indentation of 6 spaces but found 8   indent
+  298:1   error    Expected indentation of 8 spaces but found 10  indent
+  299:1   error    Expected indentation of 8 spaces but found 10  indent
+  300:1   error    Expected indentation of 8 spaces but found 10  indent
+  301:1   error    Expected indentation of 8 spaces but found 10  indent
+  302:1   error    Expected indentation of 8 spaces but found 10  indent
+  302:20  error    Unexpected trailing comma                      comma-dangle
+  303:1   error    Expected indentation of 6 spaces but found 8   indent
+  305:1   error    Expected indentation of 4 spaces but found 6   indent
+  306:1   error    Expected indentation of 6 spaces but found 8   indent
+  307:1   error    Expected indentation of 8 spaces but found 10  indent
+  308:1   error    Expected indentation of 8 spaces but found 10  indent
+  308:45  error    Unexpected trailing comma                      comma-dangle
+  309:1   error    Expected indentation of 6 spaces but found 8   indent
+  335:19  error    Unexpected trailing comma                      comma-dangle
+  343:5   warning  Unexpected console statement                   no-console
+  360:5   warning  Unexpected console statement                   no-console
+  395:44  error    Unexpected trailing comma                      comma-dangle
+  434:9   warning  Unexpected console statement                   no-console
+
+/vercel/sandbox/src/services/sessionManager.js
+   45:1   error    Expected indentation of 4 spaces but found 6  indent
+   46:1   error    Expected indentation of 4 spaces but found 6  indent
+   47:1   error    Expected indentation of 6 spaces but found 8  indent
+   48:1   error    Expected indentation of 6 spaces but found 8  indent
+   49:1   error    Expected indentation of 6 spaces but found 8  indent
+   50:1   error    Expected indentation of 6 spaces but found 8  indent
+   51:1   error    Expected indentation of 6 spaces but found 8  indent
+   53:1   error    Expected indentation of 4 spaces but found 6  indent
+   54:1   error    Expected indentation of 6 spaces but found 8  indent
+   55:1   error    Expected indentation of 6 spaces but found 8  indent
+   56:1   error    Expected indentation of 6 spaces but found 8  indent
+   57:1   error    Expected indentation of 6 spaces but found 8  indent
+   58:1   error    Expected indentation of 6 spaces but found 8  indent
+   83:7   warning  Unexpected console statement                  no-console
+  144:44  error    Unexpected trailing comma                     comma-dangle
+  160:44  error    Unexpected trailing comma                     comma-dangle
+  167:9   warning  Unexpected console statement                  no-console
+
+/vercel/sandbox/src/storage/projectManager.js
+   37:22  error    Unexpected trailing comma      comma-dangle
+  108:7   warning  Unexpected console statement   no-console
+  190:7   warning  Unexpected console statement   no-console
+  225:43  error    Unexpected trailing comma      comma-dangle
+  274:33  error    Unexpected trailing comma      comma-dangle
+  327:9   warning  Unexpected console statement   no-console
+  365:28  error    Unexpected trailing comma      comma-dangle
+  383:21  error    Unexpected trailing comma      comma-dangle
+  390:7   warning  Unexpected console statement   no-console
+  409:24  warning  'e' is defined but never used  no-unused-vars
+  429:70  error    Unexpected trailing comma      comma-dangle
+  440:7   warning  Unexpected console statement   no-console
+  451:7   warning  Unexpected console statement   no-console
+
+/vercel/sandbox/src/tutorial/index.js
+  13:15  error  Unexpected trailing comma  comma-dangle
+
+/vercel/sandbox/src/tutorial/spotlight.js
+  60:7  warning  Unexpected console statement  no-console
+
+/vercel/sandbox/src/tutorial/steps.js
+   14:50  error  Unexpected trailing comma  comma-dangle
+   15:6   error  Unexpected trailing comma  comma-dangle
+   27:59  error  Unexpected trailing comma  comma-dangle
+   28:6   error  Unexpected trailing comma  comma-dangle
+   41:20  error  Unexpected trailing comma  comma-dangle
+   45:59  error  Unexpected trailing comma  comma-dangle
+   46:6   error  Unexpected trailing comma  comma-dangle
+   57:59  error  Unexpected trailing comma  comma-dangle
+   58:6   error  Unexpected trailing comma  comma-dangle
+   70:40  error  Unexpected trailing comma  comma-dangle
+   74:59  error  Unexpected trailing comma  comma-dangle
+   75:6   error  Unexpected trailing comma  comma-dangle
+   87:59  error  Unexpected trailing comma  comma-dangle
+   88:6   error  Unexpected trailing comma  comma-dangle
+  100:59  error  Unexpected trailing comma  comma-dangle
+  101:6   error  Unexpected trailing comma  comma-dangle
+  112:59  error  Unexpected trailing comma  comma-dangle
+  113:6   error  Unexpected trailing comma  comma-dangle
+  125:59  error  Unexpected trailing comma  comma-dangle
+  126:6   error  Unexpected trailing comma  comma-dangle
+  134:72  error  Unexpected trailing comma  comma-dangle
+  135:4   error  Unexpected trailing comma  comma-dangle
+
+/vercel/sandbox/src/tutorial/tutorialEngine.js
+    6:10  warning  'tutorialSteps' is defined but never used       no-unused-vars
+   42:7   warning  Unexpected console statement                    no-console
+   59:53  error    Unexpected trailing comma                       comma-dangle
+   68:66  error    Unexpected trailing comma                       comma-dangle
+  169:1   error    Expected indentation of 8 spaces but found 10   indent
+  170:1   error    Expected indentation of 10 spaces but found 12  indent
+  171:1   error    Expected indentation of 10 spaces but found 12  indent
+  172:1   error    Expected indentation of 10 spaces but found 12  indent
+  173:1   error    Expected indentation of 10 spaces but found 12  indent
+  174:1   error    Expected indentation of 8 spaces but found 10   indent
+  175:1   error    Expected indentation of 10 spaces but found 12  indent
+  176:1   error    Expected indentation of 10 spaces but found 12  indent
+  177:1   error    Expected indentation of 10 spaces but found 12  indent
+  178:1   error    Expected indentation of 10 spaces but found 12  indent
+  179:1   error    Expected indentation of 8 spaces but found 10   indent
+  180:1   error    Expected indentation of 10 spaces but found 12  indent
+  181:1   error    Expected indentation of 10 spaces but found 12  indent
+  182:1   error    Expected indentation of 10 spaces but found 12  indent
+  183:1   error    Expected indentation of 10 spaces but found 12  indent
+  184:1   error    Expected indentation of 8 spaces but found 10   indent
+  185:1   error    Expected indentation of 10 spaces but found 12  indent
+  186:1   error    Expected indentation of 10 spaces but found 12  indent
+  187:1   error    Expected indentation of 10 spaces but found 12  indent
+  188:1   error    Expected indentation of 10 spaces but found 12  indent
+  234:34  error    Unexpected trailing comma                       comma-dangle
+  319:28  error    Unexpected trailing comma                       comma-dangle
+  337:7   warning  Unexpected console statement                    no-console
+
+/vercel/sandbox/src/utils/componentExtractor.js
+   11:44  error    Unexpected trailing comma     comma-dangle
+   16:75  error    Unexpected trailing comma     comma-dangle
+   21:59  error    Unexpected trailing comma     comma-dangle
+   26:43  error    Unexpected trailing comma     comma-dangle
+   31:68  error    Unexpected trailing comma     comma-dangle
+   36:34  error    Unexpected trailing comma     comma-dangle
+   41:46  error    Unexpected trailing comma     comma-dangle
+   46:69  error    Unexpected trailing comma     comma-dangle
+   47:8   error    Unexpected trailing comma     comma-dangle
+  196:42  error    Unexpected trailing comma     comma-dangle
+  201:7   warning  Unexpected console statement  no-console
+  365:7   warning  Unexpected console statement  no-console
+
+✖ 865 problems (680 errors, 185 warnings)
+  680 errors and 0 warnings potentially fixable with the `--fix` option.
+

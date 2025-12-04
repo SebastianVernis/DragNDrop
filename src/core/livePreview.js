@@ -2,128 +2,131 @@
  * LivePreview - Vista previa en tiempo real en navegador separado
  */
 class LivePreview {
-    constructor() {
-        this.previewWindow = null;
-        this.isLive = false;
-        this.updateInterval = null;
-        this.updateDelay = 1000; // 1 segundo
+  constructor() {
+    this.previewWindow = null;
+    this.isLive = false;
+    this.updateInterval = null;
+    this.updateDelay = 1000; // 1 segundo
+  }
+
+  /**
+   * Inicia vista previa en vivo
+   */
+  start() {
+    if (this.isLive) {
+      if (window.showToast) {
+        window.showToast('Vista previa ya está activa');
+      }
+      return;
     }
 
-    /**
-     * Inicia vista previa en vivo
-     */
-    start() {
-        if (this.isLive) {
-            if (window.showToast) {
-                window.showToast('Vista previa ya está activa');
-            }
-            return;
-        }
+    // Abrir ventana de preview
+    this.openPreviewWindow();
 
-        // Abrir ventana de preview
-        this.openPreviewWindow();
-        
-        // Iniciar actualizaciones
-        this.startUpdates();
-        
-        this.isLive = true;
-        
-        if (window.showToast) {
-            window.showToast('Vista previa en vivo iniciada');
-        }
+    // Iniciar actualizaciones
+    this.startUpdates();
+
+    this.isLive = true;
+
+    if (window.showToast) {
+      window.showToast('Vista previa en vivo iniciada');
+    }
+  }
+
+  /**
+   * Detiene vista previa
+   */
+  stop() {
+    if (!this.isLive) return;
+
+    this.stopUpdates();
+
+    if (this.previewWindow && !this.previewWindow.closed) {
+      this.previewWindow.close();
     }
 
-    /**
-     * Detiene vista previa
-     */
-    stop() {
-        if (!this.isLive) return;
+    this.previewWindow = null;
+    this.isLive = false;
 
-        this.stopUpdates();
-        
-        if (this.previewWindow && !this.previewWindow.closed) {
-            this.previewWindow.close();
-        }
-        
-        this.previewWindow = null;
-        this.isLive = false;
-        
-        if (window.showToast) {
-            window.showToast('Vista previa detenida');
-        }
+    if (window.showToast) {
+      window.showToast('Vista previa detenida');
     }
+  }
 
-    /**
-     * Abre ventana de preview
-     */
-    openPreviewWindow() {
-        const width = 1200;
-        const height = 800;
-        const left = (screen.width / 2) - (width / 2);
-        const top = (screen.height / 2) - (height / 2);
+  /**
+   * Abre ventana de preview
+   */
+  openPreviewWindow() {
+    const width = 1200;
+    const height = 800;
+    const left = screen.width / 2 - width / 2;
+    const top = screen.height / 2 - height / 2;
 
-        this.previewWindow = window.open(
-            '',
-            'Live Preview',
-            `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    this.previewWindow = window.open(
+      '',
+      'Live Preview',
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    );
+
+    if (this.previewWindow) {
+      this.updatePreview();
+    } else {
+      if (window.showToast) {
+        window.showToast(
+          'No se pudo abrir la ventana de vista previa. Verifica los permisos de ventanas emergentes.',
+          'error'
         );
+      }
+    }
+  }
 
-        if (this.previewWindow) {
-            this.updatePreview();
-        } else {
-            if (window.showToast) {
-                window.showToast('No se pudo abrir la ventana de vista previa. Verifica los permisos de ventanas emergentes.', 'error');
-            }
-        }
+  /**
+   * Actualiza contenido de preview
+   */
+  updatePreview() {
+    if (!this.previewWindow || this.previewWindow.closed) {
+      this.stop();
+      return;
     }
 
-    /**
-     * Actualiza contenido de preview
-     */
-    updatePreview() {
-        if (!this.previewWindow || this.previewWindow.closed) {
-            this.stop();
-            return;
-        }
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return;
 
-        const canvas = document.getElementById('canvas');
-        if (!canvas) return;
+    const html = this.generatePreviewHTML(canvas);
 
-        const html = this.generatePreviewHTML(canvas);
-        
-        try {
-            this.previewWindow.document.open();
-            this.previewWindow.document.write(html);
-            this.previewWindow.document.close();
-        } catch (error) {
-            console.error('Error actualizando preview:', error);
-            this.stop();
-        }
+    try {
+      this.previewWindow.document.open();
+      this.previewWindow.document.write(html);
+      this.previewWindow.document.close();
+    } catch (error) {
+      console.error('Error actualizando preview:', error);
+      this.stop();
     }
+  }
 
-    /**
-     * Genera HTML completo para preview
-     */
-    generatePreviewHTML(canvas) {
-        const clone = canvas.cloneNode(true);
+  /**
+   * Genera HTML completo para preview
+   */
+  generatePreviewHTML(canvas) {
+    const clone = canvas.cloneNode(true);
 
-        // Limpiar elementos del editor
-        const elements = clone.querySelectorAll('.canvas-element');
-        elements.forEach(el => {
-            el.classList.remove('canvas-element', 'selected');
-            const deleteBtn = el.querySelector('.delete-btn');
-            if (deleteBtn) deleteBtn.remove();
-            el.removeAttribute('draggable');
-            el.removeAttribute('data-component-type');
-        });
+    // Limpiar elementos del editor
+    const elements = clone.querySelectorAll('.canvas-element');
+    elements.forEach(el => {
+      el.classList.remove('canvas-element', 'selected');
+      const deleteBtn = el.querySelector('.delete-btn');
+      if (deleteBtn) deleteBtn.remove();
+      el.removeAttribute('draggable');
+      el.removeAttribute('data-component-type');
+    });
 
-        // Recopilar estilos
-        const styles = this.collectStyles();
+    // Recopilar estilos
+    const styles = this.collectStyles();
 
-        // Recopilar scripts
-        const scripts = this.collectScripts();
+    // Recopilar scripts
+    const scripts = this.collectScripts();
 
-        return `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -156,24 +159,26 @@ class LivePreview {
     </script>
 </body>
 </html>`;
-    }
+  }
 
-    /**
-     * Recopila estilos del documento
-     */
-    collectStyles() {
-        const styles = [];
+  /**
+   * Recopila estilos del documento
+   */
+  collectStyles() {
+    const styles = [];
 
-        // Estilos inline del head
-        document.querySelectorAll('style').forEach((styleEl, index) => {
-            if (styleEl.getAttribute('data-source') && 
-                styleEl.getAttribute('data-source').startsWith('imported')) {
-                styles.push(styleEl.textContent);
-            }
-        });
+    // Estilos inline del head
+    document.querySelectorAll('style').forEach((styleEl, index) => {
+      if (
+        styleEl.getAttribute('data-source') &&
+        styleEl.getAttribute('data-source').startsWith('imported')
+      ) {
+        styles.push(styleEl.textContent);
+      }
+    });
 
-        // Estilos de componentes
-        styles.push(`
+    // Estilos de componentes
+    styles.push(`
             .component-card {
                 border: 1px solid #e2e8f0;
                 border-radius: 8px;
@@ -228,104 +233,106 @@ class LivePreview {
             }
         `);
 
-        return styles.join('\n\n');
-    }
+    return styles.join('\n\n');
+  }
 
-    /**
-     * Recopila scripts del documento
-     */
-    collectScripts() {
-        const scripts = [];
+  /**
+   * Recopila scripts del documento
+   */
+  collectScripts() {
+    const scripts = [];
 
-        document.querySelectorAll('script').forEach((scriptEl) => {
-            if (scriptEl.getAttribute('data-source') && 
-                scriptEl.getAttribute('data-source').startsWith('imported')) {
-                if (scriptEl.src) {
-                    scripts.push(`<script src="${scriptEl.src}"><\/script>`);
-                } else {
-                    scripts.push(`<script>${scriptEl.textContent}<\/script>`);
-                }
-            }
-        });
-
-        return scripts.join('\n');
-    }
-
-    /**
-     * Inicia actualizaciones automáticas
-     */
-    startUpdates() {
-        this.stopUpdates();
-
-        // Actualizar inmediatamente
-        this.updatePreview();
-
-        // Actualizar periódicamente
-        this.updateInterval = setInterval(() => {
-            this.updatePreview();
-        }, this.updateDelay);
-
-        // Observar cambios en el canvas
-        const canvas = document.getElementById('canvas');
-        if (canvas) {
-            this.canvasObserver = new MutationObserver(() => {
-                clearTimeout(this.updateTimeout);
-                this.updateTimeout = setTimeout(() => {
-                    this.updatePreview();
-                }, 500);
-            });
-
-            this.canvasObserver.observe(canvas, {
-                childList: true,
-                subtree: true,
-                attributes: true,
-                characterData: true
-            });
-        }
-    }
-
-    /**
-     * Detiene actualizaciones
-     */
-    stopUpdates() {
-        if (this.updateInterval) {
-            clearInterval(this.updateInterval);
-            this.updateInterval = null;
-        }
-
-        if (this.updateTimeout) {
-            clearTimeout(this.updateTimeout);
-            this.updateTimeout = null;
-        }
-
-        if (this.canvasObserver) {
-            this.canvasObserver.disconnect();
-            this.canvasObserver = null;
-        }
-    }
-
-    /**
-     * Alterna vista previa
-     */
-    toggle() {
-        if (this.isLive) {
-            this.stop();
+    document.querySelectorAll('script').forEach(scriptEl => {
+      if (
+        scriptEl.getAttribute('data-source') &&
+        scriptEl.getAttribute('data-source').startsWith('imported')
+      ) {
+        if (scriptEl.src) {
+          scripts.push(`<script src="${scriptEl.src}"><\/script>`);
         } else {
-            this.start();
+          scripts.push(`<script>${scriptEl.textContent}<\/script>`);
         }
+      }
+    });
+
+    return scripts.join('\n');
+  }
+
+  /**
+   * Inicia actualizaciones automáticas
+   */
+  startUpdates() {
+    this.stopUpdates();
+
+    // Actualizar inmediatamente
+    this.updatePreview();
+
+    // Actualizar periódicamente
+    this.updateInterval = setInterval(() => {
+      this.updatePreview();
+    }, this.updateDelay);
+
+    // Observar cambios en el canvas
+    const canvas = document.getElementById('canvas');
+    if (canvas) {
+      this.canvasObserver = new MutationObserver(() => {
+        clearTimeout(this.updateTimeout);
+        this.updateTimeout = setTimeout(() => {
+          this.updatePreview();
+        }, 500);
+      });
+
+      this.canvasObserver.observe(canvas, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true,
+      });
+    }
+  }
+
+  /**
+   * Detiene actualizaciones
+   */
+  stopUpdates() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
     }
 
-    /**
-     * Verifica si está activa
-     */
-    isActive() {
-        return this.isLive && this.previewWindow && !this.previewWindow.closed;
+    if (this.updateTimeout) {
+      clearTimeout(this.updateTimeout);
+      this.updateTimeout = null;
     }
+
+    if (this.canvasObserver) {
+      this.canvasObserver.disconnect();
+      this.canvasObserver = null;
+    }
+  }
+
+  /**
+   * Alterna vista previa
+   */
+  toggle() {
+    if (this.isLive) {
+      this.stop();
+    } else {
+      this.start();
+    }
+  }
+
+  /**
+   * Verifica si está activa
+   */
+  isActive() {
+    return this.isLive && this.previewWindow && !this.previewWindow.closed;
+  }
 }
 
 // Exportar
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = LivePreview;
+  module.exports = LivePreview;
 }
 
 window.LivePreview = LivePreview;

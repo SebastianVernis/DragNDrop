@@ -39,10 +39,10 @@ export class RepoManager {
     }
 
     const { owner, repo } = this.currentRepo;
-    
+
     const response = await this.git.request('POST', `/repos/${owner}/${repo}/git/blobs`, {
       content,
-      encoding: 'utf-8'
+      encoding: 'utf-8',
     });
 
     return response.sha;
@@ -63,20 +63,20 @@ export class RepoManager {
 
     // Create blobs for all files
     const tree = await Promise.all(
-      files.map(async (file) => {
+      files.map(async file => {
         const blobSHA = await this.createBlob(file.content);
         return {
           path: file.path,
           mode: '100644', // Regular file
           type: 'blob',
-          sha: blobSHA
+          sha: blobSHA,
         };
       })
     );
 
     // Create tree
     const treeData = {
-      tree
+      tree,
     };
 
     if (baseTreeSHA) {
@@ -105,7 +105,7 @@ export class RepoManager {
     const response = await this.git.request('POST', `/repos/${owner}/${repo}/git/commits`, {
       message,
       tree: treeSHA,
-      parents: parentSHAs
+      parents: parentSHAs,
     });
 
     return response.sha;
@@ -127,7 +127,7 @@ export class RepoManager {
 
     return await this.git.request('PATCH', `/repos/${owner}/${repo}/git/refs/${ref}`, {
       sha,
-      force
+      force,
     });
   }
 
@@ -150,7 +150,10 @@ export class RepoManager {
       const latestCommitSHA = await this.git.getLatestCommitSHA(owner, repo, branch);
 
       // Get current tree
-      const commitData = await this.git.request('GET', `/repos/${owner}/${repo}/git/commits/${latestCommitSHA}`);
+      const commitData = await this.git.request(
+        'GET',
+        `/repos/${owner}/${repo}/git/commits/${latestCommitSHA}`
+      );
       const baseTreeSHA = commitData.tree.sha;
 
       // Create new tree with files
@@ -168,7 +171,7 @@ export class RepoManager {
         branch,
         commitSHA,
         message,
-        filesCount: files.length
+        filesCount: files.length,
       });
 
       return {
@@ -176,9 +179,8 @@ export class RepoManager {
         commitSHA,
         branch,
         filesCount: files.length,
-        url: `https://github.com/${owner}/${repo}/commit/${commitSHA}`
+        url: `https://github.com/${owner}/${repo}/commit/${commitSHA}`,
       };
-
     } catch (error) {
       console.error('Commit and push error:', error);
       throw error;
@@ -198,7 +200,7 @@ export class RepoManager {
       const repo = await this.git.createRepository(repoName, {
         description: options.description || 'Created with DragNDrop Editor',
         private: options.private || false,
-        auto_init: false // We'll create initial commit manually
+        auto_init: false, // We'll create initial commit manually
       });
 
       // Set as current repository
@@ -214,16 +216,15 @@ export class RepoManager {
       // Create main branch
       await this.git.request('POST', `/repos/${repo.owner.login}/${repo.name}/git/refs`, {
         ref: 'refs/heads/main',
-        sha: commitSHA
+        sha: commitSHA,
       });
 
       return {
         success: true,
         repo,
         commitSHA,
-        url: repo.html_url
+        url: repo.html_url,
       };
-
     } catch (error) {
       console.error('Repository initialization error:', error);
       throw error;
@@ -292,15 +293,14 @@ export class RepoManager {
         message,
         content: btoa(content), // Base64 encode
         sha: currentFile.sha,
-        branch
+        branch,
       });
 
       return {
         success: true,
         commit: response.commit,
-        url: response.content.html_url
+        url: response.content.html_url,
       };
-
     } catch (error) {
       console.error('Error updating file:', error);
       throw error;
@@ -326,17 +326,20 @@ export class RepoManager {
       const currentFile = await this.git.getFileContent(owner, repo, path, branch);
 
       // Delete file
-      const response = await this.git.request('DELETE', `/repos/${owner}/${repo}/contents/${path}`, {
-        message,
-        sha: currentFile.sha,
-        branch
-      });
+      const response = await this.git.request(
+        'DELETE',
+        `/repos/${owner}/${repo}/contents/${path}`,
+        {
+          message,
+          sha: currentFile.sha,
+          branch,
+        }
+      );
 
       return {
         success: true,
-        commit: response.commit
+        commit: response.commit,
       };
-
     } catch (error) {
       console.error('Error deleting file:', error);
       throw error;

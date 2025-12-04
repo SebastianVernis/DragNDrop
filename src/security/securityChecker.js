@@ -1,6 +1,6 @@
 /**
  * Security Checker
- * 
+ *
  * Scans HTML/CSS/JS for security vulnerabilities
  * - XSS detection
  * - Malicious script detection
@@ -160,11 +160,7 @@ class SecurityChecker {
     };
 
     // Calculate overall score
-    const totalIssues = [
-      ...results.html,
-      ...results.css,
-      ...results.js,
-    ];
+    const totalIssues = [...results.html, ...results.css, ...results.js];
 
     const criticalCount = totalIssues.filter(i => i.severity === 'critical').length;
     const highCount = totalIssues.filter(i => i.severity === 'high').length;

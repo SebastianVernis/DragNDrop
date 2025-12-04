@@ -1,435 +1,437 @@
 /**
  * Project Analyzer - v1.0
- * 
+ *
  * Analiza y mapea proyectos JS/HTML completos usando Gemini API.
  * Carga directorios completos y genera un árbol de estructura.
  */
 
 class ProjectAnalyzer {
-    constructor() {
-        this.geminiValidator = null;
-        this.currentProject = null;
-        this.fileTree = null;
-        this.analysisCache = new Map();
-        this.supportedExtensions = ['.html', '.htm', '.js', '.jsx', '.css', '.scss', '.sass', '.json'];
-        this.maxFileSize = 500 * 1024; // 500KB por archivo
-        
-        this.init();
+  constructor() {
+    this.geminiValidator = null;
+    this.currentProject = null;
+    this.fileTree = null;
+    this.analysisCache = new Map();
+    this.supportedExtensions = ['.html', '.htm', '.js', '.jsx', '.css', '.scss', '.sass', '.json'];
+    this.maxFileSize = 500 * 1024; // 500KB por archivo
+
+    this.init();
+  }
+
+  /**
+   * Inicializa el analizador
+   */
+  init() {
+    // Esperar a que GeminiValidator esté disponible
+    if (window.GeminiSyntaxValidator) {
+      this.geminiValidator = new window.GeminiSyntaxValidator();
     }
 
-    /**
-     * Inicializa el analizador
-     */
-    init() {
-        // Esperar a que GeminiValidator esté disponible
-        if (window.GeminiSyntaxValidator) {
-            this.geminiValidator = new window.GeminiSyntaxValidator();
-        }
-        
-        console.log('✅ ProjectAnalyzer inicializado');
+    console.log('✅ ProjectAnalyzer inicializado');
+  }
+
+  /**
+   * Carga y analiza un directorio completo
+   */
+  async loadDirectory(fileList) {
+    try {
+      if (!fileList || fileList.length === 0) {
+        throw new Error('No se seleccionaron archivos');
+      }
+
+      this.showLoadingModal('Analizando proyecto...');
+
+      // Construir árbol de archivos
+      this.fileTree = await this.buildFileTree(fileList);
+
+      // Analizar estructura
+      const structure = await this.analyzeProjectStructure(this.fileTree);
+
+      // Identificar archivos principales
+      const mainFiles = this.identifyMainFiles(this.fileTree);
+
+      // Construir proyecto
+      this.currentProject = {
+        name: this.extractProjectName(this.fileTree),
+        tree: this.fileTree,
+        structure,
+        mainFiles,
+        totalFiles: fileList.length,
+        timestamp: Date.now(),
+      };
+
+      this.hideLoadingModal();
+
+      // Mostrar modal de resultados
+      this.showAnalysisResults(this.currentProject);
+
+      return this.currentProject;
+    } catch (error) {
+      this.hideLoadingModal();
+      console.error('Error analizando proyecto:', error);
+
+      if (window.showToast) {
+        window.showToast(`❌ Error: ${error.message}`, 'error');
+      }
+
+      throw error;
+    }
+  }
+
+  /**
+   * Construye árbol de archivos desde FileList
+   */
+  async buildFileTree(fileList) {
+    const tree = {
+      name: 'root',
+      type: 'directory',
+      children: new Map(),
+      files: [],
+    };
+
+    for (const file of fileList) {
+      // Verificar extensión
+      const ext = this.getFileExtension(file.name);
+      if (!this.supportedExtensions.includes(ext)) {
+        continue;
+      }
+
+      // Verificar tamaño
+      if (file.size > this.maxFileSize) {
+        console.warn(`Archivo muy grande, ignorando: ${file.name}`);
+        continue;
+      }
+
+      // Leer contenido
+      const content = await this.readFileContent(file);
+
+      // Parsear ruta
+      const pathParts = file.webkitRelativePath ? file.webkitRelativePath.split('/') : [file.name];
+
+      // Insertar en árbol
+      this.insertIntoTree(tree, pathParts, {
+        name: file.name,
+        path: file.webkitRelativePath || file.name,
+        type: 'file',
+        extension: ext,
+        size: file.size,
+        content,
+        lastModified: file.lastModified,
+      });
     }
 
-    /**
-     * Carga y analiza un directorio completo
-     */
-    async loadDirectory(fileList) {
+    return tree;
+  }
+
+  /**
+   * Inserta archivo en el árbol
+   */
+  insertIntoTree(node, pathParts, fileData) {
+    if (pathParts.length === 1) {
+      // Es un archivo en este nivel
+      node.files.push(fileData);
+      return;
+    }
+
+    // Es un directorio
+    const dirName = pathParts[0];
+
+    if (!node.children.has(dirName)) {
+      node.children.set(dirName, {
+        name: dirName,
+        type: 'directory',
+        children: new Map(),
+        files: [],
+      });
+    }
+
+    this.insertIntoTree(node.children.get(dirName), pathParts.slice(1), fileData);
+  }
+
+  /**
+   * Lee contenido de archivo
+   */
+  readFileContent(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = e => resolve(e.target.result);
+      reader.onerror = e => reject(new Error('Error leyendo archivo'));
+
+      reader.readAsText(file);
+    });
+  }
+
+  /**
+   * Analiza estructura del proyecto
+   */
+  async analyzeProjectStructure(tree) {
+    const structure = {
+      hasPackageJson: false,
+      hasIndexHtml: false,
+      framework: 'vanilla',
+      buildTool: null,
+      dependencies: [],
+      scripts: {},
+      directories: {
+        src: false,
+        public: false,
+        dist: false,
+        components: false,
+        assets: false,
+      },
+    };
+
+    // Buscar archivos clave
+    const allFiles = this.flattenTree(tree);
+
+    for (const file of allFiles) {
+      const fileName = file.name.toLowerCase();
+
+      // package.json
+      if (fileName === 'package.json') {
+        structure.hasPackageJson = true;
         try {
-            if (!fileList || fileList.length === 0) {
-                throw new Error('No se seleccionaron archivos');
-            }
-
-            this.showLoadingModal('Analizando proyecto...');
-
-            // Construir árbol de archivos
-            this.fileTree = await this.buildFileTree(fileList);
-            
-            // Analizar estructura
-            const structure = await this.analyzeProjectStructure(this.fileTree);
-            
-            // Identificar archivos principales
-            const mainFiles = this.identifyMainFiles(this.fileTree);
-            
-            // Construir proyecto
-            this.currentProject = {
-                name: this.extractProjectName(this.fileTree),
-                tree: this.fileTree,
-                structure,
-                mainFiles,
-                totalFiles: fileList.length,
-                timestamp: Date.now()
-            };
-
-            this.hideLoadingModal();
-            
-            // Mostrar modal de resultados
-            this.showAnalysisResults(this.currentProject);
-            
-            return this.currentProject;
-
-        } catch (error) {
-            this.hideLoadingModal();
-            console.error('Error analizando proyecto:', error);
-            
-            if (window.showToast) {
-                window.showToast(`❌ Error: ${error.message}`, 'error');
-            }
-            
-            throw error;
+          const pkg = JSON.parse(file.content);
+          structure.dependencies = Object.keys(pkg.dependencies || {});
+          structure.scripts = pkg.scripts || {};
+          structure.framework = this.detectFramework(pkg);
+          structure.buildTool = this.detectBuildTool(pkg);
+        } catch (e) {
+          console.warn('Error parseando package.json');
         }
+      }
+
+      // index.html
+      if (fileName === 'index.html' || fileName === 'index.htm') {
+        structure.hasIndexHtml = true;
+      }
     }
 
-    /**
-     * Construye árbol de archivos desde FileList
-     */
-    async buildFileTree(fileList) {
-        const tree = {
-            name: 'root',
-            type: 'directory',
-            children: new Map(),
-            files: []
-        };
+    // Detectar directorios comunes
+    this.detectCommonDirectories(tree, structure.directories);
 
-        for (const file of fileList) {
-            // Verificar extensión
-            const ext = this.getFileExtension(file.name);
-            if (!this.supportedExtensions.includes(ext)) {
-                continue;
-            }
+    return structure;
+  }
 
-            // Verificar tamaño
-            if (file.size > this.maxFileSize) {
-                console.warn(`Archivo muy grande, ignorando: ${file.name}`);
-                continue;
-            }
+  /**
+   * Detecta framework usado
+   */
+  detectFramework(packageJson) {
+    const deps = {
+      ...packageJson.dependencies,
+      ...packageJson.devDependencies,
+    };
 
-            // Leer contenido
-            const content = await this.readFileContent(file);
-            
-            // Parsear ruta
-            const pathParts = file.webkitRelativePath 
-                ? file.webkitRelativePath.split('/')
-                : [file.name];
-            
-            // Insertar en árbol
-            this.insertIntoTree(tree, pathParts, {
-                name: file.name,
-                path: file.webkitRelativePath || file.name,
-                type: 'file',
-                extension: ext,
-                size: file.size,
-                content,
-                lastModified: file.lastModified
-            });
-        }
+    if (deps['react']) return 'react';
+    if (deps['vue']) return 'vue';
+    if (deps['@angular/core']) return 'angular';
+    if (deps['svelte']) return 'svelte';
+    if (deps['next']) return 'next';
+    if (deps['nuxt']) return 'nuxt';
 
-        return tree;
+    return 'vanilla';
+  }
+
+  /**
+   * Detecta build tool
+   */
+  detectBuildTool(packageJson) {
+    const deps = {
+      ...packageJson.dependencies,
+      ...packageJson.devDependencies,
+    };
+
+    if (deps['vite']) return 'vite';
+    if (deps['webpack']) return 'webpack';
+    if (deps['rollup']) return 'rollup';
+    if (deps['parcel']) return 'parcel';
+    if (deps['esbuild']) return 'esbuild';
+
+    return null;
+  }
+
+  /**
+   * Detecta directorios comunes
+   */
+  detectCommonDirectories(node, directories) {
+    const dirName = node.name.toLowerCase();
+
+    if (dirName === 'src') directories.src = true;
+    if (dirName === 'public') directories.public = true;
+    if (dirName === 'dist' || dirName === 'build') directories.dist = true;
+    if (dirName === 'components') directories.components = true;
+    if (dirName === 'assets' || dirName === 'static') directories.assets = true;
+
+    // Recursivo
+    for (const child of node.children.values()) {
+      this.detectCommonDirectories(child, directories);
+    }
+  }
+
+  /**
+   * Identifica archivos principales
+   */
+  identifyMainFiles(tree) {
+    const allFiles = this.flattenTree(tree);
+    const mainFiles = {
+      html: [],
+      entry: [],
+      config: [],
+    };
+
+    for (const file of allFiles) {
+      const fileName = file.name.toLowerCase();
+      const ext = file.extension;
+
+      // HTML principales
+      if (
+        (ext === '.html' || ext === '.htm') &&
+        (fileName === 'index.html' || fileName === 'index.htm' || fileName.includes('main'))
+      ) {
+        mainFiles.html.push(file);
+      }
+
+      // Entry points JS
+      if (
+        (ext === '.js' || ext === '.jsx') &&
+        (fileName === 'index.js' ||
+          fileName === 'main.js' ||
+          fileName === 'app.js' ||
+          fileName.includes('entry'))
+      ) {
+        mainFiles.entry.push(file);
+      }
+
+      // Configs
+      if (
+        fileName === 'package.json' ||
+        fileName === 'vite.config.js' ||
+        fileName === 'webpack.config.js' ||
+        fileName === 'tsconfig.json'
+      ) {
+        mainFiles.config.push(file);
+      }
     }
 
-    /**
-     * Inserta archivo en el árbol
-     */
-    insertIntoTree(node, pathParts, fileData) {
-        if (pathParts.length === 1) {
-            // Es un archivo en este nivel
-            node.files.push(fileData);
-            return;
-        }
+    return mainFiles;
+  }
 
-        // Es un directorio
-        const dirName = pathParts[0];
-        
-        if (!node.children.has(dirName)) {
-            node.children.set(dirName, {
-                name: dirName,
-                type: 'directory',
-                children: new Map(),
-                files: []
-            });
-        }
-
-        this.insertIntoTree(
-            node.children.get(dirName),
-            pathParts.slice(1),
-            fileData
-        );
+  /**
+   * Aplana árbol de archivos
+   */
+  flattenTree(node, result = []) {
+    // Agregar archivos de este nivel
+    if (node.files) {
+      result.push(...node.files);
     }
 
-    /**
-     * Lee contenido de archivo
-     */
-    readFileContent(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            
-            reader.onload = (e) => resolve(e.target.result);
-            reader.onerror = (e) => reject(new Error('Error leyendo archivo'));
-            
-            reader.readAsText(file);
-        });
+    // Recursivo en hijos
+    if (node.children) {
+      for (const child of node.children.values()) {
+        this.flattenTree(child, result);
+      }
     }
 
-    /**
-     * Analiza estructura del proyecto
-     */
-    async analyzeProjectStructure(tree) {
-        const structure = {
-            hasPackageJson: false,
-            hasIndexHtml: false,
-            framework: 'vanilla',
-            buildTool: null,
-            dependencies: [],
-            scripts: {},
-            directories: {
-                src: false,
-                public: false,
-                dist: false,
-                components: false,
-                assets: false
-            }
-        };
+    return result;
+  }
 
-        // Buscar archivos clave
-        const allFiles = this.flattenTree(tree);
-        
-        for (const file of allFiles) {
-            const fileName = file.name.toLowerCase();
-            
-            // package.json
-            if (fileName === 'package.json') {
-                structure.hasPackageJson = true;
-                try {
-                    const pkg = JSON.parse(file.content);
-                    structure.dependencies = Object.keys(pkg.dependencies || {});
-                    structure.scripts = pkg.scripts || {};
-                    structure.framework = this.detectFramework(pkg);
-                    structure.buildTool = this.detectBuildTool(pkg);
-                } catch (e) {
-                    console.warn('Error parseando package.json');
-                }
-            }
-            
-            // index.html
-            if (fileName === 'index.html' || fileName === 'index.htm') {
-                structure.hasIndexHtml = true;
-            }
-        }
+  /**
+   * Extrae nombre del proyecto
+   */
+  extractProjectName(tree) {
+    // Buscar en package.json
+    const allFiles = this.flattenTree(tree);
+    const pkgFile = allFiles.find(f => f.name === 'package.json');
 
-        // Detectar directorios comunes
-        this.detectCommonDirectories(tree, structure.directories);
-
-        return structure;
+    if (pkgFile) {
+      try {
+        const pkg = JSON.parse(pkgFile.content);
+        if (pkg.name) return pkg.name;
+      } catch (e) {}
     }
 
-    /**
-     * Detecta framework usado
-     */
-    detectFramework(packageJson) {
-        const deps = {
-            ...packageJson.dependencies,
-            ...packageJson.devDependencies
-        };
-
-        if (deps['react']) return 'react';
-        if (deps['vue']) return 'vue';
-        if (deps['@angular/core']) return 'angular';
-        if (deps['svelte']) return 'svelte';
-        if (deps['next']) return 'next';
-        if (deps['nuxt']) return 'nuxt';
-        
-        return 'vanilla';
+    // Usar nombre del primer directorio
+    if (tree.children.size > 0) {
+      return Array.from(tree.children.keys())[0];
     }
 
-    /**
-     * Detecta build tool
-     */
-    detectBuildTool(packageJson) {
-        const deps = {
-            ...packageJson.dependencies,
-            ...packageJson.devDependencies
-        };
+    return 'Proyecto sin nombre';
+  }
 
-        if (deps['vite']) return 'vite';
-        if (deps['webpack']) return 'webpack';
-        if (deps['rollup']) return 'rollup';
-        if (deps['parcel']) return 'parcel';
-        if (deps['esbuild']) return 'esbuild';
-        
-        return null;
+  /**
+   * Importa archivos HTML al canvas
+   */
+  async importHTMLFiles(htmlFiles) {
+    if (!htmlFiles || htmlFiles.length === 0) {
+      throw new Error('No hay archivos HTML para importar');
     }
 
-    /**
-     * Detecta directorios comunes
-     */
-    detectCommonDirectories(node, directories) {
-        const dirName = node.name.toLowerCase();
-        
-        if (dirName === 'src') directories.src = true;
-        if (dirName === 'public') directories.public = true;
-        if (dirName === 'dist' || dirName === 'build') directories.dist = true;
-        if (dirName === 'components') directories.components = true;
-        if (dirName === 'assets' || dirName === 'static') directories.assets = true;
+    // Usar el primer HTML encontrado
+    const mainHTML = htmlFiles[0];
 
-        // Recursivo
-        for (const child of node.children.values()) {
-            this.detectCommonDirectories(child, directories);
-        }
-    }
+    // Parsear y cargar en canvas
+    if (window.htmlParser) {
+      const parsed = window.htmlParser.parse(mainHTML.content);
+      this.loadParsedHTMLToCanvas(parsed);
 
-    /**
-     * Identifica archivos principales
-     */
-    identifyMainFiles(tree) {
-        const allFiles = this.flattenTree(tree);
-        const mainFiles = {
-            html: [],
-            entry: [],
-            config: []
-        };
+      if (window.showToast) {
+        window.showToast(`✅ ${mainHTML.name} importado correctamente`);
+      }
+    } else {
+      // Fallback: cargar HTML directo
+      const canvas = document.getElementById('canvas');
+      if (canvas) {
+        // Extraer body content
+        const bodyMatch = mainHTML.content.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+        const bodyContent = bodyMatch ? bodyMatch[1] : mainHTML.content;
 
-        for (const file of allFiles) {
-            const fileName = file.name.toLowerCase();
-            const ext = file.extension;
+        canvas.innerHTML = bodyContent;
 
-            // HTML principales
-            if ((ext === '.html' || ext === '.htm') && 
-                (fileName === 'index.html' || fileName === 'index.htm' || 
-                 fileName.includes('main'))) {
-                mainFiles.html.push(file);
-            }
-
-            // Entry points JS
-            if ((ext === '.js' || ext === '.jsx') && 
-                (fileName === 'index.js' || fileName === 'main.js' || 
-                 fileName === 'app.js' || fileName.includes('entry'))) {
-                mainFiles.entry.push(file);
-            }
-
-            // Configs
-            if (fileName === 'package.json' || fileName === 'vite.config.js' ||
-                fileName === 'webpack.config.js' || fileName === 'tsconfig.json') {
-                mainFiles.config.push(file);
-            }
-        }
-
-        return mainFiles;
-    }
-
-    /**
-     * Aplana árbol de archivos
-     */
-    flattenTree(node, result = []) {
-        // Agregar archivos de este nivel
-        if (node.files) {
-            result.push(...node.files);
-        }
-
-        // Recursivo en hijos
-        if (node.children) {
-            for (const child of node.children.values()) {
-                this.flattenTree(child, result);
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Extrae nombre del proyecto
-     */
-    extractProjectName(tree) {
-        // Buscar en package.json
-        const allFiles = this.flattenTree(tree);
-        const pkgFile = allFiles.find(f => f.name === 'package.json');
-        
-        if (pkgFile) {
-            try {
-                const pkg = JSON.parse(pkgFile.content);
-                if (pkg.name) return pkg.name;
-            } catch (e) {}
-        }
-
-        // Usar nombre del primer directorio
-        if (tree.children.size > 0) {
-            return Array.from(tree.children.keys())[0];
-        }
-
-        return 'Proyecto sin nombre';
-    }
-
-    /**
-     * Importa archivos HTML al canvas
-     */
-    async importHTMLFiles(htmlFiles) {
-        if (!htmlFiles || htmlFiles.length === 0) {
-            throw new Error('No hay archivos HTML para importar');
-        }
-
-        // Usar el primer HTML encontrado
-        const mainHTML = htmlFiles[0];
-        
-        // Parsear y cargar en canvas
-        if (window.htmlParser) {
-            const parsed = window.htmlParser.parse(mainHTML.content);
-            this.loadParsedHTMLToCanvas(parsed);
-            
-            if (window.showToast) {
-                window.showToast(`✅ ${mainHTML.name} importado correctamente`);
-            }
-        } else {
-            // Fallback: cargar HTML directo
-            const canvas = document.getElementById('canvas');
-            if (canvas) {
-                // Extraer body content
-                const bodyMatch = mainHTML.content.match(/<body[^>]*>([\s\S]*)<\/body>/i);
-                const bodyContent = bodyMatch ? bodyMatch[1] : mainHTML.content;
-                
-                canvas.innerHTML = bodyContent;
-                
-                // Reaplicar eventos a elementos
-                if (window.setupElementsEvents) {
-                    window.setupElementsEvents();
-                }
-            }
-        }
-    }
-
-    /**
-     * Carga HTML parseado al canvas
-     */
-    loadParsedHTMLToCanvas(parsedData) {
-        const canvas = document.getElementById('canvas');
-        if (!canvas) return;
-
-        canvas.innerHTML = parsedData.html;
-        
-        // Reaplicar eventos
+        // Reaplicar eventos a elementos
         if (window.setupElementsEvents) {
-            window.setupElementsEvents();
+          window.setupElementsEvents();
         }
+      }
+    }
+  }
+
+  /**
+   * Carga HTML parseado al canvas
+   */
+  loadParsedHTMLToCanvas(parsedData) {
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return;
+
+    canvas.innerHTML = parsedData.html;
+
+    // Reaplicar eventos
+    if (window.setupElementsEvents) {
+      window.setupElementsEvents();
+    }
+  }
+
+  /**
+   * Obtiene extensión de archivo
+   */
+  getFileExtension(fileName) {
+    const parts = fileName.split('.');
+    return parts.length > 1 ? '.' + parts[parts.length - 1].toLowerCase() : '';
+  }
+
+  /**
+   * Muestra modal de carga
+   */
+  showLoadingModal(message) {
+    let modal = document.getElementById('project-loading-modal');
+
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'project-loading-modal';
+      modal.className = 'project-analysis-modal';
+      document.body.appendChild(modal);
     }
 
-    /**
-     * Obtiene extensión de archivo
-     */
-    getFileExtension(fileName) {
-        const parts = fileName.split('.');
-        return parts.length > 1 ? '.' + parts[parts.length - 1].toLowerCase() : '';
-    }
-
-    /**
-     * Muestra modal de carga
-     */
-    showLoadingModal(message) {
-        let modal = document.getElementById('project-loading-modal');
-        
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'project-loading-modal';
-            modal.className = 'project-analysis-modal';
-            document.body.appendChild(modal);
-        }
-
-        modal.innerHTML = `
+    modal.innerHTML = `
             <div class="modal-overlay"></div>
             <div class="modal-content">
                 <div class="loading-spinner"></div>
@@ -437,30 +439,30 @@ class ProjectAnalyzer {
                 <p>Esto puede tomar unos segundos...</p>
             </div>
         `;
-        
-        modal.style.display = 'flex';
-    }
 
-    /**
-     * Oculta modal de carga
-     */
-    hideLoadingModal() {
-        const modal = document.getElementById('project-loading-modal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    }
+    modal.style.display = 'flex';
+  }
 
-    /**
-     * Muestra resultados del análisis
-     */
-    showAnalysisResults(project) {
-        const modal = document.createElement('div');
-        modal.className = 'project-analysis-modal';
-        
-        const treeHTML = this.renderFileTree(project.tree);
-        
-        modal.innerHTML = `
+  /**
+   * Oculta modal de carga
+   */
+  hideLoadingModal() {
+    const modal = document.getElementById('project-loading-modal');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  }
+
+  /**
+   * Muestra resultados del análisis
+   */
+  showAnalysisResults(project) {
+    const modal = document.createElement('div');
+    modal.className = 'project-analysis-modal';
+
+    const treeHTML = this.renderFileTree(project.tree);
+
+    modal.innerHTML = `
             <div class="modal-overlay"></div>
             <div class="modal-content analysis-results">
                 <div class="modal-header">
@@ -479,12 +481,16 @@ class ProjectAnalyzer {
                                 <span class="info-label">Framework:</span>
                                 <span class="info-value">${project.structure.framework}</span>
                             </div>
-                            ${project.structure.buildTool ? `
+                            ${
+                              project.structure.buildTool
+                                ? `
                             <div class="info-item">
                                 <span class="info-label">Build Tool:</span>
                                 <span class="info-value">${project.structure.buildTool}</span>
                             </div>
-                            ` : ''}
+                            `
+                                : ''
+                            }
                         </div>
                     </div>
 
@@ -495,115 +501,127 @@ class ProjectAnalyzer {
                         </div>
                     </div>
 
-                    ${project.mainFiles.html.length > 0 ? `
+                    ${
+                      project.mainFiles.html.length > 0
+                        ? `
                     <div class="main-files">
                         <h4>📄 Archivos HTML Encontrados</h4>
                         <ul class="files-list">
-                            ${project.mainFiles.html.map(f => `
+                            ${project.mainFiles.html
+                              .map(
+                                f => `
                                 <li>
                                     <span class="file-icon">📄</span>
                                     <span class="file-name">${f.name}</span>
                                     <span class="file-path">${f.path}</span>
                                 </li>
-                            `).join('')}
+                            `
+                              )
+                              .join('')}
                         </ul>
                     </div>
-                    ` : ''}
+                    `
+                        : ''
+                    }
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-action="cancel">Cancelar</button>
-                    ${project.mainFiles.html.length > 0 ? `
+                    ${
+                      project.mainFiles.html.length > 0
+                        ? `
                     <button class="btn btn-primary" data-action="import">
                         Importar HTML Principal
                     </button>
-                    ` : ''}
+                    `
+                        : ''
+                    }
                 </div>
             </div>
         `;
 
-        // Eventos
-        modal.querySelector('.modal-close-btn').addEventListener('click', () => modal.remove());
-        modal.querySelector('.modal-overlay').addEventListener('click', () => modal.remove());
-        modal.querySelector('[data-action="cancel"]').addEventListener('click', () => modal.remove());
-        
-        const importBtn = modal.querySelector('[data-action="import"]');
-        if (importBtn) {
-            importBtn.addEventListener('click', async () => {
-                try {
-                    await this.importHTMLFiles(project.mainFiles.html);
-                    modal.remove();
-                } catch (error) {
-                    alert(`Error importando: ${error.message}`);
-                }
-            });
-        }
+    // Eventos
+    modal.querySelector('.modal-close-btn').addEventListener('click', () => modal.remove());
+    modal.querySelector('.modal-overlay').addEventListener('click', () => modal.remove());
+    modal.querySelector('[data-action="cancel"]').addEventListener('click', () => modal.remove());
 
-        document.body.appendChild(modal);
+    const importBtn = modal.querySelector('[data-action="import"]');
+    if (importBtn) {
+      importBtn.addEventListener('click', async () => {
+        try {
+          await this.importHTMLFiles(project.mainFiles.html);
+          modal.remove();
+        } catch (error) {
+          alert(`Error importando: ${error.message}`);
+        }
+      });
     }
 
-    /**
-     * Renderiza árbol de archivos como HTML
-     */
-    renderFileTree(node, level = 0) {
-        let html = '';
+    document.body.appendChild(modal);
+  }
 
-        // Renderizar archivos
-        if (node.files && node.files.length > 0) {
-            for (const file of node.files) {
-                const icon = this.getFileIcon(file.extension);
-                html += `
+  /**
+   * Renderiza árbol de archivos como HTML
+   */
+  renderFileTree(node, level = 0) {
+    let html = '';
+
+    // Renderizar archivos
+    if (node.files && node.files.length > 0) {
+      for (const file of node.files) {
+        const icon = this.getFileIcon(file.extension);
+        html += `
                     <div class="tree-item file" style="padding-left: ${level * 20}px;">
                         <span class="tree-icon">${icon}</span>
                         <span class="tree-name">${file.name}</span>
                         <span class="tree-size">${this.formatFileSize(file.size)}</span>
                     </div>
                 `;
-            }
-        }
+      }
+    }
 
-        // Renderizar directorios
-        if (node.children && node.children.size > 0) {
-            for (const [name, child] of node.children.entries()) {
-                html += `
+    // Renderizar directorios
+    if (node.children && node.children.size > 0) {
+      for (const [name, child] of node.children.entries()) {
+        html += `
                     <div class="tree-item directory" style="padding-left: ${level * 20}px;">
                         <span class="tree-icon">📁</span>
                         <span class="tree-name">${name}/</span>
                     </div>
                 `;
-                html += this.renderFileTree(child, level + 1);
-            }
-        }
-
-        return html;
+        html += this.renderFileTree(child, level + 1);
+      }
     }
 
-    /**
-     * Obtiene ícono según extensión
-     */
-    getFileIcon(ext) {
-        const icons = {
-            '.html': '📄',
-            '.htm': '📄',
-            '.js': '📜',
-            '.jsx': '⚛️',
-            '.css': '🎨',
-            '.scss': '🎨',
-            '.sass': '🎨',
-            '.json': '📋',
-            '.md': '📝'
-        };
-        
-        return icons[ext] || '📄';
-    }
+    return html;
+  }
 
-    /**
-     * Formatea tamaño de archivo
-     */
-    formatFileSize(bytes) {
-        if (bytes < 1024) return bytes + ' B';
-        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-    }
+  /**
+   * Obtiene ícono según extensión
+   */
+  getFileIcon(ext) {
+    const icons = {
+      '.html': '📄',
+      '.htm': '📄',
+      '.js': '📜',
+      '.jsx': '⚛️',
+      '.css': '🎨',
+      '.scss': '🎨',
+      '.sass': '🎨',
+      '.json': '📋',
+      '.md': '📝',
+    };
+
+    return icons[ext] || '📄';
+  }
+
+  /**
+   * Formatea tamaño de archivo
+   */
+  formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
 }
 
 // Estilos

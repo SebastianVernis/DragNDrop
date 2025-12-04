@@ -76,7 +76,7 @@
 .layers-search input:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 10%);
 }
 
 .layers-search input::placeholder {
@@ -86,8 +86,7 @@
 /* ===== Tree Container ===== */
 .layers-tree {
     max-height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden auto;
     padding: 8px 0;
     background: var(--bg-primary);
 }
@@ -182,7 +181,7 @@
 }
 
 .layer-content.drop-child {
-    background: rgba(37, 99, 235, 0.1);
+    background: rgb(37 99 235 / 10%);
     border: 2px dashed var(--accent-primary);
 }
 
@@ -284,11 +283,11 @@
 }
 
 .layer-action-btn:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgb(0 0 0 / 10%);
 }
 
 .layer-content.selected .layer-action-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255 255 255 / 20%);
 }
 
 .layer-action-btn:active {
@@ -301,7 +300,7 @@
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .layers-panel {
         max-height: 300px;
     }
@@ -317,9 +316,9 @@
 }
 
 [data-theme="dark"] .layer-action-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(255 255 255 / 10%);
 }
 
 [data-theme="dark"] .layer-content.selected .layer-action-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255 255 255 / 20%);
 }

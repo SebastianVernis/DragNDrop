@@ -36,23 +36,25 @@ export class FileUploader {
       const response = await fetch(`${this.baseURL}/v2/files`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.token}`,
+          Authorization: `Bearer ${this.token}`,
           'x-now-digest': sha,
           'x-now-size': size.toString(),
-          'Content-Type': 'application/octet-stream'
+          'Content-Type': 'application/octet-stream',
         },
-        body: content
+        body: content,
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(`Upload failed for ${filename}: ${error.error?.message || response.statusText}`);
+        throw new Error(
+          `Upload failed for ${filename}: ${error.error?.message || response.statusText}`
+        );
       }
 
       return {
         file: filename,
         sha,
-        size
+        size,
       };
     } catch (error) {
       console.error(`Error uploading ${filename}:`, error);
@@ -72,13 +74,13 @@ export class FileUploader {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      
+
       if (onProgress) {
         onProgress({
           current: i + 1,
           total,
           filename: file.name,
-          percentage: Math.round(((i + 1) / total) * 100)
+          percentage: Math.round(((i + 1) / total) * 100),
         });
       }
 
@@ -102,7 +104,7 @@ export class FileUploader {
     if (projectData.html) {
       files.push({
         name: 'index.html',
-        content: projectData.html
+        content: projectData.html,
       });
     }
 
@@ -110,7 +112,7 @@ export class FileUploader {
     if (projectData.css) {
       files.push({
         name: 'styles.css',
-        content: projectData.css
+        content: projectData.css,
       });
     }
 
@@ -118,7 +120,7 @@ export class FileUploader {
     if (projectData.js) {
       files.push({
         name: 'script.js',
-        content: projectData.js
+        content: projectData.js,
       });
     }
 
@@ -127,7 +129,7 @@ export class FileUploader {
       projectData.additionalFiles.forEach(file => {
         files.push({
           name: file.name,
-          content: file.content
+          content: file.content,
         });
       });
     }
@@ -154,7 +156,7 @@ export class FileUploader {
     files.forEach(file => {
       const size = new Blob([file.content]).size;
       const sizeMB = size / (1024 * 1024);
-      
+
       if (sizeMB > 10) {
         errors.push(`File ${file.name} is too large (${sizeMB.toFixed(2)}MB). Max size is 10MB.`);
       } else if (sizeMB > 5) {
@@ -176,7 +178,7 @@ export class FileUploader {
       valid: errors.length === 0,
       errors,
       warnings,
-      totalSize: totalSizeMB
+      totalSize: totalSizeMB,
     };
   }
 }
