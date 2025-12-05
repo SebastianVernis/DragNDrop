@@ -24,6 +24,29 @@ describe('AlignmentEngine', () => {
             document.getElementById('element2'),
             document.getElementById('element3')
         ];
+        
+        // Mock getBoundingClientRect for all elements
+        mockElements.forEach(el => {
+            const left = parseFloat(el.style.left) || 0;
+            const top = parseFloat(el.style.top) || 0;
+            const width = parseFloat(el.style.width) || 0;
+            const height = parseFloat(el.style.height) || 0;
+            
+            el.getBoundingClientRect = jest.fn(() => ({
+                left: left,
+                top: top,
+                right: left + width,
+                bottom: top + height,
+                width: width,
+                height: height,
+                x: left,
+                y: top
+            }));
+            
+            // Mock offsetWidth and offsetHeight
+            Object.defineProperty(el, 'offsetWidth', { value: width, configurable: true });
+            Object.defineProperty(el, 'offsetHeight', { value: height, configurable: true });
+        });
     });
 
     afterEach(() => {

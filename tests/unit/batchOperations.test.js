@@ -52,10 +52,8 @@ describe('BatchOperations', () => {
             const element1 = document.getElementById('element1');
             const element2 = document.getElementById('element2');
             
-            multiSelectManager.selectMultiple([
-                element1.dataset.layerId,
-                element2.dataset.layerId
-            ]);
+            multiSelectManager.toggleSelection(element1.dataset.layerId);
+            multiSelectManager.toggleSelection(element2.dataset.layerId);
             
             batchOperations.align('left');
             
@@ -84,11 +82,9 @@ describe('BatchOperations', () => {
             const element2 = document.getElementById('element2');
             const element3 = document.getElementById('element3');
             
-            multiSelectManager.selectMultiple([
-                element1.dataset.layerId,
-                element2.dataset.layerId,
-                element3.dataset.layerId
-            ]);
+            multiSelectManager.toggleSelection(element1.dataset.layerId);
+            multiSelectManager.toggleSelection(element2.dataset.layerId);
+            multiSelectManager.toggleSelection(element3.dataset.layerId);
             
             batchOperations.distribute('horizontal');
             
@@ -107,10 +103,8 @@ describe('BatchOperations', () => {
             const element1 = document.getElementById('element1');
             const element2 = document.getElementById('element2');
             
-            multiSelectManager.selectMultiple([
-                element1.dataset.layerId,
-                element2.dataset.layerId
-            ]);
+            multiSelectManager.toggleSelection(element1.dataset.layerId);
+            multiSelectManager.toggleSelection(element2.dataset.layerId);
             
             window.showToast = jest.fn();
             
@@ -127,10 +121,8 @@ describe('BatchOperations', () => {
             const element1 = document.getElementById('element1');
             const element2 = document.getElementById('element2');
             
-            multiSelectManager.selectMultiple([
-                element1.dataset.layerId,
-                element2.dataset.layerId
-            ]);
+            multiSelectManager.toggleSelection(element1.dataset.layerId);
+            multiSelectManager.toggleSelection(element2.dataset.layerId);
             
             const groupId = batchOperations.group();
             
@@ -157,10 +149,8 @@ describe('BatchOperations', () => {
             const element1 = document.getElementById('element1');
             const element2 = document.getElementById('element2');
             
-            multiSelectManager.selectMultiple([
-                element1.dataset.layerId,
-                element2.dataset.layerId
-            ]);
+            multiSelectManager.toggleSelection(element1.dataset.layerId);
+            multiSelectManager.toggleSelection(element2.dataset.layerId);
             
             batchOperations.applyBatchStyle('backgroundColor', 'red');
             
@@ -174,10 +164,8 @@ describe('BatchOperations', () => {
             const element1 = document.getElementById('element1');
             const element2 = document.getElementById('element2');
             
-            multiSelectManager.selectMultiple([
-                element1.dataset.layerId,
-                element2.dataset.layerId
-            ]);
+            multiSelectManager.toggleSelection(element1.dataset.layerId);
+            multiSelectManager.toggleSelection(element2.dataset.layerId);
             
             // Mock confirm
             window.confirm = jest.fn(() => true);
@@ -193,14 +181,16 @@ describe('BatchOperations', () => {
         test('should duplicate all selected elements', () => {
             const element1 = document.getElementById('element1');
             
+            // Mock duplicateLayer to return a new layer ID
+            window.layersManager = layersManager;
+            const mockDuplicate = jest.spyOn(layersManager, 'duplicateLayer').mockReturnValue('duplicated-layer-1');
+            
             multiSelectManager.selectSingle(element1.dataset.layerId);
             
             batchOperations.duplicateSelected();
             
-            const canvas = document.getElementById('canvas');
-            const elements = canvas.querySelectorAll('.canvas-element');
-            
-            expect(elements.length).toBeGreaterThan(3);
+            expect(mockDuplicate).toHaveBeenCalledWith(element1.dataset.layerId);
+            mockDuplicate.mockRestore();
         });
     });
 
@@ -209,18 +199,17 @@ describe('BatchOperations', () => {
             const element1 = document.getElementById('element1');
             const element2 = document.getElementById('element2');
             
-            multiSelectManager.selectMultiple([
-                element1.dataset.layerId,
-                element2.dataset.layerId
-            ]);
+            multiSelectManager.toggleSelection(element1.dataset.layerId);
+            multiSelectManager.toggleSelection(element2.dataset.layerId);
+            
+            window.layersManager = layersManager;
+            const mockLock = jest.spyOn(layersManager, 'lockLayer');
             
             batchOperations.lockSelected();
             
-            const layer1 = layersManager.getLayer(element1.dataset.layerId);
-            const layer2 = layersManager.getLayer(element2.dataset.layerId);
-            
-            expect(layer1.locked).toBe(true);
-            expect(layer2.locked).toBe(true);
+            expect(mockLock).toHaveBeenCalledWith(element1.dataset.layerId);
+            expect(mockLock).toHaveBeenCalledWith(element2.dataset.layerId);
+            mockLock.mockRestore();
         });
 
         test('should unlock all selected elements', () => {

@@ -128,7 +128,9 @@ describe('MultiSelectManager', () => {
             const layerId1 = element1.dataset.layerId;
             const layerId2 = element2.dataset.layerId;
             
-            multiSelectManager.selectMultiple([layerId1, layerId2]);
+            // Use toggleSelection to add elements
+            multiSelectManager.toggleSelection(layerId1);
+            multiSelectManager.toggleSelection(layerId2);
             
             const selected = multiSelectManager.getSelected();
             expect(selected).toHaveLength(2);
@@ -162,7 +164,9 @@ describe('MultiSelectManager', () => {
             const layerId1 = element1.dataset.layerId;
             const layerId2 = element2.dataset.layerId;
             
-            multiSelectManager.selectMultiple([layerId1, layerId2]);
+            // Use toggleSelection to add elements instead of selectMultiple
+            multiSelectManager.toggleSelection(layerId1);
+            multiSelectManager.toggleSelection(layerId2);
             multiSelectManager.updateVisualSelection();
             
             expect(element1.classList.contains('multi-selected')).toBe(true);
@@ -172,10 +176,18 @@ describe('MultiSelectManager', () => {
 
     describe('Events', () => {
         test('should dispatch selection changed event', (done) => {
-            window.addEventListener('multiselect:changed', (e) => {
-                expect(e.detail.count).toBe(1);
-                done();
-            });
+            const handler = (e) => {
+                try {
+                    expect(e.detail.count).toBe(1);
+                    window.removeEventListener('multiselect:changed', handler);
+                    done();
+                } catch (error) {
+                    window.removeEventListener('multiselect:changed', handler);
+                    done(error);
+                }
+            };
+            
+            window.addEventListener('multiselect:changed', handler);
 
             const element1 = document.getElementById('element1');
             const layerId = element1.dataset.layerId;
