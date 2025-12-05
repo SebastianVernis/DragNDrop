@@ -55,7 +55,7 @@ export class Spotlight {
    */
   highlight(target, options = {}) {
     const element = typeof target === 'string' ? document.querySelector(target) : target;
-    
+
     if (!element) {
       console.warn('Spotlight target not found:', target);
       return;
@@ -126,7 +126,7 @@ export class Spotlight {
     if (!this.isActive) return;
 
     const element = typeof target === 'string' ? document.querySelector(target) : target;
-    
+
     if (!element || !this.spotlight) return;
 
     const rect = element.getBoundingClientRect();
@@ -145,7 +145,7 @@ export class Spotlight {
     if (!this.spotlight) return;
 
     this.spotlight.style.animation = 'tutorial-spotlight-pulse 1s ease-in-out';
-    
+
     setTimeout(() => {
       if (this.spotlight) {
         this.spotlight.style.animation = '';

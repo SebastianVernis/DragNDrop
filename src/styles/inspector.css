@@ -40,7 +40,7 @@
     font-size: 16px;
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0 0 4px 0;
+    margin: 0 0 4px;
 }
 
 .computed-styles-info {
@@ -168,7 +168,7 @@
 .computed-search input:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 10%);
 }
 
 /* ===== All Properties List ===== */
@@ -221,22 +221,22 @@
 
 .box-model-margin {
     border-color: #f59e0b;
-    background: rgba(245, 158, 11, 0.1);
+    background: rgb(245 158 11 / 10%);
 }
 
 .box-model-border {
     border-color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
+    background: rgb(16 185 129 / 10%);
 }
 
 .box-model-padding {
     border-color: #3b82f6;
-    background: rgba(59, 130, 246, 0.1);
+    background: rgb(59 130 246 / 10%);
 }
 
 .box-model-content {
     border-color: #8b5cf6;
-    background: rgba(139, 92, 246, 0.1);
+    background: rgb(139 92 246 / 10%);
     min-width: 120px;
     min-height: 80px;
 }
@@ -319,7 +319,7 @@
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .computed-styles-container {
         padding: 12px;
     }
@@ -344,17 +344,17 @@
 
 /* ===== Dark Mode ===== */
 [data-theme="dark"] .box-model-margin {
-    background: rgba(245, 158, 11, 0.15);
+    background: rgb(245 158 11 / 15%);
 }
 
 [data-theme="dark"] .box-model-border {
-    background: rgba(16, 185, 129, 0.15);
+    background: rgb(16 185 129 / 15%);
 }
 
 [data-theme="dark"] .box-model-padding {
-    background: rgba(59, 130, 246, 0.15);
+    background: rgb(59 130 246 / 15%);
 }
 
 [data-theme="dark"] .box-model-content {
-    background: rgba(139, 92, 246, 0.15);
+    background: rgb(139 92 246 / 15%);
 }

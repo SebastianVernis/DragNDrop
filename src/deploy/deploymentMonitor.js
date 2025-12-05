@@ -20,8 +20,8 @@ export class DeploymentMonitor {
     try {
       const response = await fetch(`${this.baseURL}/v13/deployments/${deploymentId}`, {
         headers: {
-          'Authorization': `Bearer ${this.token}`
-        }
+          Authorization: `Bearer ${this.token}`,
+        },
       });
 
       if (!response.ok) {
@@ -65,7 +65,7 @@ export class DeploymentMonitor {
             url: status.url,
             attempts,
             elapsed: Math.round(elapsed / 1000),
-            status
+            status,
           });
         }
 
@@ -76,18 +76,19 @@ export class DeploymentMonitor {
             url: status.url,
             deploymentId,
             readyState: status.readyState,
-            elapsed: Math.round(elapsed / 1000)
+            elapsed: Math.round(elapsed / 1000),
           };
         }
 
         // Check if deployment failed
         if (status.readyState === 'ERROR' || status.readyState === 'CANCELED') {
-          throw new Error(`Deployment ${status.readyState.toLowerCase()}: ${status.error?.message || 'Unknown error'}`);
+          throw new Error(
+            `Deployment ${status.readyState.toLowerCase()}: ${status.error?.message || 'Unknown error'}`
+          );
         }
 
         // Wait before next poll
         await this.sleep(this.pollingInterval);
-
       } catch (error) {
         if (error.message.includes('Deployment')) {
           throw error;
@@ -108,8 +109,8 @@ export class DeploymentMonitor {
     try {
       const response = await fetch(`${this.baseURL}/v2/deployments/${deploymentId}/events`, {
         headers: {
-          'Authorization': `Bearer ${this.token}`
-        }
+          Authorization: `Bearer ${this.token}`,
+        },
       });
 
       if (!response.ok) {
@@ -132,8 +133,8 @@ export class DeploymentMonitor {
     try {
       const response = await fetch(`${this.baseURL}/v1/deployments/${deploymentId}/builds`, {
         headers: {
-          'Authorization': `Bearer ${this.token}`
-        }
+          Authorization: `Bearer ${this.token}`,
+        },
       });
 
       if (!response.ok) {
@@ -157,8 +158,8 @@ export class DeploymentMonitor {
       const response = await fetch(`${this.baseURL}/v12/deployments/${deploymentId}/cancel`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${this.token}`
-        }
+          Authorization: `Bearer ${this.token}`,
+        },
       });
 
       if (!response.ok) {
@@ -188,14 +189,14 @@ export class DeploymentMonitor {
    */
   formatState(readyState) {
     const states = {
-      'INITIALIZING': { label: 'Inicializando', icon: '⏳', color: '#3b82f6' },
-      'BUILDING': { label: 'Construyendo', icon: '🔨', color: '#f59e0b' },
-      'UPLOADING': { label: 'Subiendo', icon: '📤', color: '#8b5cf6' },
-      'DEPLOYING': { label: 'Desplegando', icon: '🚀', color: '#06b6d4' },
-      'READY': { label: 'Listo', icon: '✅', color: '#10b981' },
-      'ERROR': { label: 'Error', icon: '❌', color: '#ef4444' },
-      'CANCELED': { label: 'Cancelado', icon: '⛔', color: '#6b7280' },
-      'QUEUED': { label: 'En cola', icon: '⏸️', color: '#64748b' }
+      INITIALIZING: { label: 'Inicializando', icon: '⏳', color: '#3b82f6' },
+      BUILDING: { label: 'Construyendo', icon: '🔨', color: '#f59e0b' },
+      UPLOADING: { label: 'Subiendo', icon: '📤', color: '#8b5cf6' },
+      DEPLOYING: { label: 'Desplegando', icon: '🚀', color: '#06b6d4' },
+      READY: { label: 'Listo', icon: '✅', color: '#10b981' },
+      ERROR: { label: 'Error', icon: '❌', color: '#ef4444' },
+      CANCELED: { label: 'Cancelado', icon: '⛔', color: '#6b7280' },
+      QUEUED: { label: 'En cola', icon: '⏸️', color: '#64748b' },
     };
 
     return states[readyState] || { label: readyState, icon: '❓', color: '#9ca3af' };

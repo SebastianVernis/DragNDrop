@@ -4,31 +4,31 @@
  */
 
 class MarqueeSelector {
-    constructor() {
-        this.active = false;
-        this.startPoint = null;
-        this.element = null;
-        this.canvas = null;
-        
-        this.init();
-    }
+  constructor() {
+    this.active = false;
+    this.startPoint = null;
+    this.element = null;
+    this.canvas = null;
 
-    init() {
-        this.canvas = document.getElementById('canvas');
-        console.log('🎯 MarqueeSelector initialized');
-    }
+    this.init();
+  }
 
-    /**
-     * Start marquee selection
-     */
-    start(x, y) {
-        this.active = true;
-        this.startPoint = { x, y };
+  init() {
+    this.canvas = document.getElementById('canvas');
+    console.log('🎯 MarqueeSelector initialized');
+  }
 
-        // Create marquee element
-        this.element = document.createElement('div');
-        this.element.className = 'marquee-selector';
-        this.element.style.cssText = `
+  /**
+   * Start marquee selection
+   */
+  start(x, y) {
+    this.active = true;
+    this.startPoint = { x, y };
+
+    // Create marquee element
+    this.element = document.createElement('div');
+    this.element.className = 'marquee-selector';
+    this.element.style.cssText = `
             position: fixed;
             left: ${x}px;
             top: ${y}px;
@@ -40,92 +40,92 @@ class MarqueeSelector {
             z-index: 10000;
         `;
 
-        document.body.appendChild(this.element);
+    document.body.appendChild(this.element);
+  }
+
+  /**
+   * Update marquee position and size
+   */
+  update(x, y) {
+    if (!this.active || !this.element || !this.startPoint) return;
+
+    const left = Math.min(x, this.startPoint.x);
+    const top = Math.min(y, this.startPoint.y);
+    const width = Math.abs(x - this.startPoint.x);
+    const height = Math.abs(y - this.startPoint.y);
+
+    this.element.style.left = `${left}px`;
+    this.element.style.top = `${top}px`;
+    this.element.style.width = `${width}px`;
+    this.element.style.height = `${height}px`;
+
+    return { left, top, width, height };
+  }
+
+  /**
+   * End marquee selection
+   */
+  end() {
+    this.active = false;
+
+    if (this.element) {
+      this.element.remove();
+      this.element = null;
     }
 
-    /**
-     * Update marquee position and size
-     */
-    update(x, y) {
-        if (!this.active || !this.element || !this.startPoint) return;
+    this.startPoint = null;
+  }
 
-        const left = Math.min(x, this.startPoint.x);
-        const top = Math.min(y, this.startPoint.y);
-        const width = Math.abs(x - this.startPoint.x);
-        const height = Math.abs(y - this.startPoint.y);
+  /**
+   * Check if element intersects with marquee
+   */
+  intersects(elementRect, marqueeRect) {
+    return !(
+      elementRect.right < marqueeRect.left ||
+      elementRect.left > marqueeRect.left + marqueeRect.width ||
+      elementRect.bottom < marqueeRect.top ||
+      elementRect.top > marqueeRect.top + marqueeRect.height
+    );
+  }
 
-        this.element.style.left = `${left}px`;
-        this.element.style.top = `${top}px`;
-        this.element.style.width = `${width}px`;
-        this.element.style.height = `${height}px`;
+  /**
+   * Get elements within marquee
+   */
+  getIntersectingElements(marqueeRect) {
+    if (!this.canvas) return [];
 
-        return { left, top, width, height };
-    }
+    const elements = this.canvas.querySelectorAll('.canvas-element');
+    const intersecting = [];
 
-    /**
-     * End marquee selection
-     */
-    end() {
-        this.active = false;
-        
-        if (this.element) {
-            this.element.remove();
-            this.element = null;
-        }
+    elements.forEach(element => {
+      const rect = element.getBoundingClientRect();
 
-        this.startPoint = null;
-    }
+      if (this.intersects(rect, marqueeRect)) {
+        intersecting.push(element);
+      }
+    });
 
-    /**
-     * Check if element intersects with marquee
-     */
-    intersects(elementRect, marqueeRect) {
-        return !(
-            elementRect.right < marqueeRect.left ||
-            elementRect.left > marqueeRect.left + marqueeRect.width ||
-            elementRect.bottom < marqueeRect.top ||
-            elementRect.top > marqueeRect.top + marqueeRect.height
-        );
-    }
+    return intersecting;
+  }
 
-    /**
-     * Get elements within marquee
-     */
-    getIntersectingElements(marqueeRect) {
-        if (!this.canvas) return [];
+  /**
+   * Is active
+   */
+  isActive() {
+    return this.active;
+  }
 
-        const elements = this.canvas.querySelectorAll('.canvas-element');
-        const intersecting = [];
-
-        elements.forEach(element => {
-            const rect = element.getBoundingClientRect();
-            
-            if (this.intersects(rect, marqueeRect)) {
-                intersecting.push(element);
-            }
-        });
-
-        return intersecting;
-    }
-
-    /**
-     * Is active
-     */
-    isActive() {
-        return this.active;
-    }
-
-    /**
-     * Destroy
-     */
-    destroy() {
-        this.end();
-    }
+  /**
+   * Destroy
+   */
+  destroy() {
+    this.end();
+  }
 }
 
 // Export
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MarqueeSelector;
+  module.exports = MarqueeSelector;
 }
 
 window.MarqueeSelector = MarqueeSelector;

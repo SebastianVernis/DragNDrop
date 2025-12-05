@@ -67,38 +67,38 @@ export function initWorkflow4() {
  */
 function setupEventListeners() {
   // Vercel deployment events
-  window.addEventListener('deploy:start', (e) => {
+  window.addEventListener('deploy:start', e => {
     console.log('🚀 Deployment started:', e.detail);
     showToast('Iniciando deployment...', 'info');
   });
 
-  window.addEventListener('deploy:complete', (e) => {
+  window.addEventListener('deploy:complete', e => {
     console.log('✅ Deployment complete:', e.detail);
     showToast(`¡Deployment exitoso! URL: ${e.detail.url}`, 'success');
   });
 
-  window.addEventListener('deploy:error', (e) => {
+  window.addEventListener('deploy:error', e => {
     console.error('❌ Deployment error:', e.detail);
     showToast(`Error en deployment: ${e.detail.error}`, 'error');
   });
 
   // GitHub events
-  window.addEventListener('github:connected', (e) => {
+  window.addEventListener('github:connected', e => {
     console.log('✅ GitHub connected:', e.detail);
     showToast(`Conectado a GitHub como ${e.detail.user.login}`, 'success');
   });
 
-  window.addEventListener('github:commit', (e) => {
+  window.addEventListener('github:commit', e => {
     console.log('✅ GitHub commit:', e.detail);
     showToast(`Commit exitoso: ${e.detail.commitSHA.substring(0, 7)}`, 'success');
   });
 
   // Tutorial events
-  window.addEventListener('tutorial:start', (e) => {
+  window.addEventListener('tutorial:start', e => {
     console.log('📚 Tutorial started:', e.detail);
   });
 
-  window.addEventListener('tutorial:complete', (e) => {
+  window.addEventListener('tutorial:complete', e => {
     console.log('🎉 Tutorial completed:', e.detail);
     showToast('¡Tutorial completado! 🎉', 'success');
   });
@@ -108,10 +108,7 @@ function setupEventListeners() {
  * Load CSS styles for workflow 4
  */
 function loadStyles() {
-  const styles = [
-    '/src/styles/deploy.css',
-    '/src/styles/tutorial.css'
-  ];
+  const styles = ['/src/styles/deploy.css', '/src/styles/tutorial.css'];
 
   styles.forEach(href => {
     if (!document.querySelector(`link[href="${href}"]`)) {
@@ -140,7 +137,7 @@ function showToast(message, type = 'info') {
  */
 
 // Show deploy modal
-window.showDeployModal = function() {
+window.showDeployModal = function () {
   if (window.deployModal) {
     window.deployModal.show();
   } else {
@@ -149,13 +146,13 @@ window.showDeployModal = function() {
 };
 
 // Show GitHub connection modal
-window.showGitHubModal = function() {
+window.showGitHubModal = function () {
   alert('GitHub integration modal - Coming soon!');
   // TODO: Implement GitHub modal UI
 };
 
 // Start tutorial
-window.startTutorial = function() {
+window.startTutorial = function () {
   if (window.tutorial) {
     window.tutorial.start();
   } else {
@@ -164,7 +161,7 @@ window.startTutorial = function() {
 };
 
 // Show deployment history
-window.showDeploymentHistory = function() {
+window.showDeploymentHistory = function () {
   if (window.vercelDeployer) {
     const history = window.vercelDeployer.getDeploymentHistory(10);
     console.log('Deployment History:', history);
