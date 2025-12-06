@@ -16,7 +16,7 @@ export class DeploymentHistory {
    */
   addDeployment(deployment) {
     const history = this.getHistory();
-    
+
     const record = {
       id: this.generateId(),
       timestamp: Date.now(),
@@ -27,7 +27,7 @@ export class DeploymentHistory {
       duration: deployment.duration || 0,
       filesCount: deployment.filesCount || 0,
       size: deployment.size || 0,
-      ...deployment
+      ...deployment,
     };
 
     history.unshift(record);
@@ -74,13 +74,13 @@ export class DeploymentHistory {
   updateDeployment(id, updates) {
     const history = this.getHistory();
     const index = history.findIndex(d => d.id === id || d.deploymentId === id);
-    
+
     if (index === -1) return null;
 
     history[index] = {
       ...history[index],
       ...updates,
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
 
     this.saveHistory(history);
@@ -95,7 +95,7 @@ export class DeploymentHistory {
   deleteDeployment(id) {
     const history = this.getHistory();
     const filtered = history.filter(d => d.id !== id && d.deploymentId !== id);
-    
+
     if (filtered.length === history.length) return false;
 
     this.saveHistory(filtered);
@@ -135,14 +135,14 @@ export class DeploymentHistory {
    */
   getStatistics() {
     const history = this.getHistory();
-    
+
     if (history.length === 0) {
       return {
         total: 0,
         successful: 0,
         failed: 0,
         avgDuration: 0,
-        totalSize: 0
+        totalSize: 0,
       };
     }
 
@@ -157,7 +157,7 @@ export class DeploymentHistory {
       failed,
       avgDuration: Math.round(totalDuration / history.length),
       totalSize: totalSize / (1024 * 1024), // Convert to MB
-      successRate: Math.round((successful / history.length) * 100)
+      successRate: Math.round((successful / history.length) * 100),
     };
   }
 
@@ -221,7 +221,7 @@ export class DeploymentHistory {
       formattedDuration: this.formatDuration(deployment.duration),
       formattedSize: this.formatSize(deployment.size),
       statusIcon: this.getStatusIcon(deployment.status),
-      statusColor: this.getStatusColor(deployment.status)
+      statusColor: this.getStatusColor(deployment.status),
     };
   }
 
@@ -258,11 +258,11 @@ export class DeploymentHistory {
    */
   getStatusIcon(status) {
     const icons = {
-      'READY': '✅',
-      'ERROR': '❌',
-      'BUILDING': '🔨',
-      'DEPLOYING': '🚀',
-      'CANCELED': '⛔'
+      READY: '✅',
+      ERROR: '❌',
+      BUILDING: '🔨',
+      DEPLOYING: '🚀',
+      CANCELED: '⛔',
     };
     return icons[status] || '❓';
   }
@@ -274,11 +274,11 @@ export class DeploymentHistory {
    */
   getStatusColor(status) {
     const colors = {
-      'READY': '#10b981',
-      'ERROR': '#ef4444',
-      'BUILDING': '#f59e0b',
-      'DEPLOYING': '#06b6d4',
-      'CANCELED': '#6b7280'
+      READY: '#10b981',
+      ERROR: '#ef4444',
+      BUILDING: '#f59e0b',
+      DEPLOYING: '#06b6d4',
+      CANCELED: '#6b7280',
     };
     return colors[status] || '#9ca3af';
   }

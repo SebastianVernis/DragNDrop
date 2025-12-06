@@ -67,6 +67,7 @@
 ### Components (`src/components/`)
 - `fileLoader.js` - File loading with drag & drop support
 - `htmlParser.js` - HTML to JSON conversion with component detection
+- **NEW** `toolbarDropdown.js` - Modular dropdown menu system for toolbar
 
 ### Storage (`src/storage/`)
 - `projectManager.js` - Project management with auto-save (30s)
@@ -109,6 +110,14 @@
    - Identify build tools (Vite, Webpack, etc.)
    - Parse file tree with size info
    - Import HTML files to canvas
+
+6. **Toolbar Dropdown System** (v3.1):
+   - Modular dropdown menus organized by category
+   - 8 menu groups: File, Edit, Layout, View, AI Tools, Export, Deploy, Help
+   - Auto-sync states (active/disabled) across UI
+   - Keyboard shortcuts display
+   - Mobile responsive (bottom sheet)
+   - Hover and click interaction modes
 
 ### Guidelines
 - All modules export globally via `window` object

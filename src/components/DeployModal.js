@@ -158,16 +158,15 @@ export class DeployModal {
 
     try {
       this.showStatus('info', 'Conectando a Vercel...');
-      
+
       window.vercelDeployer.connect(token, teamId || null);
-      
+
       this.showStatus('success', '¡Conectado exitosamente!');
-      
+
       setTimeout(() => {
         this.updateConnectionStatus();
         this.renderForm();
       }, 1000);
-
     } catch (error) {
       this.showStatus('error', `Error al conectar: ${error.message}`);
     }
@@ -254,7 +253,6 @@ export class DeployModal {
       if (this.onDeploy) {
         this.onDeploy(result);
       }
-
     } catch (error) {
       this.showStatus('error', `Error al desplegar: ${error.message}`);
       this.hideProgress();
@@ -318,7 +316,7 @@ export class DeployModal {
    * Setup progress listeners
    */
   setupProgressListeners() {
-    window.addEventListener('deploy:progress', (e) => {
+    window.addEventListener('deploy:progress', e => {
       const { message, progress } = e.detail;
       const progressBar = document.getElementById('deployProgressBar');
       const progressText = document.getElementById('deployProgressText');
@@ -412,7 +410,7 @@ export class DeployModal {
       info: 'ℹ️',
       success: '✅',
       error: '❌',
-      warning: '⚠️'
+      warning: '⚠️',
     };
     return icons[type] || 'ℹ️';
   }

@@ -1,27 +1,27 @@
 {
-  "mcpServers": {
-    "better-auth": {
-      "httpUrl": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+    "mcpServers": {
+        "better-auth": {
+            "httpUrl": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+        },
+        "chrome-devtools": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "chrome-devtools-mcp@latest"
+            ]
+        },
+        "@21st-dev/magic": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@21st-dev/magic@latest"
+            ],
+            "env": {
+                "API_KEY": "$MAGIC_API_KEY"
+            }
+        }
     },
-    "chrome-devtools": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "chrome-devtools-mcp@latest"
-      ]
-    },
-    "@21st-dev/magic": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@21st-dev/magic@latest"
-      ],
-      "env": {
-        "API_KEY": "$MAGIC_API_KEY"
-      }
+    "tools": {
+        "approvalMode": "yolo"
     }
-  },
-  "tools": {
-    "approvalMode": "yolo"
-  }
 }

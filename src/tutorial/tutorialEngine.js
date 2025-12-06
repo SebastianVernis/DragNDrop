@@ -13,7 +13,7 @@ export class TutorialEngine {
     this.spotlight = new Spotlight();
     this.tooltip = null;
     this.completedSteps = new Set();
-    
+
     // Load progress
     this.loadProgress();
   }
@@ -25,9 +25,9 @@ export class TutorialEngine {
   start(startIndex = 0) {
     this.currentStepIndex = startIndex;
     this.isActive = true;
-    
+
     this.dispatchEvent('tutorial:start', { stepIndex: startIndex });
-    
+
     this.showStep(this.currentStepIndex);
   }
 
@@ -37,7 +37,7 @@ export class TutorialEngine {
    */
   showStep(index) {
     const step = getTutorialStepByIndex(index);
-    
+
     if (!step) {
       console.error('Tutorial step not found:', index);
       return;
@@ -56,7 +56,7 @@ export class TutorialEngine {
       setTimeout(() => {
         this.spotlight.highlight(step.target, {
           padding: 8,
-          allowClicks: step.action?.type === 'click'
+          allowClicks: step.action?.type === 'click',
         });
       }, 100);
     }
@@ -65,7 +65,7 @@ export class TutorialEngine {
     this.dispatchEvent('tutorial:step', {
       stepIndex: index,
       step,
-      progress: Math.round(((index + 1) / getTotalSteps()) * 100)
+      progress: Math.round(((index + 1) / getTotalSteps()) * 100),
     });
 
     // Save progress
@@ -86,10 +86,10 @@ export class TutorialEngine {
     this.tooltip = document.createElement('div');
     this.tooltip.id = 'tutorial-tooltip';
     this.tooltip.className = 'tutorial-tooltip';
-    
+
     // Build tooltip content
     const progress = Math.round(((this.currentStepIndex + 1) / getTotalSteps()) * 100);
-    
+
     this.tooltip.innerHTML = `
       <div class="tutorial-tooltip-header">
         <h3>${step.title}</h3>
@@ -130,11 +130,13 @@ export class TutorialEngine {
       return '<button class="tutorial-btn tutorial-btn-primary" onclick="window.tutorial.next()">Siguiente</button>';
     }
 
-    return buttons.map(btn => {
-      const className = btn.primary ? 'tutorial-btn tutorial-btn-primary' : 'tutorial-btn';
-      const onclick = `window.tutorial.${btn.action}()`;
-      return `<button class="${className}" onclick="${onclick}">${btn.text}</button>`;
-    }).join('');
+    return buttons
+      .map(btn => {
+        const className = btn.primary ? 'tutorial-btn tutorial-btn-primary' : 'tutorial-btn';
+        const onclick = `window.tutorial.${btn.action}()`;
+        return `<button class="${className}" onclick="${onclick}">${btn.text}</button>`;
+      })
+      .join('');
   }
 
   /**
@@ -162,7 +164,7 @@ export class TutorialEngine {
       const target = document.querySelector(step.target);
       if (target) {
         const rect = target.getBoundingClientRect();
-        
+
         switch (position) {
           case 'top':
             this.tooltip.style.left = `${rect.left + rect.width / 2}px`;
@@ -226,10 +228,10 @@ export class TutorialEngine {
   complete() {
     this.completedSteps.add(this.currentStepIndex);
     this.stop();
-    
+
     this.dispatchEvent('tutorial:complete', {
       completedSteps: Array.from(this.completedSteps),
-      totalSteps: getTotalSteps()
+      totalSteps: getTotalSteps(),
     });
 
     // Mark tutorial as completed
@@ -244,7 +246,7 @@ export class TutorialEngine {
    */
   stop() {
     this.isActive = false;
-    
+
     // Remove tooltip
     if (this.tooltip) {
       this.tooltip.classList.remove('tutorial-tooltip-visible');
@@ -270,7 +272,7 @@ export class TutorialEngine {
     this.completedSteps.clear();
     localStorage.removeItem('tutorial_progress');
     localStorage.removeItem('tutorial_completed');
-    
+
     this.dispatchEvent('tutorial:reset');
   }
 
@@ -314,7 +316,7 @@ export class TutorialEngine {
     const progress = {
       currentStepIndex: this.currentStepIndex,
       completedSteps: Array.from(this.completedSteps),
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     localStorage.setItem('tutorial_progress', JSON.stringify(progress));

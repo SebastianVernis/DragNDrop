@@ -26,7 +26,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgb(0 0 0 / 60%);
     backdrop-filter: blur(4px);
 }
 
@@ -38,7 +38,7 @@
     max-height: 90vh;
     position: relative;
     z-index: 10;
-    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 30%);
     display: flex;
     flex-direction: column;
 }
@@ -118,7 +118,7 @@
 .generator-form textarea:focus {
     outline: none;
     border-color: var(--accent-color, #2563eb);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 10%);
 }
 
 .form-hint {
@@ -160,7 +160,7 @@
 
 .style-preset-card.active {
     border-color: var(--accent-color, #2563eb);
-    background: rgba(37, 99, 235, 0.1);
+    background: rgb(37 99 235 / 10%);
 }
 
 .preset-name {
@@ -289,7 +289,7 @@
     max-height: calc(100vh - 100px);
     background: var(--bg-primary, white);
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgb(0 0 0 / 20%);
     z-index: 2000;
     display: flex;
     flex-direction: column;
@@ -399,13 +399,13 @@
 }
 
 .summary-item.error {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: rgb(239 68 68 / 10%);
+    border: 1px solid rgb(239 68 68 / 30%);
 }
 
 .summary-item.warning {
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: rgb(245 158 11 / 10%);
+    border: 1px solid rgb(245 158 11 / 30%);
 }
 
 .summary-count {
@@ -423,7 +423,7 @@
 
 /* Issues List */
 .issues-list h4 {
-    margin: 0 0 16px 0;
+    margin: 0 0 16px;
     font-size: 16px;
     color: var(--text-primary, #1e293b);
 }
@@ -444,18 +444,18 @@
 
 .issue-item.A,
 .issue-item.error {
-    background: rgba(239, 68, 68, 0.05);
+    background: rgb(239 68 68 / 5%);
     border-left-color: #ef4444;
 }
 
 .issue-item.AA,
 .issue-item.warning {
-    background: rgba(245, 158, 11, 0.05);
+    background: rgb(245 158 11 / 5%);
     border-left-color: #f59e0b;
 }
 
 .issue-item.info {
-    background: rgba(59, 130, 246, 0.05);
+    background: rgb(59 130 246 / 5%);
     border-left-color: #3b82f6;
 }
 
@@ -470,7 +470,7 @@
     font-size: 11px;
     padding: 2px 8px;
     border-radius: 4px;
-    background: rgba(0,0,0,0.1);
+    background: rgb(0 0 0 / 10%);
     font-weight: 600;
 }
 
@@ -504,7 +504,7 @@
 }
 
 .no-results h4 {
-    margin: 0 0 12px 0;
+    margin: 0 0 12px;
     color: var(--text-primary, #1e293b);
 }
 
@@ -519,7 +519,7 @@
 }
 
 .recommendations h4 {
-    margin: 0 0 12px 0;
+    margin: 0 0 12px;
     font-size: 16px;
     color: var(--text-primary, #1e293b);
 }
@@ -534,11 +534,11 @@
 }
 
 .recommendation-item.high {
-    background: rgba(239, 68, 68, 0.1);
+    background: rgb(239 68 68 / 10%);
 }
 
 .recommendation-item.medium {
-    background: rgba(245, 158, 11, 0.1);
+    background: rgb(245 158 11 / 10%);
 }
 
 .rec-priority {
@@ -547,7 +547,7 @@
     text-transform: uppercase;
     padding: 4px 8px;
     border-radius: 4px;
-    background: rgba(0,0,0,0.1);
+    background: rgb(0 0 0 / 10%);
 }
 
 .rec-message {
@@ -564,7 +564,7 @@
 
 /* Category Sections */
 .issues-by-category h4 {
-    margin: 0 0 12px 0;
+    margin: 0 0 12px;
     font-size: 16px;
     color: var(--text-primary, #1e293b);
 }
@@ -689,7 +689,7 @@
 
 .usage-bar {
     height: 8px;
-    background: rgba(0,0,0,0.1);
+    background: rgb(0 0 0 / 10%);
     border-radius: 4px;
     overflow: hidden;
     margin: 8px 0;
@@ -729,7 +729,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .a11y-panel,
     .seo-panel {
         width: calc(100% - 40px);

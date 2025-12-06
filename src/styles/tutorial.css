@@ -6,7 +6,7 @@
   position: fixed;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 30%);
   max-width: 400px;
   z-index: 10001;
   opacity: 0;
@@ -119,7 +119,7 @@
 
 .tutorial-btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 12px rgb(59 130 246 / 40%);
 }
 
 /* Completion Message */
@@ -129,7 +129,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,7 +148,7 @@
   padding: 40px;
   text-align: center;
   max-width: 500px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 30%);
   transform: scale(0.9);
   transition: transform 0.3s ease;
 }
@@ -167,6 +167,7 @@
   0%, 100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.2);
   }
@@ -245,7 +246,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .tutorial-tooltip {
     max-width: 90%;
     left: 5% !important;

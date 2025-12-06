@@ -1,6 +1,6 @@
 /**
  * Cloud Sync Service
- * 
+ *
  * Manages automatic synchronization of projects to the cloud
  * Features:
  * - Auto-save with debouncing
@@ -33,7 +33,7 @@ class CloudSync {
     window.addEventListener('offline', () => this.handleOffline());
 
     // Listen to auth events
-    authService.subscribe((event) => {
+    authService.subscribe(event => {
       if (event === 'logout') {
         this.reset();
       }
@@ -50,7 +50,7 @@ class CloudSync {
 
     // Load project from cloud
     const result = await this.load(projectId);
-    
+
     if (result.success) {
       this.notifyListeners('initialized', result.data);
     }
@@ -142,7 +142,7 @@ class CloudSync {
       } else {
         // Create new project
         result = await apiClient.createProject(projectData);
-        
+
         if (result.success) {
           this.currentProjectId = result.data.id;
         }
@@ -154,15 +154,19 @@ class CloudSync {
         this.notifyListeners('synced', result.data);
 
         // Dispatch global event
-        window.dispatchEvent(new CustomEvent('sync:complete', {
-          detail: result.data,
-        }));
+        window.dispatchEvent(
+          new CustomEvent('sync:complete', {
+            detail: result.data,
+          })
+        );
       } else {
         this.notifyListeners('error', result.error);
 
-        window.dispatchEvent(new CustomEvent('sync:error', {
-          detail: { error: result.error },
-        }));
+        window.dispatchEvent(
+          new CustomEvent('sync:error', {
+            detail: { error: result.error },
+          })
+        );
       }
 
       return result;
@@ -268,9 +272,11 @@ class CloudSync {
   async resolveConflict(serverData, localData) {
     this.notifyListeners('conflict', { serverData, localData });
 
-    window.dispatchEvent(new CustomEvent('sync:conflict', {
-      detail: { serverData, localData },
-    }));
+    window.dispatchEvent(
+      new CustomEvent('sync:conflict', {
+        detail: { serverData, localData },
+      })
+    );
 
     switch (this.conflictStrategy) {
       case 'server-wins':
@@ -319,7 +325,7 @@ class CloudSync {
   getCurrentProjectData() {
     // This should be implemented by the application
     // to extract current project state
-    
+
     // For now, return a placeholder
     return {
       name: 'Untitled Project',
@@ -340,7 +346,7 @@ class CloudSync {
     // Process offline queue
     while (this.offlineQueue.length > 0) {
       const item = this.offlineQueue.shift();
-      
+
       if (item.action === 'save') {
         await this.save(item.data);
       }
