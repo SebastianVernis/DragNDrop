@@ -1,204 +1,111 @@
-# Editor HTML Drag & Drop - Proyecto Completado
+# 📚 Documentación DragNDrop Editor v3.0
 
-## Descripción
-Editor visual de HTML con funcionalidad de arrastrar y soltar (drag & drop) para crear páginas web de forma intuitiva.
+Bienvenido a la documentación oficial del editor DragNDrop.
 
-## Problema Encontrado y Solucionado
+## 🚀 Inicio Rápido
 
-### Problema Principal
-El JavaScript no se estaba ejecutando debido a un error crítico en el código. La causa raíz era:
+- **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Primeros pasos y configuración inicial
+- **[guides/GUIA_RAPIDA.md](./guides/GUIA_RAPIDA.md)** - Guía rápida en español
+- **[guides/QUICK_START.md](./guides/QUICK_START.md)** - Quick start guide
 
-**Línea 2567**: Dentro de una plantilla literal (template string) en la función `exportZip()`, había un tag `</script>` que el navegador interpretaba como el cierre del bloque principal de JavaScript, cortando prematuramente la ejecución del script.
+## 📖 Índices y Referencias
 
-```javascript
-// ANTES (INCORRECTO):
-const html = `<!DOCTYPE html>
-...
-<script src="script.js"></script>
-...`;
+- **[DOCUMENTATION_INDEX.md](./DOCUMENTATION_INDEX.md)** - Índice completo de documentación
+- **[INDICE.md](./INDICE.md)** - Índice general del proyecto
+- **[ROADMAP_V1.md](./ROADMAP_V1.md)** - Hoja de ruta y versiones
 
-// DESPUÉS (CORRECTO):
-const html = `<!DOCTYPE html>
-...
-<script src="script.js"><\/script>
-...`;
-```
+## 🏗️ Arquitectura y Diseño
 
-### Solución Aplicada
-Se escapó el tag de cierre `</script>` usando `<\/script>` para evitar que el navegador lo interprete como el cierre del script principal.
+### Especificaciones Técnicas
+- **[architecture/TECHNICAL_SPECS.md](./architecture/TECHNICAL_SPECS.md)** - Especificaciones técnicas v3.0
+- **[architecture/PROJECT_STRUCTURE.md](./architecture/PROJECT_STRUCTURE.md)** - Estructura del proyecto
+- **[architecture/MULTI_AGENT_OPTION.md](./architecture/MULTI_AGENT_OPTION.md)** - Sistema multi-agente
 
-## Funcionalidades Implementadas
+### Planes de Implementación
+- **[architecture/IMPLEMENTATION_PLAN.md](./architecture/IMPLEMENTATION_PLAN.md)** - Plan de implementación
+- **[architecture/PLAN_*.md](./architecture/)** - Planes estratégicos y de acción
 
-### 1. **Galería de Plantillas**
-- 5 plantillas profesionales precargadas:
-  - Landing Page SaaS (Negocios)
-  - Portafolio Profesional (Personal)
-  - Blog Minimalista (Blog)
-  - Página de Contacto (Servicios)
-  - Tienda Online (Tienda)
-- Filtros por categoría
-- Opción de proyecto en blanco
+## 🔄 Workflows
 
-### 2. **Panel de Componentes**
-Componentes organizados en 6 categorías:
+Documentación de flujos de trabajo para diferentes funcionalidades:
 
-#### Layout
-- Contenedor
-- Sección
-- Fila
-- Columna
-- Grid 2 Columnas
-- Grid 3 Columnas
+- **[workflows/WORKFLOW_1_UI_UX.md](./workflows/)** - Mejoras UI/UX
+- **[workflows/WORKFLOW_2_AI_SMART.md](./workflows/)** - Funcionalidades AI
+- **[workflows/WORKFLOW_3_BACKEND_AUTH.md](./workflows/)** - Backend y autenticación
+- **[workflows/WORKFLOW_4_DEPLOY.md](./workflows/)** - Deploy y producción
 
-#### Texto
-- Títulos H1, H2, H3
-- Párrafo
-- Texto en línea
-- Listas ordenadas y desordenadas
+Ver índice completo: **[workflows/README.md](./workflows/README.md)**
 
-#### Medios
-- Imagen
-- Video
-- Iframe
+## 📘 Guías de Usuario
 
-#### Formularios
-- Campo de texto
-- Textarea
-- Botón
-- Checkbox
-- Radio
-- Select
+### Funcionalidades Principales
+- **[guides/NUEVAS_FUNCIONALIDADES.md](./guides/NUEVAS_FUNCIONALIDADES.md)** - Nuevas características v3.0
+- **[FREE_POSITION_SYSTEM.md](./FREE_POSITION_SYSTEM.md)** - Sistema de posicionamiento libre
+- **[TOOLBAR_DROPDOWN_SYSTEM.md](./TOOLBAR_DROPDOWN_SYSTEM.md)** - Sistema de menús dropdown
+- **[USER_GUIDE_THEME.md](./USER_GUIDE_THEME.md)** - Guía del sistema de temas
 
-#### Componentes
-- Botones (Primario y Secundario)
-- Card
-- Navbar
-- Footer
-- Hero Section
+### Características AI
+- **[guides/AI_FEATURES_README.md](./guides/AI_FEATURES_README.md)** - Documentación completa de AI
+- **[guides/AI_FEATURES_QUICK_START.md](./guides/AI_FEATURES_QUICK_START.md)** - Inicio rápido con AI
+- **[AI_CODE_GENERATOR.md](./AI_CODE_GENERATOR.md)** - Generador de código AI
 
-#### UI Avanzado
-- Pestañas (Tabs)
-- Acordeón
-- Modal
-- Carrusel
-- Alerta
-- Badge
+### Deployment
+- **[guides/DEPLOYMENT.md](./guides/DEPLOYMENT.md)** - Guía de despliegue
+- **[guides/BLACKBOX.md](./guides/BLACKBOX.md)** - Configuración Blackbox
+- **[deployment/DEPLOYMENT_GUIDE.md](./deployment/DEPLOYMENT_GUIDE.md)** - Guía detallada
 
-### 3. **Canvas (Área de Trabajo)**
-- Vista responsive con 3 tamaños: Escritorio, Tablet, Móvil
-- Drag & drop de componentes
-- Selección de elementos
-- Edición de texto con doble clic
-- Eliminación de elementos
-- Indicadores visuales de selección
+## 🧪 Testing y Calidad
 
-### 4. **Panel de Propiedades**
-Edición completa de estilos CSS:
-- **General**: ID, clases, tag HTML
-- **Dimensiones**: ancho, alto, máximos
-- **Espaciado**: padding y margin (4 lados)
-- **Posicionamiento**: display, position
-- **Tipografía**: tamaño, peso, color, alineación
-- **Fondo y Bordes**: colores, anchos, estilos, radios
-- **Sombra y Efectos**: box-shadow, opacity
-- **Flexbox**: dirección, justify, align, gap
-- **Grid**: template columns/rows, gap, align
-- **Transiciones**: duración y tipo
-- **Atributos específicos**: según el tipo de elemento
+- **[reports/TEST_REPORT.md](./reports/TEST_REPORT.md)** - Reportes de testing
+- **[reports/TESTING_CHECKLIST.md](./reports/TESTING_CHECKLIST.md)** - Checklist de pruebas
+- **[reports/VERIFICACION_CALIDAD.md](./reports/VERIFICACION_CALIDAD.md)** - Verificación de calidad
+- **[TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md)** - Testing general
 
-### 5. **Barra de Herramientas**
-- **Plantillas**: Volver a la galería
-- **Nuevo**: Crear proyecto en blanco
-- **Vistas**: Escritorio / Tablet / Móvil
-- **Exportar HTML**: Descarga archivo HTML completo
-- **Exportar Todo**: Descarga HTML, CSS y JS separados
-- **Ayuda**: Documentación completa
-- **Guardar**: Guardar proyecto como JSON
-- **Cargar**: Cargar proyecto guardado
+## 📊 Reportes y Resúmenes
 
-### 6. **Funcionalidades Adicionales**
-- **Búsqueda de componentes**: Filtro en tiempo real
-- **Categorías colapsables**: Organización del panel
-- **Atajos de teclado**:
-  - `Delete`: Eliminar elemento seleccionado
-  - `Ctrl+S`: Guardar proyecto
-- **Notificaciones toast**: Feedback visual de acciones
-- **Componentes interactivos**: Tabs, acordeones, modales y carruseles con JavaScript funcional
+- **[reports/STATUS.md](./reports/STATUS.md)** - Estado actual del proyecto
+- **[reports/IMPLEMENTATION_SUMMARY.md](./reports/IMPLEMENTATION_SUMMARY.md)** - Resumen de implementación
+- **[reports/RESUMEN_*.md](./reports/)** - Diversos resúmenes técnicos
+- **[reports/checkpoints/](./reports/checkpoints/)** - Checkpoints de desarrollo
 
-## Tecnologías Utilizadas
-- **HTML5**: Estructura
-- **CSS3**: Estilos y animaciones
-- **JavaScript Vanilla**: Lógica completa sin frameworks
-- **Drag & Drop API**: Funcionalidad de arrastrar y soltar
+## 🔧 API y Protocolos
 
-## Cómo Usar
+- **[VISUAL_TO_CODE_PROTOCOL.md](./VISUAL_TO_CODE_PROTOCOL.md)** - Protocolo visual a código
 
-### Iniciar el Proyecto
-1. Abrir `dnd.html` en un navegador web
-2. Seleccionar una plantilla o crear un proyecto en blanco
+## 📦 Proyectos Relacionados
 
-### Crear una Página
-1. Arrastrar componentes desde el panel izquierdo al canvas
-2. Hacer clic en un elemento para seleccionarlo
-3. Editar propiedades en el panel derecho
-4. Doble clic en textos para editarlos
-5. Usar el botón de eliminar (×) para borrar elementos
+### Backend Node.js
+- **[../backend-node/README.md](../backend-node/README.md)** - Documentación del backend
+- **[../backend-node/SETUP_GUIDE.md](../backend-node/SETUP_GUIDE.md)** - Guía de configuración
 
-### Exportar
-- **Exportar HTML**: Genera un archivo HTML completo con estilos inline
-- **Exportar Todo**: Genera 3 archivos separados:
-  - `index.html`: Estructura HTML
-  - `styles.css`: Estilos CSS
-  - `script.js`: JavaScript para componentes interactivos
+### Frontend TypeScript
+- **[../frontend/README.md](../frontend/)** - Frontend TypeScript
 
-### Guardar y Cargar
-- **Guardar**: Descarga un archivo JSON con el proyecto
-- **Cargar**: Sube el archivo JSON para continuar editando
+## 📝 Archivos Históricos
 
-## Estructura del Código
+Documentación histórica y archivada disponible en:
+- **[archive/](./archive/)** - Documentos antiguos y referencias históricas
 
-```
-dnd.html
-├── <style>           # Estilos CSS (líneas 7-622)
-├── <body>            # Estructura HTML (líneas 623-923)
-│   ├── Toolbar       # Barra superior
-│   ├── Components    # Panel izquierdo
-│   ├── Canvas        # Área central
-│   ├── Properties    # Panel derecho
-│   ├── Help Screen   # Documentación
-│   └── Gallery       # Galería de plantillas
-└── <script>          # JavaScript (líneas 924-2801)
-    ├── Variables globales
-    ├── Plantillas precargadas
-    ├── Inicialización
-    ├── Funciones de componentes
-    ├── Funciones de drag & drop
-    ├── Funciones de propiedades
-    ├── Funciones de exportación
-    └── Utilidades
-```
+## 🛠️ Para Desarrolladores
 
-## Estado del Proyecto
-✅ **COMPLETADO Y FUNCIONAL**
+### Configuración del Entorno
+1. Lee **[guides/SETUP_GUIDE.md](./guides/SETUP_GUIDE.md)**
+2. Revisa **[../AGENTS.md](../AGENTS.md)** para comandos de desarrollo
+3. Configura tu entorno según **[guides/BLACKBOX.md](./guides/BLACKBOX.md)**
 
-Todas las funcionalidades están implementadas y probadas:
-- ✅ Galería de plantillas renderizando correctamente
-- ✅ Drag & drop funcionando
-- ✅ Panel de propiedades operativo
-- ✅ Exportación de HTML y archivos
-- ✅ Guardar y cargar proyectos
-- ✅ Componentes interactivos con JavaScript
-- ✅ Responsive design (3 tamaños de vista)
-- ✅ Búsqueda y filtros
-- ✅ Atajos de teclado
-- ✅ Notificaciones toast
+### Flujo de Trabajo
+1. Revisa los workflows en **[workflows/](./workflows/)**
+2. Consulta las guías de testing en **[reports/](./reports/)**
+3. Sigue las especificaciones en **[architecture/](./architecture/)**
 
-## Notas Técnicas
-- El proyecto es completamente standalone (un solo archivo HTML)
-- No requiere dependencias externas
-- Compatible con navegadores modernos
-- Usa APIs nativas del navegador (Drag & Drop, File API, etc.)
+## 🔗 Enlaces Útiles
 
-## Autor
-Proyecto de editor HTML visual con drag & drop
-Fecha: 2025
+- **Changelog**: [../CHANGELOG.md](../CHANGELOG.md)
+- **README Principal**: [../README.md](../README.md)
+- **Configuración de Agentes**: [../AGENTS.md](../AGENTS.md)
+
+---
+
+**Última actualización**: Diciembre 2025  
+**Versión**: 3.0  
+**Mantenido por**: Equipo DragNDrop
