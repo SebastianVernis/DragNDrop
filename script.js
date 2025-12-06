@@ -9,6 +9,14 @@
         let projectManager = null;
         let componentExtractor = null;
 
+        // Initialize Frontend Reader
+        import('./src/reader/integration.js').then(module => {
+            module.initFrontendReader();
+            console.log('✅ Frontend Reader initialized');
+        }).catch(error => {
+            console.error('❌ Failed to initialize Frontend Reader:', error);
+        });
+
         // Plantillas precargadas
         const plantillas = [
             {
