@@ -1650,19 +1650,34 @@
             const wrapper = document.getElementById('canvasWrapper');
             const buttons = ['btnDesktop', 'btnTablet', 'btnMobile'];
 
-            // Remover clases
+            // Remover clases de botones y dropdown items
             wrapper.className = 'canvas-wrapper';
-            buttons.forEach(id => document.getElementById(id).classList.remove('active'));
+            buttons.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.classList.remove('active');
+                // Sync dropdown items
+                const dropdownItem = document.querySelector(`.dropdown-item#${id}`);
+                if (dropdownItem) dropdownItem.classList.remove('active');
+            });
 
             // Aplicar nueva clase
             if (size === 'tablet') {
                 wrapper.classList.add('tablet');
-                document.getElementById('btnTablet').classList.add('active');
+                const btn = document.getElementById('btnTablet');
+                if (btn) btn.classList.add('active');
+                const dropdownItem = document.querySelector('.dropdown-item#btnTablet');
+                if (dropdownItem) dropdownItem.classList.add('active');
             } else if (size === 'mobile') {
                 wrapper.classList.add('mobile');
-                document.getElementById('btnMobile').classList.add('active');
+                const btn = document.getElementById('btnMobile');
+                if (btn) btn.classList.add('active');
+                const dropdownItem = document.querySelector('.dropdown-item#btnMobile');
+                if (dropdownItem) dropdownItem.classList.add('active');
             } else {
-                document.getElementById('btnDesktop').classList.add('active');
+                const btn = document.getElementById('btnDesktop');
+                if (btn) btn.classList.add('active');
+                const dropdownItem = document.querySelector('.dropdown-item#btnDesktop');
+                if (dropdownItem) dropdownItem.classList.add('active');
             }
         }
 

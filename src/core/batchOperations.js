@@ -192,7 +192,7 @@ class BatchOperations {
     // Select duplicated elements
     if (newIds.length > 0) {
       this.multiSelectManager.clearSelection();
-      this.multiSelectManager.selectMultiple(newIds);
+      newIds.forEach(id => this.multiSelectManager.toggleSelection(id));
     }
 
     if (window.showToast) {

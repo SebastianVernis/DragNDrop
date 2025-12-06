@@ -27,62 +27,114 @@
     <script type="module" src="./src/components/A11yPanel.js"></script>
     <script type="module" src="./src/components/SEOPanel.js"></script>
     <script type="module" src="./src/ai/index.js"></script>
+    <!-- Toolbar Dropdown Manager -->
+    <script src="./src/components/toolbarDropdown.js"></script>
 </head>
 <body>
     <div class="app-container">
         <!-- Barra de herramientas superior -->
         <div class="toolbar">
-            <button class="toolbar-btn" onclick="showGallery()">🎨 Plantillas</button>
-            <button class="toolbar-btn" onclick="newProject()">🗎 Nuevo</button>
-            <div class="toolbar-divider"></div>
-            <!-- Undo/Redo -->
-            <button class="toolbar-btn" id="undoBtn" onclick="window.undoRedoManager && window.undoRedoManager.undo()" title="Deshacer (Ctrl+Z)" disabled>↶</button>
-            <button class="toolbar-btn" id="redoBtn" onclick="window.undoRedoManager && window.undoRedoManager.redo()" title="Rehacer (Ctrl+Y)" disabled>↷</button>
-            <div class="toolbar-divider"></div>
-            <!-- Layout Controls -->
-            <button class="toolbar-btn" onclick="toggleLayoutMode()" id="layoutModeBtn" title="Alternar entre posicionamiento libre y flujo normal">📐 Libre</button>
-            <button class="toolbar-btn" onclick="autoLayoutVertical()" title="Reorganizar verticalmente">↕️ Vertical</button>
-            <button class="toolbar-btn" onclick="autoLayoutGrid()" title="Reorganizar en grid">⊞ Grid</button>
-            <div class="toolbar-divider"></div>
-            <!-- Vistas -->
-            <button class="toolbar-btn active" id="btnDesktop" onclick="setCanvasSize('desktop')">🖥️ Escritorio</button>
-            <button class="toolbar-btn" id="btnTablet" onclick="setCanvasSize('tablet')">📱 Tablet</button>
-            <button class="toolbar-btn" id="btnMobile" onclick="setCanvasSize('mobile')">📱 Móvil</button>
-            <button class="toolbar-btn" onclick="openResponsiveTester()">🔍 Responsive</button>
-            <div class="toolbar-divider"></div>
-            <!-- Preview -->
-            <button class="toolbar-btn" id="livePreviewBtn" onclick="toggleLivePreview()">👁️ Vista Previa</button>
-            <button class="toolbar-btn" id="themeToggle" onclick="window.themeManager && window.themeManager.toggle()" title="Cambiar tema (Ctrl+Shift+D)">🌙 Oscuro</button>
-            <div class="toolbar-divider"></div>
-            <!-- AI Features -->
-            <button class="toolbar-btn" onclick="showAIGenerator()" title="Generate component with AI">🤖 AI Generate</button>
-            <button class="toolbar-btn" onclick="showA11yPanel()" title="Accessibility Checker">♿ A11y Check</button>
-            <button class="toolbar-btn" onclick="showSEOPanel()" title="SEO Optimizer">🔍 SEO</button>
-            <button class="toolbar-btn" onclick="showTokenDashboard()" title="Token Usage">📊 Tokens</button>
-            <button class="toolbar-btn" onclick="configureGeminiAPI()" title="Configure Gemini API">⚙️ AI Config</button>
-            <div class="toolbar-divider"></div>
-            <!-- Exportar -->
-            <button class="toolbar-btn primary" onclick="exportHTML()">📥 Exportar HTML</button>
-            <button class="toolbar-btn" onclick="exportZip()">📦 Exportar Todo</button>
-            <div class="toolbar-divider"></div>
-            <!-- Deploy & Integrations (Workflow 4) -->
-            <button class="toolbar-btn" onclick="showDeployModal()" title="Desplegar a Vercel">🚀 Deploy</button>
-            <button class="toolbar-btn" onclick="showGitHubModal()" title="Integración con GitHub">🐙 GitHub</button>
-            <button class="toolbar-btn" onclick="showDeploymentHistory()" title="Historial de deployments">📊 Historial</button>
-            <button class="toolbar-btn" onclick="startTutorial()" title="Tutorial interactivo">📚 Tutorial</button>
-            <div class="toolbar-divider"></div>
-            <!-- Proyectos y ayuda -->
-            <button class="toolbar-btn" onclick="showHelp()">❓ Ayuda</button>
-            <button class="toolbar-btn" onclick="saveProject()">💾 Guardar</button>
-            <button class="toolbar-btn" onclick="document.getElementById('loadProjectInput').click()">📂 Cargar Proyecto</button>
-            <input type="file" id="loadProjectInput" accept=".json,.html,.htm" onchange="loadProject(event)">
-            <button class="toolbar-btn" onclick="document.getElementById('loadDirectoryInput').click()">📁 Analizar Directorio</button>
+            <!-- File Menu -->
+            <div class="toolbar-dropdown">
+                <button class="toolbar-btn dropdown-trigger">📁 Archivo <span class="dropdown-arrow">▼</span></button>
+                <div class="toolbar-dropdown-menu">
+                    <button class="dropdown-item" onclick="newProject()">🗎 Nuevo Proyecto</button>
+                    <button class="dropdown-item" onclick="saveProject()">💾 Guardar Proyecto</button>
+                    <button class="dropdown-item" onclick="document.getElementById('loadProjectInput').click()">📂 Cargar Proyecto</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="document.getElementById('importHTMLInput').click()">📄 Importar HTML</button>
+                    <button class="dropdown-item" onclick="document.getElementById('loadDirectoryInput').click()">📁 Analizar Directorio</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="showGallery()">🎨 Plantillas</button>
+                    <button class="dropdown-item" onclick="showProjectsPanel()">📁 Mis Proyectos</button>
+                    <button class="dropdown-item" onclick="showComponentsLibrary()">🧩 Biblioteca de Componentes</button>
+                </div>
+            </div>
+            
+            <input type="file" id="loadProjectInput" accept=".json,.html,.htm" onchange="loadProject(event)" style="display: none;">
             <input type="file" id="loadDirectoryInput" webkitdirectory multiple onchange="analyzeDirectory(event)" style="display: none;">
+            <input type="file" id="importHTMLInput" accept=".html,.htm" onchange="importHTMLFile(event)" style="display: none;">
+            
+            <!-- Edit Menu -->
+            <div class="toolbar-dropdown">
+                <button class="toolbar-btn dropdown-trigger">✏️ Editar <span class="dropdown-arrow">▼</span></button>
+                <div class="toolbar-dropdown-menu">
+                    <button class="dropdown-item" id="undoBtn" onclick="window.undoRedoManager && window.undoRedoManager.undo()" disabled>↶ Deshacer <span class="shortcut">Ctrl+Z</span></button>
+                    <button class="dropdown-item" id="redoBtn" onclick="window.undoRedoManager && window.undoRedoManager.redo()" disabled>↷ Rehacer <span class="shortcut">Ctrl+Y</span></button>
+                </div>
+            </div>
+            
             <div class="toolbar-divider"></div>
-            <button class="toolbar-btn" onclick="document.getElementById('importHTMLInput').click()">📄 Importar HTML</button>
-            <input type="file" id="importHTMLInput" accept=".html,.htm" onchange="importHTMLFile(event)">
-            <button class="toolbar-btn" onclick="showProjectsPanel()">📁 Proyectos</button>
-            <button class="toolbar-btn" onclick="showComponentsLibrary()">🧩 Componentes</button>
+            
+            <!-- Layout Menu -->
+            <div class="toolbar-dropdown">
+                <button class="toolbar-btn dropdown-trigger">📐 Layout <span class="dropdown-arrow">▼</span></button>
+                <div class="toolbar-dropdown-menu">
+                    <button class="dropdown-item" onclick="toggleLayoutMode()" id="layoutModeBtn">📐 Modo Libre</button>
+                    <button class="dropdown-item" onclick="autoLayoutVertical()">↕️ Organizar Vertical</button>
+                    <button class="dropdown-item" onclick="autoLayoutGrid()">⊞ Organizar Grid</button>
+                </div>
+            </div>
+            
+            <!-- View Menu -->
+            <div class="toolbar-dropdown">
+                <button class="toolbar-btn dropdown-trigger">👁️ Vista <span class="dropdown-arrow">▼</span></button>
+                <div class="toolbar-dropdown-menu">
+                    <button class="dropdown-item active" id="btnDesktop" onclick="setCanvasSize('desktop')">🖥️ Escritorio</button>
+                    <button class="dropdown-item" id="btnTablet" onclick="setCanvasSize('tablet')">📱 Tablet</button>
+                    <button class="dropdown-item" id="btnMobile" onclick="setCanvasSize('mobile')">📱 Móvil</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="openResponsiveTester()">🔍 Tester Responsive</button>
+                    <button class="dropdown-item" id="livePreviewBtn" onclick="toggleLivePreview()">👁️ Vista Previa en Vivo</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" id="themeToggle" onclick="window.themeManager && window.themeManager.toggle()">🌙 Tema Oscuro <span class="shortcut">Ctrl+Shift+D</span></button>
+                </div>
+            </div>
+            
+            <div class="toolbar-divider"></div>
+            
+            <!-- AI Tools Menu -->
+            <div class="toolbar-dropdown">
+                <button class="toolbar-btn dropdown-trigger">🤖 AI Tools <span class="dropdown-arrow">▼</span></button>
+                <div class="toolbar-dropdown-menu">
+                    <button class="dropdown-item" onclick="showAIGenerator()">🤖 Generar Componente</button>
+                    <button class="dropdown-item" onclick="showA11yPanel()">♿ Verificar Accesibilidad</button>
+                    <button class="dropdown-item" onclick="showSEOPanel()">🔍 Optimizar SEO</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="showTokenDashboard()">📊 Dashboard de Tokens</button>
+                    <button class="dropdown-item" onclick="configureGeminiAPI()">⚙️ Configurar API</button>
+                </div>
+            </div>
+            
+            <!-- Export Menu -->
+            <div class="toolbar-dropdown">
+                <button class="toolbar-btn dropdown-trigger primary">📥 Exportar <span class="dropdown-arrow">▼</span></button>
+                <div class="toolbar-dropdown-menu">
+                    <button class="dropdown-item" onclick="exportHTML()">📥 Exportar HTML</button>
+                    <button class="dropdown-item" onclick="exportZip()">📦 Exportar Todo (ZIP)</button>
+                </div>
+            </div>
+            
+            <div class="toolbar-divider"></div>
+            
+            <!-- Deploy & Integration Menu -->
+            <div class="toolbar-dropdown">
+                <button class="toolbar-btn dropdown-trigger">🚀 Deploy <span class="dropdown-arrow">▼</span></button>
+                <div class="toolbar-dropdown-menu">
+                    <button class="dropdown-item" onclick="showDeployModal()">🚀 Deploy a Vercel</button>
+                    <button class="dropdown-item" onclick="showGitHubModal()">🐙 Integración GitHub</button>
+                    <button class="dropdown-item" onclick="showDeploymentHistory()">📊 Historial de Deploys</button>
+                </div>
+            </div>
+            
+            <!-- Help Menu -->
+            <div class="toolbar-dropdown">
+                <button class="toolbar-btn dropdown-trigger">❓ Ayuda <span class="dropdown-arrow">▼</span></button>
+                <div class="toolbar-dropdown-menu">
+                    <button class="dropdown-item" onclick="startTutorial()">📚 Tutorial Interactivo</button>
+                    <button class="dropdown-item" onclick="showHelp()">❓ Centro de Ayuda</button>
+                </div>
+            </div>
         </div>
 
         <!-- Contenido principal con 3 paneles -->
