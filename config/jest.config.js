@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   testEnvironment: 'jsdom',
   rootDir: '..',
   testMatch: ['**/tests/unit/**/*.test.js'],
