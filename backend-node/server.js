@@ -1,10 +1,11 @@
 /**
- * Express Server with Better Auth
+ * Express Server with Better Auth and Real-Time Collaboration
  * 
  * Main entry point for the backend API
  */
 
 import express from 'express';
+import { createServer } from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -16,6 +17,9 @@ import { testConnection } from './db/client.js';
 import projectsRouter from './api/projects.js';
 import componentsRouter from './api/components.js';
 import deploymentsRouter from './api/deployments.js';
+
+// Import collaboration modules
+import { initializeSocketServer, getServerStats } from './collaboration/socketServer.js';
 
 // Load environment variables
 dotenv.config();
@@ -111,6 +115,22 @@ app.use('/api/projects', projectsRouter);
 app.use('/api/components', componentsRouter);
 app.use('/api/deployments', deploymentsRouter);
 
+// Collaboration stats endpoint
+app.get('/api/collaboration/stats', (req, res) => {
+  try {
+    const stats = getServerStats(io);
+    res.json({
+      success: true,
+      stats
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // API documentation
 app.get('/api', (req, res) => {
   res.json({
@@ -187,6 +207,12 @@ app.use((err, req, res, next) => {
 // SERVER STARTUP
 // ================================================
 
+// Create HTTP server (needed for Socket.io)
+const httpServer = createServer(app);
+
+// Initialize Socket.io server
+let io;
+
 async function startServer() {
   try {
     // Test database connection
@@ -198,8 +224,14 @@ async function startServer() {
       process.exit(1);
     }
 
+    // Initialize Socket.io
+    console.log('🔌 Initializing Socket.io server...');
+    io = initializeSocketServer(httpServer, {
+      corsOrigin: process.env.FRONTEND_URL || 'http://localhost:8080'
+    });
+
     // Start server
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log('');
       console.log('🚀 ========================================');
       console.log(`🚀 Server running on http://localhost:${PORT}`);
@@ -210,6 +242,8 @@ async function startServer() {
       console.log('💾 Projects API: http://localhost:' + PORT + '/api/projects');
       console.log('🧩 Components API: http://localhost:' + PORT + '/api/components');
       console.log('🚀 Deployments API: http://localhost:' + PORT + '/api/deployments');
+      console.log('🔗 Collaboration: WebSocket enabled');
+      console.log('📊 Collaboration Stats: http://localhost:' + PORT + '/api/collaboration/stats');
       console.log('');
       console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
       console.log('🔗 Frontend URL:', process.env.FRONTEND_URL || 'http://localhost:8080');
@@ -230,6 +264,7 @@ async function startServer() {
 
       console.log('');
       console.log('✨ Ready to accept requests!');
+      console.log('✨ Real-time collaboration enabled!');
       console.log('');
     });
   } catch (error) {

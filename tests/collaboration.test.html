@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaboration Test - DragNDrop</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .test-panel {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-left: 10px;
+    }
+
+    .status.disconnected {
+      background: #fee;
+      color: #c33;
+    }
+
+    .status.connecting {
+      background: #ffeaa7;
+      color: #d63031;
+    }
+
+    .status.connected {
+      background: #dfe;
+      color: #3c3;
+    }
+
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    button.danger {
+      background: #f44336;
+    }
+
+    button.danger:hover {
+      background: #da190b;
+    }
+
+    .log {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+
+    .log-entry {
+      margin-bottom: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-entry .timestamp {
+      color: #999;
+      margin-right: 10px;
+    }
+
+    .log-entry.success {
+      color: #2ecc71;
+    }
+
+    .log-entry.error {
+      color: #e74c3c;
+    }
+
+    .log-entry.info {
+      color: #3498db;
+    }
+
+    .users-list {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #f0f0f0;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .user-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔌 Real-Time Collaboration Test</h1>
+
+    <div class="test-panel">
+      <h2>
+        Connection Status
+        <span class="status disconnected" id="status">Disconnected</span>
+      </h2>
+      
+      <div class="input-group">
+        <label for="serverUrl">Server URL:</label>
+        <input type="text" id="serverUrl" value="http://localhost:3001" />
+      </div>
+
+      <div class="input-group">
+        <label for="token">Auth Token (mock):</label>
+        <input type="text" id="token" value="test-token-123" />
+      </div>
+
+      <div class="input-group">
+        <label for="projectId">Project ID:</label>
+        <input type="text" id="projectId" value="test-project-001" />
+      </div>
+
+      <button id="connectBtn">Connect</button>
+      <button id="disconnectBtn" disabled>Disconnect</button>
+      <button id="joinRoomBtn" disabled>Join Room</button>
+      <button id="leaveRoomBtn" disabled>Leave Room</button>
+      <button id="pingBtn" disabled>Ping Server</button>
+      <button id="clearLogBtn" class="danger">Clear Log</button>
+    </div>
+
+    <div class="test-panel">
+      <h2>Active Users <span id="userCount">(0)</span></h2>
+      <div class="users-list" id="usersList">
+        <p style="color: #999;">No users connected</p>
+      </div>
+    </div>
+
+    <div class="test-panel">
+      <h2>Event Log</h2>
+      <div class="log" id="log"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { collaborationClient } from '../src/collaboration/collaborationClient.js';
+
+    // DOM elements
+    const statusEl = document.getElementById('status');
+    const logEl = document.getElementById('log');
+    const connectBtn = document.getElementById('connectBtn');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    const joinRoomBtn = document.getElementById('joinRoomBtn');
+    const leaveRoomBtn = document.getElementById('leaveRoomBtn');
+    const pingBtn = document.getElementById('pingBtn');
+    const clearLogBtn = document.getElementById('clearLogBtn');
+    const serverUrlInput = document.getElementById('serverUrl');
+    const tokenInput = document.getElementById('token');
+    const projectIdInput = document.getElementById('projectId');
+    const usersListEl = document.getElementById('usersList');
+    const userCountEl = document.getElementById('userCount');
+
+    let activeUsers = [];
+
+    // Logging function
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.innerHTML = `<span class="timestamp">[${timestamp}]</span>${message}`;
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+      console.log(`[${type.toUpperCase()}]`, message);
+    }
+
+    // Update status
+    function updateStatus(state) {
+      statusEl.textContent = state.charAt(0).toUpperCase() + state.slice(1);
+      statusEl.className = `status ${state}`;
+    }
+
+    // Update users list
+    function updateUsersList() {
+      if (activeUsers.length === 0) {
+        usersListEl.innerHTML = '<p style="color: #999;">No users connected</p>';
+        userCountEl.textContent = '(0)';
+        return;
+      }
+
+      userCountEl.textContent = `(${activeUsers.length})`;
+      usersListEl.innerHTML = activeUsers.map(user => `
+        <div class="user-badge">
+          <div class="user-color" style="background: ${user.color}"></div>
+          <span>${user.userName}</span>
+        </div>
+      `).join('');
+    }
+
+    // Event handlers
+    collaborationClient.on('connected', (data) => {
+      log('✅ Connected to server', 'success');
+      updateStatus('connected');
+      connectBtn.disabled = true;
+      disconnectBtn.disabled = false;
+      joinRoomBtn.disabled = false;
+      pingBtn.disabled = false;
+    });
+
+    collaborationClient.on('disconnected', (data) => {
+      log(`🔌 Disconnected: ${data.reason}`, 'error');
+      updateStatus('disconnected');
+      connectBtn.disabled = false;
+      disconnectBtn.disabled = true;
+      joinRoomBtn.disabled = true;
+      leaveRoomBtn.disabled = true;
+      pingBtn.disabled = true;
+      activeUsers = [];
+      updateUsersList();
+    });
+
+    collaborationClient.on('connection-state-change', (data) => {
+      updateStatus(data.state);
+      if (data.state === 'reconnecting') {
+        log(`🔄 Reconnecting... (attempt ${data.attemptNumber})`, 'info');
+      }
+    });
+
+    collaborationClient.on('connection-error', (data) => {
+      log(`❌ Connection error: ${data.error}`, 'error');
+    });
+
+    collaborationClient.on('room-joined', (data) => {
+      log(`✅ Joined room: ${data.projectId}`, 'success');
+      log(`👤 Current user: ${data.user.userName} (${data.user.color})`, 'info');
+      joinRoomBtn.disabled = true;
+      leaveRoomBtn.disabled = false;
+      
+      // Add current user and existing users
+      activeUsers = data.users || [];
+      updateUsersList();
+    });
+
+    collaborationClient.on('room-left', (data) => {
+      log('👋 Left room', 'info');
+      joinRoomBtn.disabled = false;
+      leaveRoomBtn.disabled = true;
+      activeUsers = [];
+      updateUsersList();
+    });
+
+    collaborationClient.on('user-joined', (data) => {
+      log(`👤 User joined: ${data.user.userName}`, 'success');
+      activeUsers.push(data.user);
+      updateUsersList();
+    });
+
+    collaborationClient.on('user-left', (data) => {
+      log(`👋 User left: ${data.userId}`, 'info');
+      activeUsers = activeUsers.filter(u => u.userId !== data.userId);
+      updateUsersList();
+    });
+
+    collaborationClient.on('error', (data) => {
+      log(`❌ Error: ${data.message || data.error}`, 'error');
+    });
+
+    // Button handlers
+    connectBtn.addEventListener('click', () => {
+      const serverUrl = serverUrlInput.value;
+      const token = tokenInput.value;
+      
+      log(`🔌 Connecting to ${serverUrl}...`, 'info');
+      
+      collaborationClient.initialize({
+        serverUrl,
+        token,
+        autoConnect: false
+      });
+      
+      collaborationClient.connect();
+    });
+
+    disconnectBtn.addEventListener('click', () => {
+      log('👋 Disconnecting...', 'info');
+      collaborationClient.disconnect();
+    });
+
+    joinRoomBtn.addEventListener('click', async () => {
+      const projectId = projectIdInput.value;
+      
+      try {
+        log(`📦 Joining room: ${projectId}...`, 'info');
+        await collaborationClient.joinRoom(projectId, {
+          userName: `User ${Math.floor(Math.random() * 1000)}`
+        });
+      } catch (error) {
+        log(`❌ Failed to join room: ${error.message}`, 'error');
+      }
+    });
+
+    leaveRoomBtn.addEventListener('click', async () => {
+      try {
+        log('👋 Leaving room...', 'info');
+        await collaborationClient.leaveRoom();
+      } catch (error) {
+        log(`❌ Failed to leave room: ${error.message}`, 'error');
+      }
+    });
+
+    pingBtn.addEventListener('click', async () => {
+      try {
+        const result = await collaborationClient.ping();
+        log(`🏓 Pong! Latency: ${result.latency}ms`, 'success');
+      } catch (error) {
+        log(`❌ Ping failed: ${error.message}`, 'error');
+      }
+    });
+
+    clearLogBtn.addEventListener('click', () => {
+      logEl.innerHTML = '';
+      log('🧹 Log cleared', 'info');
+    });
+
+    // Initial log
+    log('🚀 Collaboration test page loaded', 'info');
+    log('ℹ️  Configure server URL and token, then click Connect', 'info');
+  </script>
+</body>
+</html>
