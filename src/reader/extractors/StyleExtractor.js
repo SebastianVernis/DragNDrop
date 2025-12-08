@@ -203,7 +203,7 @@ export class StyleExtractor {
     score += (selector.match(/#/g) || []).length * 100;
     
     // Classes, attributes, pseudo-classes
-    score += (selector.match(/\.|\\[|:/g) || []).length * 10;
+    score += (selector.match(/\.|\[|:/g) || []).length * 10;
     
     // Elements
     score += (selector.match(/[a-z]/g) || []).length;
