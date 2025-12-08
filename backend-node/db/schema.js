@@ -149,6 +149,74 @@ export const aiUsage = pgTable('aiUsage', {
 });
 
 // ================================================
+// COLLABORATION TABLES
+// ================================================
+
+export const projectSession = pgTable('projectSession', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  projectId: uuid('projectId')
+    .notNull()
+    .references(() => project.id, { onDelete: 'cascade' }),
+  startedAt: timestamp('startedAt').notNull().defaultNow(),
+  endedAt: timestamp('endedAt'),
+  activeUsers: integer('activeUsers').notNull().default(0),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+});
+
+export const userPresence = pgTable('userPresence', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  sessionId: uuid('sessionId')
+    .notNull()
+    .references(() => projectSession.id, { onDelete: 'cascade' }),
+  userId: text('userId')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  userName: varchar('userName', { length: 255 }).notNull(),
+  userColor: varchar('userColor', { length: 7 }).notNull(), // Hex color
+  cursorX: integer('cursorX'),
+  cursorY: integer('cursorY'),
+  selectedElementId: varchar('selectedElementId', { length: 255 }),
+  isActive: boolean('isActive').notNull().default(true),
+  lastSeen: timestamp('lastSeen').notNull().defaultNow(),
+  joinedAt: timestamp('joinedAt').notNull().defaultNow(),
+  leftAt: timestamp('leftAt'),
+});
+
+export const projectSnapshot = pgTable('projectSnapshot', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  projectId: uuid('projectId')
+    .notNull()
+    .references(() => project.id, { onDelete: 'cascade' }),
+  sessionId: uuid('sessionId')
+    .references(() => projectSession.id, { onDelete: 'set null' }),
+  snapshotData: text('snapshotData').notNull(), // Compressed Yjs state (base64)
+  operationCount: integer('operationCount').notNull().default(0),
+  createdBy: text('createdBy')
+    .references(() => user.id),
+  snapshotType: varchar('snapshotType', { length: 20 }).notNull(), // 'auto', 'manual', 'checkpoint'
+  description: text('description'),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+});
+
+export const projectOperation = pgTable('projectOperation', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  sessionId: uuid('sessionId')
+    .notNull()
+    .references(() => projectSession.id, { onDelete: 'cascade' }),
+  userId: text('userId')
+    .notNull()
+    .references(() => user.id),
+  operationType: varchar('operationType', { length: 50 }).notNull(),
+  elementId: varchar('elementId', { length: 255 }),
+  operationData: jsonb('operationData').notNull(),
+  timestamp: varchar('timestamp', { length: 50 }).notNull(), // Bigint as string
+  clientId: varchar('clientId', { length: 255 }).notNull(),
+  isUndone: boolean('isUndone').notNull().default(false),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+});
+
+// ================================================
 // RELATIONS
 // ================================================
 
@@ -184,6 +252,53 @@ export const deploymentRelations = relations(deployment, ({ one }) => ({
   }),
   user: one(user, {
     fields: [deployment.userId],
+    references: [user.id],
+  }),
+}));
+
+export const projectSessionRelations = relations(projectSession, ({ one, many }) => ({
+  project: one(project, {
+    fields: [projectSession.projectId],
+    references: [project.id],
+  }),
+  userPresences: many(userPresence),
+  operations: many(projectOperation),
+  snapshots: many(projectSnapshot),
+}));
+
+export const userPresenceRelations = relations(userPresence, ({ one }) => ({
+  session: one(projectSession, {
+    fields: [userPresence.sessionId],
+    references: [projectSession.id],
+  }),
+  user: one(user, {
+    fields: [userPresence.userId],
+    references: [user.id],
+  }),
+}));
+
+export const projectSnapshotRelations = relations(projectSnapshot, ({ one }) => ({
+  project: one(project, {
+    fields: [projectSnapshot.projectId],
+    references: [project.id],
+  }),
+  session: one(projectSession, {
+    fields: [projectSnapshot.sessionId],
+    references: [projectSession.id],
+  }),
+  createdByUser: one(user, {
+    fields: [projectSnapshot.createdBy],
+    references: [user.id],
+  }),
+}));
+
+export const projectOperationRelations = relations(projectOperation, ({ one }) => ({
+  session: one(projectSession, {
+    fields: [projectOperation.sessionId],
+    references: [projectSession.id],
+  }),
+  user: one(user, {
+    fields: [projectOperation.userId],
     references: [user.id],
   }),
 }));
