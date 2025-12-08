@@ -2,9 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
     <title>Editor HTML Drag &amp; Drop</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Mobile Styles -->
+    <link rel="stylesheet" href="src/styles/mobile.css">
     <!-- Workflow 4: Deploy & Tutorial -->
     <link rel="stylesheet" href="./src/styles/deploy.css">
     <link rel="stylesheet" href="./src/styles/tutorial.css">
@@ -29,6 +34,14 @@
     <script type="module" src="./src/ai/index.js"></script>
     <!-- Toolbar Dropdown Manager -->
     <script src="./src/components/toolbarDropdown.js"></script>
+    
+    <!-- Mobile-First Modules -->
+    <script type="module" src="./src/utils/deviceDetector.js"></script>
+    <script type="module" src="./src/core/unifiedEventManager.js"></script>
+    <script type="module" src="./src/core/touchDragDrop.js"></script>
+    <script type="module" src="./src/core/gestureManager.js"></script>
+    <script type="module" src="./src/components/mobileUI.js"></script>
+    <script type="module" src="./src/utils/performanceOptimizer.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -508,10 +521,48 @@
     <!-- Script principal -->
     <script src="script.js"></script>
     
+    <!-- Service Worker Registration -->
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registered:', registration.scope);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            console.log('🔄 Service Worker update found');
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New service worker available
+                                    if (confirm('Nueva versión disponible. ¿Actualizar ahora?')) {
+                                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.error('❌ Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+    
     <!-- Inicialización de nuevos módulos -->
     <script>
         // Inicializar módulos cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
+            // Device Detection (first to detect capabilities)
+            window.deviceDetector = new DeviceDetector();
+            
+            // Performance Optimizer
+            window.performanceOptimizer = new PerformanceOptimizer();
+            
             // Theme Manager (primero para aplicar tema)
             window.themeManager = new ThemeManager();
             
@@ -548,6 +599,18 @@
             window.smartGuides = new SmartGuides(window.alignmentEngine);
             window.layersPanel = new LayersPanel(window.layersManager);
             window.advancedPropertiesPanel = new AdvancedPropertiesPanel();
+            
+            // Mobile-First Modules (initialize after device detection)
+            if (window.deviceDetector.isTouchDevice) {
+                window.touchDragDrop = new TouchDragDropManager();
+                window.gestureManager = new GestureManager();
+                console.log('✅ Touch & Gesture support enabled');
+            }
+            
+            if (window.deviceDetector.isMobile) {
+                window.mobileUI = new MobileUIManager();
+                console.log('✅ Mobile UI adaptations enabled');
+            }
             
             // Build initial layers tree
             setTimeout(() => {
