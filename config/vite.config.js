@@ -1,7 +1,20 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 
 export default defineConfig({
+  // Monaco Editor plugin
+  plugins: [
+    monacoEditorPlugin({
+      languageWorkers: ['editorWorkerService', 'css', 'html', 'json', 'typescript'],
+      customWorkers: [
+        {
+          label: 'editorWorkerService',
+          entry: 'monaco-editor/esm/vs/editor/editor.worker'
+        }
+      ]
+    })
+  ],
   // Root directory
   root: '.',
   
@@ -26,7 +39,8 @@ export default defineConfig({
         manualChunks: {
           'core': ['./src/core/undoRedo.js', './src/core/keyboardShortcuts.js'],
           'drag-drop': ['./src/core/enhancedDragDrop.js', './src/core/freePositionDragDrop.js'],
-          'ai': ['./src/core/geminiValidator.js', './src/core/aiCodeGenerator.js']
+          'ai': ['./src/core/geminiValidator.js', './src/core/aiCodeGenerator.js'],
+          'monaco-editor': ['monaco-editor']
         }
       }
     }
@@ -80,7 +94,13 @@ export default defineConfig({
       '@': resolve(process.cwd(), 'src'),
       '@components': resolve(process.cwd(), 'src/components'),
       '@utils': resolve(process.cwd(), 'src/utils'),
-      '@storage': resolve(process.cwd(), 'src/storage')
+      '@storage': resolve(process.cwd(), 'src/storage'),
+      '@editor': resolve(process.cwd(), 'src/editor')
     }
+  },
+
+  // Optimizations
+  optimizeDeps: {
+    include: ['monaco-editor']
   }
 });
