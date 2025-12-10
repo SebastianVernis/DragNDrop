@@ -334,5 +334,3 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 window.GroupManager = GroupManager;
-
-export default GroupManager;

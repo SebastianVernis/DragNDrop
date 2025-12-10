@@ -51,6 +51,13 @@ describe('AlignmentEngine', () => {
 
     afterEach(() => {
         document.body.innerHTML = '';
+        jest.restoreAllMocks();
+    });
+
+    beforeEach(() => {
+        jest.spyOn(console, 'log').mockImplementation(() => {});
+        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        jest.spyOn(console, 'error').mockImplementation(() => {});
     });
 
     describe('Initialization', () => {
