@@ -7,9 +7,9 @@
 import { VALIDATION, ERROR_MESSAGES } from '../config/constants.js';
 
 /**
- * Validates an element ID
- * @param {string} id - The ID to validate
- * @returns {Object} Validation result with isValid and error properties
+ * Validate an element ID against configured constraints (type, emptiness, max length, and pattern).
+ * @param {string} id - The ID string to validate.
+ * @returns {{isValid: boolean, error: string|null}} `{ isValid: true, error: null }` if the ID is valid; otherwise `{ isValid: false, error }` with a descriptive failure message.
  */
 export function validateId(id) {
     if (typeof id !== 'string') {
@@ -32,9 +32,9 @@ export function validateId(id) {
 }
 
 /**
- * Validates a CSS class name
- * @param {string} className - The class name to validate
- * @returns {Object} Validation result
+ * Validate a CSS class name string, allowing multiple class tokens separated by whitespace.
+ * @param {string} className - The class name or space-separated class list to validate; an empty string is considered valid.
+ * @returns {{isValid: boolean, error: string|null}} An object with `isValid` indicating validity and `error` containing a message when invalid (otherwise `null`).
  */
 export function validateClassName(className) {
     if (typeof className !== 'string') {
@@ -61,10 +61,10 @@ export function validateClassName(className) {
 }
 
 /**
- * Validates a URL
- * @param {string} url - The URL to validate
- * @param {boolean} allowRelative - Whether to allow relative URLs
- * @returns {Object} Validation result
+ * Validate that a string is a safe, well-formed URL, optionally allowing relative paths.
+ * @param {string} url - The URL string to validate.
+ * @param {boolean} [allowRelative=false] - If true, accept relative URLs that start with '/' or './'.
+ * @returns {{isValid: boolean, error: string|null}} `isValid` is `true` when the URL is acceptable; `error` contains a message when invalid.
  */
 export function validateURL(url, allowRelative = false) {
     if (typeof url !== 'string') {
@@ -100,9 +100,10 @@ export function validateURL(url, allowRelative = false) {
 }
 
 /**
- * Validates a color value
- * @param {string} color - The color to validate
- * @returns {Object} Validation result
+ * Determine whether a string represents a valid CSS color value.
+ * Accepts hex codes, `rgb(...)`, `rgba(...)`, and a set of common named colors.
+ * @param {string} color - Color string to validate (hex, `rgb(...)`, `rgba(...)`, or named color; named colors are matched case-insensitively).
+ * @returns {{ isValid: boolean, error: string|null }} `isValid` is `true` when the input matches a supported color format; `error` contains a message when invalid.
  */
 export function validateColor(color) {
     if (typeof color !== 'string') {
@@ -141,9 +142,13 @@ export function validateColor(color) {
 }
 
 /**
- * Validates a CSS dimension value
- * @param {string} dimension - The dimension to validate
- * @returns {Object} Validation result
+ * Check whether a string is a valid CSS dimension value.
+ *
+ * Accepts the keywords `auto`, `inherit`, `initial`, and `unset` (case-insensitive), or values matching the module's CSS dimension pattern.
+ * The input must be a non-empty string.
+ *
+ * @param {string} dimension - The CSS dimension to validate.
+ * @returns {{isValid: boolean, error: string|null}} An object with `isValid` set to `true` if the dimension is valid, `false` otherwise, and `error` containing a human-readable message or `null` when valid.
  */
 export function validateDimension(dimension) {
     if (typeof dimension !== 'string') {
@@ -167,12 +172,13 @@ export function validateDimension(dimension) {
 }
 
 /**
- * Validates an integer
- * @param {string|number} value - The value to validate
- * @param {Object} options - Validation options
- * @param {number} options.min - Minimum value
- * @param {number} options.max - Maximum value
- * @returns {Object} Validation result
+ * Validate that a value represents an integer within optional bounds.
+ *
+ * @param {string|number} value - The input to validate; numeric strings are parsed.
+ * @param {Object} [options] - Validation options.
+ * @param {number} [options.min] - Minimum allowed value (inclusive).
+ * @param {number} [options.max] - Maximum allowed value (inclusive).
+ * @returns {{isValid: boolean, error: string|null, value?: number}} `isValid` indicates success; `error` contains a message on failure; on success `value` is the parsed integer.
  */
 export function validateInteger(value, options = {}) {
     const { min, max } = options;
@@ -202,12 +208,14 @@ export function validateInteger(value, options = {}) {
 }
 
 /**
- * Validates a float number
- * @param {string|number} value - The value to validate
- * @param {Object} options - Validation options
- * @param {number} options.min - Minimum value
- * @param {number} options.max - Maximum value
- * @returns {Object} Validation result
+ * Validate that a value represents a finite floating-point number and optionally enforce numeric bounds.
+ *
+ * Accepts a number or a numeric string; when valid returns the parsed numeric value.
+ * @param {string|number} value - The value to validate (number or numeric string).
+ * @param {Object} [options] - Validation options.
+ * @param {number} [options.min] - Minimum allowed value (inclusive).
+ * @param {number} [options.max] - Maximum allowed value (inclusive).
+ * @returns {{isValid: boolean, error: string|null, value?: number}} An object containing `isValid`, an `error` message when invalid, and the numeric `value` when valid.
  */
 export function validateFloat(value, options = {}) {
     const { min, max } = options;
@@ -237,12 +245,13 @@ export function validateFloat(value, options = {}) {
 }
 
 /**
- * Validates a file
- * @param {File} file - The file to validate
- * @param {Object} options - Validation options
- * @param {Array<string>} options.allowedTypes - Allowed MIME types
- * @param {number} options.maxSize - Maximum file size in bytes
- * @returns {Object} Validation result
+ * Validate a File object against optional allowed types and maximum size.
+ *
+ * @param {File} file - File instance to validate.
+ * @param {Object} [options] - Validation options.
+ * @param {Array<string>} [options.allowedTypes] - Allowed MIME types or extensions (e.g., "image/png", "image/*", ".jpg").
+ * @param {number} [options.maxSize] - Maximum file size in bytes.
+ * @returns {{isValid: boolean, error: string|null}} Validation result: `isValid` indicates success; `error` contains a message when invalid.
  */
 export function validateFile(file, options = {}) {
     if (!(file instanceof File)) {
@@ -278,9 +287,9 @@ export function validateFile(file, options = {}) {
 }
 
 /**
- * Validates an email address
- * @param {string} email - The email to validate
- * @returns {Object} Validation result
+ * Determines whether a string is a syntactically valid email address.
+ * @param {string} email - The email address to validate.
+ * @returns {{isValid: boolean, error: string|null}} `isValid` is `true` when the email matches a basic email pattern; `error` contains a failure message when invalid.
  */
 export function validateEmail(email) {
     if (typeof email !== 'string') {
@@ -297,10 +306,10 @@ export function validateEmail(email) {
 }
 
 /**
- * Validates a component type
- * @param {string} type - The component type to validate
- * @param {Array<string>} validTypes - Array of valid component types
- * @returns {Object} Validation result
+ * Determine whether a component type is allowed.
+ * @param {string} type - Component type identifier to validate.
+ * @param {Array<string>} validTypes - Array of allowed component type identifiers.
+ * @returns {{isValid: boolean, error: string|null}} `isValid: true` and `error: null` when allowed; otherwise `isValid: false` and `error` contains a message.
  */
 export function validateComponentType(type, validTypes) {
     if (typeof type !== 'string') {
@@ -315,10 +324,11 @@ export function validateComponentType(type, validTypes) {
 }
 
 /**
- * Validates an object against a schema
- * @param {Object} obj - The object to validate
- * @param {Object} schema - The validation schema
- * @returns {Object} Validation result with errors object
+ * Validate an object's fields using a schema of field validators.
+ *
+ * @param {Object} obj - The object whose fields will be validated.
+ * @param {Object<string, function>} schema - Map of field names to validator functions. Each validator is called with the field value and must return an object of the shape `{ isValid: boolean, error: string|null }`.
+ * @returns {{ isValid: boolean, errors: Object<string, string> }} An object with `isValid` set to `true` when all validators pass, and `errors` mapping field names to error messages for each failing validator.
  */
 export function validateObject(obj, schema) {
     const errors = {};
@@ -338,11 +348,16 @@ export function validateObject(obj, schema) {
 }
 
 /**
- * Sanitizes and validates user input
- * @param {string} input - The input to sanitize and validate
- * @param {Object} options - Validation options
- * @returns {Object} Validation result with sanitized value
- */
+ * Sanitizes and validates a string input according to provided options.
+ *
+ * Trims the input (when enabled), enforces a maximum length, and strips HTML tags unless HTML is allowed.
+ *
+ * @param {string} input - The string to sanitize and validate.
+ * @param {Object} [options] - Validation options.
+ * @param {number} [options.maxLength=1000] - Maximum allowed length for the input.
+ * @param {boolean} [options.allowHTML=false] - If true, HTML tags are preserved; otherwise tags are removed.
+ * @param {boolean} [options.trim=true] - If true, leading and trailing whitespace is removed before validation.
+ * @returns {{isValid: boolean, error: string|null, value: string}} An object with `isValid`, an `error` message when invalid, and the sanitized `value`.
 export function sanitizeAndValidate(input, options = {}) {
     const {
         maxLength = 1000,
