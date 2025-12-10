@@ -7,7 +7,10 @@
 // This file shows how to integrate the new modules into script.js
 
 /**
- * Example 1: Replace Global Variables with State Manager
+ * Demonstrates replacing module-level global variables with a state manager.
+ *
+ * Imports the state manager and shows setting and getting a named state key,
+ * generating a new element ID, and observing changes to the stored value.
  */
 function exampleStateManager() {
     // OLD WAY (Global Variables)
@@ -33,7 +36,10 @@ function exampleStateManager() {
 }
 
 /**
- * Example 2: Add Error Handling
+ * Demonstrates adding structured error handling to synchronous project-loading code.
+ *
+ * Shows wrapping a synchronous loader with the global errorHandler (including category, severity, and context)
+ * and provides an equivalent manual try/catch that reports errors via errorHandler.handleError.
  */
 function exampleErrorHandling() {
     // OLD WAY (No Error Handling)
@@ -69,7 +75,9 @@ function exampleErrorHandling() {
 }
 
 /**
- * Example 3: Use Event Manager
+ * Demonstrates using a centralized event manager to register, remove, and delegate DOM event listeners with automatic cleanup.
+ *
+ * Uses eventManager.addEventListener to register a tracked listener (returns a listener id), eventManager.removeEventListener to remove a specific listener by id, eventManager.removeAllListeners to remove all listeners from an element, and eventManager.addDelegatedListener to add a delegated listener on a container for a selector.
  */
 function exampleEventManager() {
     // OLD WAY (Memory Leak Risk)
@@ -103,7 +111,9 @@ function exampleEventManager() {
 }
 
 /**
- * Example 4: Sanitize User Input
+ * Demonstrates safely handling user-provided HTML and URLs using the global Sanitizer.
+ *
+ * Shows how to sanitize HTML for insertion, escape HTML for plain-text display, use a safe innerHTML wrapper, and validate/sanitize URLs before assigning to anchors.
  */
 function exampleSanitization() {
     // OLD WAY (XSS Vulnerability)
@@ -133,7 +143,12 @@ function exampleSanitization() {
 }
 
 /**
- * Example 5: Add Performance Optimizations
+ * Demonstrates applying performance optimizations: debounced input handling, throttled updates, and cached DOM lookups.
+ *
+ * This example imports performance utilities and:
+ * - replaces per-keystroke search handling with a debounced search call,
+ * - applies a throttled function for frequent style updates,
+ * - obtains cached DOM references via a DOM cache utility to avoid repeated queries.
  */
 function examplePerformance() {
     // Import performance utilities
@@ -170,7 +185,9 @@ function examplePerformance() {
 }
 
 /**
- * Example 6: Validate User Input
+ * Validate multiple user inputs (ID, color, file, and URL) and apply or report results.
+ *
+ * Validates an element ID, a color value, and an uploaded file in sequence; on the first invalid result it calls `showError` with the validation error and stops. If the URL validation succeeds, assigns the value to `link.href`.
  */
 function exampleValidation() {
     import('./utils/validation.js').then((validation) => {
@@ -208,7 +225,10 @@ function exampleValidation() {
 }
 
 /**
- * Example 7: Use Constants
+ * Demonstrates using centralized constants to replace magic numbers and hardcoded strings.
+ *
+ * Loads the constants module and applies values for UI timing, styling, file size checks,
+ * error messages, and component type comparisons.
  */
 function exampleConstants() {
     import('./config/constants.js').then((constants) => {
@@ -235,8 +255,9 @@ function exampleConstants() {
 }
 
 /**
- * Complete Integration Example
- * Shows how to refactor a typical function
+ * Set up a debounced, validated, and sanitized search input that updates UI visibility and application state.
+ *
+ * Asynchronously imports required modules, wires a debounced search handler to the search input, validates and sanitizes user input, toggles visibility of `.component-item` elements based on matches, reports validation issues via the centralized error handler, and stores the active filter in the state manager.
  */
 async function completeExample() {
     // Import all modules

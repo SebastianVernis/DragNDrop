@@ -5,13 +5,13 @@
  */
 
 /**
- * Sanitizes HTML string to prevent XSS attacks
- * @param {string} html - The HTML string to sanitize
- * @param {Object} options - Sanitization options
- * @param {boolean} options.allowStyles - Allow inline styles (default: true)
- * @param {boolean} options.allowScripts - Allow script tags (default: false)
- * @param {Array<string>} options.allowedTags - Whitelist of allowed tags
- * @returns {string} Sanitized HTML string
+ * Sanitizes HTML to prevent XSS by removing disallowed tags and dangerous attributes.
+ * @param {string} html - Input HTML to sanitize.
+ * @param {Object} [options] - Sanitization options.
+ * @param {boolean} [options.allowStyles=true] - Whether to allow inline `style` attributes.
+ * @param {boolean} [options.allowScripts=false] - Whether to allow `<script>` tags.
+ * @param {Array<string>} [options.allowedTags] - Whitelist of allowed tag names; defaults to a common-safe set.
+ * @returns {string} The sanitized HTML string.
  */
 function sanitizeHTML(html, options = {}) {
     const {
@@ -42,9 +42,17 @@ function sanitizeHTML(html, options = {}) {
 }
 
 /**
- * Recursively sanitizes a DOM node and its children
- * @param {Node} node - The DOM node to sanitize
- * @param {Object} options - Sanitization options
+ * Recursively sanitize a DOM node and its descendant nodes according to the given options.
+ *
+ * Removes elements whose tag name is not in `options.allowedTags`, removes non-element/non-text nodes,
+ * removes `<script>` elements when `options.allowScripts` is false, and sanitizes retained element attributes
+ * using `sanitizeAttributes` (respecting `options.allowStyles`).
+ *
+ * @param {Node} node - The DOM node whose subtree will be sanitized in place.
+ * @param {Object} options - Sanitization options.
+ * @param {boolean} options.allowStyles - If true, allow `style` attributes on elements.
+ * @param {boolean} options.allowScripts - If true, retain `<script>` elements; otherwise they are removed.
+ * @param {string[]} options.allowedTags - List of allowed lowercase tag names; elements not in this list are removed.
  * @private
  */
 function sanitizeNode(node, options) {
@@ -84,9 +92,14 @@ function sanitizeNode(node, options) {
 }
 
 /**
- * Sanitizes element attributes to prevent XSS
- * @param {Element} element - The element to sanitize
- * @param {boolean} allowStyles - Whether to allow style attributes
+ * Remove unsafe attributes from an element, enforcing an allowlist and optional style support.
+ *
+ * This function mutates the provided element by removing event-handler attributes, blocking
+ * `javascript:` and `data:text/html` values on `href`/`src`, allowing `data-` and `aria-` attributes,
+ * and removing any attribute not present in the internal allowlist (optionally including `style`).
+ *
+ * @param {Element} element - Element whose attributes will be sanitized (attributes may be removed).
+ * @param {boolean} allowStyles - If true, permit the `style` attribute; otherwise `style` will be removed.
  * @private
  */
 function sanitizeAttributes(element, allowStyles) {
@@ -163,9 +176,9 @@ function escapeHTML(text) {
 }
 
 /**
- * Unescapes HTML entities back to characters
- * @param {string} text - The text to unescape
- * @returns {string} Unescaped text
+ * Convert HTML entities in a string back into their corresponding characters.
+ * @param {string} text - String that may contain HTML entities.
+ * @returns {string} The decoded string with HTML entities replaced by their characters; returns an empty string if `text` is not a string.
  */
 function unescapeHTML(text) {
     if (typeof text !== 'string') {
@@ -178,10 +191,10 @@ function unescapeHTML(text) {
 }
 
 /**
- * Sanitizes a URL to prevent XSS and ensure it's safe
- * @param {string} url - The URL to sanitize
- * @param {Array<string>} allowedProtocols - Allowed URL protocols
- * @returns {string} Sanitized URL or empty string if invalid
+ * Normalize and validate a URL against an allowlist of protocols.
+ * @param {string} url - The URL to validate and normalize.
+ * @param {Array<string>} allowedProtocols - Permitted protocols (for example: 'http:', 'https:', 'mailto:', 'tel:').
+ * @returns {string} The normalized absolute URL if valid and protocol is allowed, otherwise an empty string.
  */
 function sanitizeURL(url, allowedProtocols = ['http:', 'https:', 'mailto:', 'tel:']) {
     if (typeof url !== 'string') {
@@ -204,10 +217,13 @@ function sanitizeURL(url, allowedProtocols = ['http:', 'https:', 'mailto:', 'tel
 }
 
 /**
- * Safely sets innerHTML with sanitization
- * @param {Element} element - The element to set innerHTML on
- * @param {string} html - The HTML content to set
- * @param {Object} options - Sanitization options
+ * Set an element's innerHTML to a sanitized version of the provided HTML string.
+ * @param {Element} element - Target DOM element whose innerHTML will be replaced.
+ * @param {string} html - HTML string to sanitize and insert.
+ * @param {Object} [options] - Sanitization options.
+ * @param {boolean} [options.allowStyles=true] - Whether to allow inline `style` attributes.
+ * @param {boolean} [options.allowScripts=false] - Whether to allow `<script>` elements.
+ * @param {Array<string>} [options.allowedTags] - Whitelist of allowed tag names (defaults to module's built-in list).
  */
 function safeSetInnerHTML(element, html, options = {}) {
     if (!element || !(element instanceof Element)) {
@@ -220,11 +236,18 @@ function safeSetInnerHTML(element, html, options = {}) {
 }
 
 /**
- * Safely creates an element with sanitized content
- * @param {string} tagName - The tag name for the element
- * @param {Object} attributes - Attributes to set on the element
- * @param {string} content - Text or HTML content
- * @returns {Element} The created element
+ * Create a new DOM element and apply attributes and content with safety checks.
+ *
+ * Attributes whose names start with "on" (event handlers) are ignored. If an attribute
+ * named `style` is an object, its properties are applied to element.style. If
+ * `attributes.allowHTML` is truthy, `content` is inserted as sanitized HTML; otherwise
+ * `content` is set as text content.
+ * @param {string} tagName - Tag name for the new element (e.g., "div", "span").
+ * @param {Object} attributes - Key/value map of attributes to set. Special keys:
+ *                              `style` may be an object of CSS properties;
+ *                              `allowHTML` controls whether `content` is treated as HTML.
+ * @param {string} content - Text or HTML to insert into the element.
+ * @returns {Element} The created element with applied attributes and content.
  */
 function safeCreateElement(tagName, attributes = {}, content = '') {
     const element = document.createElement(tagName);
