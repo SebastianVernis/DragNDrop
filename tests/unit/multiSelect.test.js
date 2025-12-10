@@ -176,14 +176,20 @@ describe('MultiSelectManager', () => {
 
     describe('Events', () => {
         test('should dispatch selection changed event', (done) => {
+            let eventCount = 0;
             const handler = (e) => {
-                try {
-                    expect(e.detail.count).toBe(1);
-                    window.removeEventListener('multiselect:changed', handler);
-                    done();
-                } catch (error) {
-                    window.removeEventListener('multiselect:changed', handler);
-                    done(error);
+                eventCount++;
+                // selectSingle first clears (count=0), then selects (count=1)
+                // We wait for the second event with count=1
+                if (e.detail.count === 1) {
+                    try {
+                        expect(e.detail.count).toBe(1);
+                        window.removeEventListener('multiselect:changed', handler);
+                        done();
+                    } catch (error) {
+                        window.removeEventListener('multiselect:changed', handler);
+                        done(error);
+                    }
                 }
             };
             
@@ -192,6 +198,14 @@ describe('MultiSelectManager', () => {
             const element1 = document.getElementById('element1');
             const layerId = element1.dataset.layerId;
             multiSelectManager.selectSingle(layerId);
+            
+            // Timeout fallback in case event doesn't fire as expected
+            setTimeout(() => {
+                if (eventCount === 0) {
+                    window.removeEventListener('multiselect:changed', handler);
+                    done(new Error('No events dispatched'));
+                }
+            }, 100);
         });
     });
 });

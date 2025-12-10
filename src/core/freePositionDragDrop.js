@@ -622,3 +622,5 @@ class FreePositionDragDropManager {
 
 // Exportar globalmente
 window.FreePositionDragDropManager = FreePositionDragDropManager;
+
+export default FreePositionDragDropManager;

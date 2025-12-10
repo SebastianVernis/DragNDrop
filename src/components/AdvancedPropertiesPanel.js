@@ -385,3 +385,5 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 window.AdvancedPropertiesPanel = AdvancedPropertiesPanel;
+
+export default AdvancedPropertiesPanel;

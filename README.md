@@ -2,10 +2,16 @@
 
 Un editor HTML visual completo con funcionalidad de arrastrar y soltar, sistema de temas, undo/redo, y características avanzadas de desarrollo web.
 
-![DragNDrop Editor](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
-![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)
-![Coverage](https://img.shields.io/badge/Coverage-High-green)
+<!-- CI/CD Badges -->
+[![Deploy to Production](https://github.com/sebastianvernis/DragNDrop/actions/workflows/deploy.yml/badge.svg)](https://github.com/sebastianvernis/DragNDrop/actions/workflows/deploy.yml)
+[![Tests](https://github.com/sebastianvernis/DragNDrop/actions/workflows/test.yml/badge.svg)](https://github.com/sebastianvernis/DragNDrop/actions/workflows/test.yml)
+[![CI](https://github.com/sebastianvernis/DragNDrop/actions/workflows/ci.yml/badge.svg)](https://github.com/sebastianvernis/DragNDrop/actions/workflows/ci.yml)
+
+<!-- Status Badges -->
+![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 ![Version](https://img.shields.io/badge/Version-2.0.0-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Node](https://img.shields.io/badge/Node-18.x-green)
 
 ## 🌐 Live Demo
 

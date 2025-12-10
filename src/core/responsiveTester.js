@@ -432,3 +432,5 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 window.ResponsiveTester = ResponsiveTester;
+
+export default ResponsiveTester;

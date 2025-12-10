@@ -344,3 +344,5 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 window.AlignmentEngine = AlignmentEngine;
+
+export default AlignmentEngine;

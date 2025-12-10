@@ -500,3 +500,5 @@ class ResizeManager {
 
 // Exportar globalmente
 window.ResizeManager = ResizeManager;
+
+export default ResizeManager;

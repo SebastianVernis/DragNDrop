@@ -336,3 +336,5 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 window.LivePreview = LivePreview;
+
+export default LivePreview;

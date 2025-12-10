@@ -553,3 +553,5 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 window.LayersPanel = LayersPanel;
+
+export default LayersPanel;

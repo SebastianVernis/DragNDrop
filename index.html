@@ -18,6 +18,8 @@
     <script type="module" src="./script.js"></script>
     <!-- Workflow 4: Deploy & Integrations -->
     <script type="module" src="./src/init-workflow4.js"></script>
+    <!-- Main Initialization Module -->
+    <script type="module" src="./src/init.js"></script>
     <!-- Workflow 2: AI Features -->
     <script type="module" src="./src/ai/tokenTracker.js"></script>
     <script type="module" src="./src/ai/promptBuilder.js"></script>
@@ -518,9 +520,6 @@
     <link rel="stylesheet" href="src/styles/multiSelect.css">
     <link rel="stylesheet" href="src/styles/inspector.css">
     
-    <!-- Script principal -->
-    <script src="script.js"></script>
-    
     <!-- Service Worker Registration -->
     <script>
         // Register Service Worker
@@ -553,93 +552,8 @@
         }
     </script>
     
-    <!-- Inicialización de nuevos módulos -->
+    <!-- Global utility functions -->
     <script>
-        // Inicializar módulos cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
-            // Device Detection (first to detect capabilities)
-            window.deviceDetector = new DeviceDetector();
-            
-            // Performance Optimizer
-            window.performanceOptimizer = new PerformanceOptimizer();
-            
-            // Theme Manager (primero para aplicar tema)
-            window.themeManager = new ThemeManager();
-            
-            // AI Code Generator
-            window.aiCodeGenerator = new AICodeGenerator();
-            
-            // Undo/Redo Manager
-            window.undoRedoManager = new UndoRedoManager();
-            window.undoRedoManager.init();
-            
-            // Keyboard Shortcuts Manager
-            window.keyboardShortcutsManager = new KeyboardShortcutsManager();
-            
-            // Responsive Tester
-            window.responsiveTester = new ResponsiveTester();
-            window.responsiveTester.init();
-            
-            // Live Preview
-            window.livePreview = new LivePreview();
-            
-            // Nuevos módulos mejorados
-            window.geminiValidator = new GeminiSyntaxValidator();
-            window.resizeManager = new ResizeManager();
-            // window.enhancedDragDrop = new EnhancedDragDropManager(); // Deshabilitado en favor del nuevo sistema
-            window.freePositionDragDrop = new FreePositionDragDropManager();
-            window.projectAnalyzer = new ProjectAnalyzer();
-            
-            // Workflow 1: UI/UX Core - Layers, Multi-Select & Inspector
-            window.layersManager = new LayersManager();
-            window.groupManager = new GroupManager(window.layersManager);
-            window.multiSelectManager = new MultiSelectManager(window.layersManager);
-            window.alignmentEngine = new AlignmentEngine();
-            window.batchOperations = new BatchOperations(window.multiSelectManager, window.alignmentEngine, window.groupManager);
-            window.smartGuides = new SmartGuides(window.alignmentEngine);
-            window.layersPanel = new LayersPanel(window.layersManager);
-            window.advancedPropertiesPanel = new AdvancedPropertiesPanel();
-            
-            // Mobile-First Modules (initialize after device detection)
-            if (window.deviceDetector.isTouchDevice) {
-                window.touchDragDrop = new TouchDragDropManager();
-                window.gestureManager = new GestureManager();
-                console.log('✅ Touch & Gesture support enabled');
-            }
-            
-            if (window.deviceDetector.isMobile) {
-                window.mobileUI = new MobileUIManager();
-                console.log('✅ Mobile UI adaptations enabled');
-            }
-            
-            // Build initial layers tree
-            setTimeout(() => {
-                window.layersManager.buildTree();
-                window.layersPanel.render();
-            }, 500);
-            
-            // Listen for multi-select changes
-            window.addEventListener('multiselect:changed', (e) => {
-                const count = e.detail.count;
-                const toolbar = document.getElementById('multiselectToolbar');
-                const countSpan = document.getElementById('multiselectCount');
-                const selectionInfo = document.getElementById('selectionInfo');
-                const selectionInfoCount = document.getElementById('selectionInfoCount');
-                
-                if (count > 1) {
-                    toolbar.classList.remove('hidden');
-                    selectionInfo.classList.remove('hidden');
-                    countSpan.textContent = `${count} seleccionados`;
-                    selectionInfoCount.textContent = count;
-                } else {
-                    toolbar.classList.add('hidden');
-                    selectionInfo.classList.add('hidden');
-                }
-            });
-            
-            console.log('✅ Todos los módulos inicializados correctamente');
-        });
-        
         // Función global para toggle de preview
         function toggleLivePreview() {
             if (window.livePreview) {

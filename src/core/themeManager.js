@@ -153,3 +153,6 @@ if (typeof module !== 'undefined' && module.exports) {
 
 // Exportar globalmente
 window.ThemeManager = ThemeManager;
+
+// ES6 export
+export default ThemeManager;

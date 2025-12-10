@@ -1,0 +1,103 @@
+# =============================================================================
+# Production Environment - Example Variables
+# =============================================================================
+# Copy this file to terraform.tfvars and fill in your values.
+# NEVER commit terraform.tfvars to version control!
+#
+# For production, consider using:
+# - Terraform Cloud variables
+# - Environment variables (TF_VAR_*)
+# - HashiCorp Vault
+# - AWS Secrets Manager
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Cloudflare Configuration (Required)
+# -----------------------------------------------------------------------------
+
+# API Token: Create at https://dash.cloudflare.com/profile/api-tokens
+# Required permissions:
+# - Cloudflare Pages: Edit
+# - Zone: Edit (for DNS)
+# - Firewall: Edit (for WAF and rate limiting)
+# - Zone Settings: Edit (for security headers)
+cloudflare_api_token = "your-cloudflare-api-token"
+
+# Account ID: Found in Cloudflare dashboard sidebar
+cloudflare_account_id = "your-cloudflare-account-id"
+
+# Zone ID: Required for all security features
+# Found in domain overview page
+cloudflare_zone_id = "your-cloudflare-zone-id"
+
+# -----------------------------------------------------------------------------
+# GitHub Configuration (Required)
+# -----------------------------------------------------------------------------
+
+# Your GitHub username or organization
+github_owner = "your-github-username"
+
+# Repository name
+github_repo = "DragNDrop"
+
+# -----------------------------------------------------------------------------
+# Domain Configuration (Required)
+# -----------------------------------------------------------------------------
+
+# Production domain (e.g., dragndrop.yourdomain.com or yourdomain.com)
+custom_domain = "dragndrop.yourdomain.com"
+
+# Backend API URL for production
+api_url = "https://api.yourdomain.com"
+
+# Staging URL for comparison monitoring (optional)
+staging_url = "https://staging.yourdomain.com"
+
+# -----------------------------------------------------------------------------
+# Security Configuration
+# -----------------------------------------------------------------------------
+
+# Content Security Policy (customize based on your needs)
+csp_policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.github.com https://*.supabase.co https://generativelanguage.googleapis.com;"
+
+# Challenge anonymous proxies (Tor, VPNs) - set to false if you need to allow them
+challenge_anonymous_proxies = true
+
+# -----------------------------------------------------------------------------
+# Analytics & Error Tracking
+# -----------------------------------------------------------------------------
+
+# Sentry DSN for error tracking
+# Get it: https://sentry.io/settings/[org]/projects/[project]/keys/
+sentry_dsn = "https://xxx@xxx.ingest.sentry.io/xxx"
+
+# Google Analytics 4 Measurement ID
+google_analytics_id = "G-XXXXXXXXXX"
+
+# -----------------------------------------------------------------------------
+# Alerting Configuration (Required)
+# -----------------------------------------------------------------------------
+
+# Primary email for alerts (receives all alerts)
+alert_email = "production-alerts@example.com"
+
+# Slack webhook for team notifications
+# Create at: https://api.slack.com/messaging/webhooks
+slack_webhook_url = "https://hooks.slack.com/services/xxx/xxx/xxx"
+
+# PagerDuty integration for critical alerts (24/7 on-call)
+# Create at: https://support.pagerduty.com/docs/services-and-integrations
+pagerduty_integration_key = "your-pagerduty-integration-key"
+
+# -----------------------------------------------------------------------------
+# Monitoring Configuration
+# -----------------------------------------------------------------------------
+
+# Enable Prometheus metrics export
+enable_prometheus = true
+
+# Enable Grafana dashboard generation
+enable_grafana = true
+
+# Blackbox exporter address (if using Prometheus)
+blackbox_exporter_address = "blackbox-exporter:9115"

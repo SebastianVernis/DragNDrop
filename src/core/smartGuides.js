@@ -359,3 +359,5 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 window.SmartGuides = SmartGuides;
+
+export default SmartGuides;

@@ -108,14 +108,29 @@ function setupEventListeners() {
  * Load CSS styles for workflow 4
  */
 function loadStyles() {
-  const styles = ['/src/styles/deploy.css', '/src/styles/tutorial.css'];
-
-  styles.forEach(href => {
-    if (!document.querySelector(`link[href="${href}"]`)) {
+  // Check if styles are already loaded (with or without leading slash or ./)
+  const alreadyLoaded = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+    .map(link => link.getAttribute('href'));
+  
+  const stylesToLoad = ['/src/styles/deploy.css', '/src/styles/tutorial.css'];
+  
+  stylesToLoad.forEach(href => {
+    // Check multiple possible paths
+    const isLoaded = alreadyLoaded.some(loaded => 
+      loaded === href || 
+      loaded === `.${href}` || 
+      loaded === href.substring(1) ||
+      loaded.endsWith(href.split('/').pop())
+    );
+    
+    if (!isLoaded) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = href;
       document.head.appendChild(link);
+      console.log(`✅ Loaded stylesheet: ${href}`);
+    } else {
+      console.log(`⏭️ Stylesheet already loaded: ${href}`);
     }
   });
 }
