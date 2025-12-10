@@ -29,6 +29,9 @@ class FileLoader {
    */
   setupDropZone() {
     const canvas = document.getElementById('canvas');
+    if (!canvas) {
+      throw new Error("Element with id 'canvas' not found.");
+    }
 
     // Prevenir comportamiento por defecto del navegador
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -416,9 +419,12 @@ class FileLoader {
    */
   // Método de escape de HTML para prevenir XSS
   escapeHtml(html) {
-    const div = document.createElement('div');
-    div.textContent = html;
-    return div.innerHTML;
+    return html
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 
   // Generar nonce para políticas de seguridad de contenido
@@ -430,9 +436,30 @@ class FileLoader {
    * Validador de nombres de archivo
    */
   isValidFileName(filename) {
-    // Expresión regular para nombres de archivo seguros
-    const filenameRegex = /^[a-zA-Z0-9_\-\.]+\.[a-zA-Z0-9]+$/;
-    return filenameRegex.test(filename);
+    if (!filename || filename.length > 255) {
+      return false;
+    }
+    // Evitar caracteres de control, / \ y null byte
+    if (/[\x00-\x1F/\\?%*:|"<>]/ .test(filename)) {
+      return false;
+    }
+    // Evitar travesía de directorios
+    if (filename.includes('..')) {
+      return false;
+    }
+    // Evitar nombres reservados de Windows (insensible a mayúsculas)
+    if (/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(filename.split('.')[0])) {
+      return false;
+    }
+    // Evitar archivos que comienzan o terminan con punto o espacio
+    if (/^[\. ]|[\. ]$/ .test(filename)) {
+      return false;
+    }
+    // Asegurarse de que haya una extensión
+    if (!/\.[a-zA-Z0-9]{1,10}$/ .test(filename)) {
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -493,10 +520,4 @@ class FileLoader {
   }
 }
 
-// Exportar para uso en otros módulos
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = FileLoader;
-}
-
-// Exportar globalmente para compatibilidad
-window.FileLoader = FileLoader;
+module.exports = FileLoader;

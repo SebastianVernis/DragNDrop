@@ -4,6 +4,15 @@
  */
 
 describe('Language Services', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
   describe('HTML Completions', () => {
     test('should provide HTML tag suggestions', () => {
       const { setupHTMLCompletions } = require('../../src/editor/htmlCompletions.js');

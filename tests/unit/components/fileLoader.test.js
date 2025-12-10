@@ -67,9 +67,16 @@ describe('FileLoader', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.restoreAllMocks();
     document.body.innerHTML = '';
     localStorage.clear();
+  });
+
+  beforeEach(() => {
+    // Mock console methods to prevent test failures
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   describe('Constructor', () => {
@@ -106,12 +113,12 @@ describe('FileLoader', () => {
       expect(addEventListenerSpy).toHaveBeenCalled();
     });
 
-    it('should handle missing canvas gracefully', () => {
-      document.body.innerHTML = '';
+    it('should throw an error if canvas is missing', () => {
+      document.body.innerHTML = ''; // Ensure canvas is not in the DOM
       
       expect(() => {
         new FileLoader();
-      }).toThrow();
+      }).toThrow("Element with id 'canvas' not found.");
     });
   });
 
@@ -345,6 +352,7 @@ describe('FileLoader', () => {
       expect(fileLoader.isValidFileName('my-file.css')).toBe(true);
       expect(fileLoader.isValidFileName('script_v2.js')).toBe(true);
       expect(fileLoader.isValidFileName('image.png')).toBe(true);
+      expect(fileLoader.isValidFileName('archive.zip')).toBe(true);
     });
 
     it('should reject file names with path traversal', () => {
@@ -354,11 +362,30 @@ describe('FileLoader', () => {
 
     it('should reject file names with special characters', () => {
       expect(fileLoader.isValidFileName('test<script>.html')).toBe(false);
-      expect(fileLoader.isValidFileName('test;rm -rf.html')).toBe(false);
+      expect(fileLoader.isValidFileName('test|rm -rf.html')).toBe(false);
+      expect(fileLoader.isValidFileName('test:danger.html')).toBe(false);
     });
 
     it('should reject file names without extension', () => {
       expect(fileLoader.isValidFileName('testfile')).toBe(false);
+    });
+
+    it('should reject excessively long file names', () => {
+      const longName = 'a'.repeat(251) + '.html'; // 256 chars
+      expect(fileLoader.isValidFileName(longName)).toBe(false);
+    });
+
+    it('should reject file names with leading/trailing dots or spaces', () => {
+      expect(fileLoader.isValidFileName('.test.html')).toBe(false);
+      expect(fileLoader.isValidFileName('test.html.')).toBe(false);
+      expect(fileLoader.isValidFileName(' test.html')).toBe(false);
+      expect(fileLoader.isValidFileName('test.html ')).toBe(false);
+    });
+
+    it('should reject reserved file names', () => {
+      expect(fileLoader.isValidFileName('CON.html')).toBe(false);
+      expect(fileLoader.isValidFileName('PRN.txt')).toBe(false);
+      expect(fileLoader.isValidFileName('LPT1.css')).toBe(false);
     });
   });
 
@@ -773,11 +800,11 @@ describe('FileLoader', () => {
       expect(result).toContain('&gt;');
     });
 
-    it('should escape quotes', () => {
+    it('should escape quotes and ampersands', () => {
       const input = '"test" & \'test\'';
       const result = fileLoader.escapeHtml(input);
 
-      expect(result).toContain('&amp;');
+      expect(result).toBe('&quot;test&quot; &amp; &#039;test&#039;');
     });
 
     it('should handle empty string', () => {

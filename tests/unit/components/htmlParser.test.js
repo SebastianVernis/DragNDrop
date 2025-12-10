@@ -31,6 +31,13 @@ describe('HTMLParser', () => {
     document.body.innerHTML = '';
     // Clean up imported styles and scripts from head
     document.querySelectorAll('[data-source^="imported-"]').forEach(el => el.remove());
+    jest.restoreAllMocks();
+  });
+
+  beforeEach(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   describe('Constructor', () => {

@@ -163,4 +163,7 @@ function addDOMTypeDefinitions(monaco) {
   );
 }
 
-export default { initializeLanguageServices };
+// Exportar para uso en otros módulos
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { initializeLanguageServices };
+}
