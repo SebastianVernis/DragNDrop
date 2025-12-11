@@ -677,3 +677,6 @@ class EnhancedDragDropManager {
 
 // Exportar globalmente
 window.EnhancedDragDropManager = EnhancedDragDropManager;
+
+// ES6 export
+export default EnhancedDragDropManager;

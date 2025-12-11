@@ -1,0 +1,48 @@
+# =============================================================================
+# Development Environment - Example Variables
+# =============================================================================
+# Copy this file to terraform.tfvars and fill in your values.
+# NEVER commit terraform.tfvars to version control!
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Cloudflare Configuration (Required)
+# -----------------------------------------------------------------------------
+
+# API Token: Create at https://dash.cloudflare.com/profile/api-tokens
+# Required permissions: Cloudflare Pages:Edit, Zone:Read (if using custom domain)
+cloudflare_api_token = "your-cloudflare-api-token"
+
+# Account ID: Found in Cloudflare dashboard sidebar
+cloudflare_account_id = "your-cloudflare-account-id"
+
+# Zone ID: Only needed if using custom domain
+# Found in domain overview page
+cloudflare_zone_id = ""
+
+# -----------------------------------------------------------------------------
+# GitHub Configuration (Required)
+# -----------------------------------------------------------------------------
+
+# Your GitHub username or organization
+github_owner = "your-github-username"
+
+# Repository name
+github_repo = "DragNDrop"
+
+# -----------------------------------------------------------------------------
+# Domain Configuration (Optional)
+# -----------------------------------------------------------------------------
+
+# Custom domain for dev environment (leave empty to use *.pages.dev)
+custom_domain = ""
+
+# Backend API URL
+api_url = "http://localhost:3001"
+
+# -----------------------------------------------------------------------------
+# Alerting Configuration (Optional)
+# -----------------------------------------------------------------------------
+
+# Email for monitoring alerts
+alert_email = "dev@example.com"

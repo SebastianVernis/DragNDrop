@@ -1,0 +1,61 @@
+# =============================================================================
+# Staging Environment - Example Variables
+# =============================================================================
+# Copy this file to terraform.tfvars and fill in your values.
+# NEVER commit terraform.tfvars to version control!
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Cloudflare Configuration (Required)
+# -----------------------------------------------------------------------------
+
+# API Token: Create at https://dash.cloudflare.com/profile/api-tokens
+# Required permissions: Cloudflare Pages:Edit, Zone:Edit, Firewall:Edit
+cloudflare_api_token = "your-cloudflare-api-token"
+
+# Account ID: Found in Cloudflare dashboard sidebar
+cloudflare_account_id = "your-cloudflare-account-id"
+
+# Zone ID: Required for security headers and rate limiting
+# Found in domain overview page
+cloudflare_zone_id = "your-cloudflare-zone-id"
+
+# -----------------------------------------------------------------------------
+# GitHub Configuration (Required)
+# -----------------------------------------------------------------------------
+
+# Your GitHub username or organization
+github_owner = "your-github-username"
+
+# Repository name
+github_repo = "DragNDrop"
+
+# -----------------------------------------------------------------------------
+# Domain Configuration
+# -----------------------------------------------------------------------------
+
+# Custom domain for staging (e.g., staging.yourdomain.com)
+custom_domain = "staging.yourdomain.com"
+
+# Backend API URL for staging
+api_url = "https://api-staging.yourdomain.com"
+
+# -----------------------------------------------------------------------------
+# Alerting Configuration (Required)
+# -----------------------------------------------------------------------------
+
+# Email for monitoring alerts
+alert_email = "staging-alerts@example.com"
+
+# Slack webhook for alerts (optional but recommended)
+slack_webhook_url = "https://hooks.slack.com/services/xxx/xxx/xxx"
+
+# -----------------------------------------------------------------------------
+# Monitoring Configuration
+# -----------------------------------------------------------------------------
+
+# Enable Prometheus metrics export
+enable_prometheus = false
+
+# Enable Grafana dashboard generation
+enable_grafana = false

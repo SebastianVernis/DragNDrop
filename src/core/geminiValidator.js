@@ -683,3 +683,5 @@ document.head.appendChild(validatorStyles);
 
 // Exportar globalmente
 window.GeminiSyntaxValidator = GeminiSyntaxValidator;
+
+export default GeminiSyntaxValidator;

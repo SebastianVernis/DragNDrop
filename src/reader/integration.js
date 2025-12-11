@@ -27,10 +27,24 @@ export function initFrontendReader() {
  * Add CSS styles
  */
 function addStyles() {
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = './src/reader/ui/styles.css';
-  document.head.appendChild(link);
+  const href = './src/reader/ui/styles.css';
+  
+  // Check if already loaded
+  const alreadyLoaded = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+    .some(link => {
+      const linkHref = link.getAttribute('href');
+      return linkHref === href || linkHref === href.substring(2) || linkHref.endsWith('styles.css');
+    });
+  
+  if (!alreadyLoaded) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+    console.log('✅ Loaded reader styles');
+  } else {
+    console.log('⏭️ Reader styles already loaded');
+  }
 }
 
 /**

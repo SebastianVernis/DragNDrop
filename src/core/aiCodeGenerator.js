@@ -904,3 +904,5 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 window.AICodeGenerator = AICodeGenerator;
+
+export default AICodeGenerator;

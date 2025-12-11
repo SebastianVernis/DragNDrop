@@ -850,3 +850,5 @@ document.head.appendChild(analyzerStyles);
 
 // Exportar globalmente
 window.ProjectAnalyzer = ProjectAnalyzer;
+
+export default ProjectAnalyzer;

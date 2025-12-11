@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>DragNDrop - Visual HTML Editor for Vanilla JavaScript</title>
+    <meta name="title" content="DragNDrop - Visual HTML Editor for Vanilla JavaScript">
+    <meta name="description" content="Create beautiful websites with drag & drop. Export clean HTML, CSS, and JavaScript. No frameworks. No lock-in. Free and open source.">
+    <meta name="keywords" content="HTML editor, visual editor, drag and drop, vanilla JavaScript, web builder, no-code, low-code, open source">
+    <meta name="author" content="DragNDrop Team">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dragndrop.dev/">
+    <meta property="og:title" content="DragNDrop - Visual HTML Editor">
+    <meta property="og:description" content="The best visual editor for vanilla JavaScript. Build websites without frameworks.">
+    <meta property="og:image" content="https://dragndrop.dev/assets/og-image.png">
+    <meta property="og:site_name" content="DragNDrop">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://dragndrop.dev/">
+    <meta name="twitter:title" content="DragNDrop - Visual HTML Editor">
+    <meta name="twitter:description" content="Build websites with vanilla JS. No frameworks. No lock-in.">
+    <meta name="twitter:image" content="https://dragndrop.dev/assets/twitter-card.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "DragNDrop",
+        "description": "Visual HTML editor for vanilla JavaScript. Create beautiful websites with drag & drop and export clean code.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "DragNDrop Team"
+        },
+        "softwareVersion": "2.0",
+        "license": "https://opensource.org/licenses/MIT"
+    }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span class="logo-icon">◇</span>
+                <span class="logo-text">DragNDrop</span>
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#demo" class="nav-link">Demo</a></li>
+                <li><a href="#comparison" class="nav-link">Compare</a></li>
+                <li><a href="#faq" class="nav-link">FAQ</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="https://github.com/SebastianVernis/DragNDrop" class="btn btn-ghost" target="_blank" rel="noopener">GitHub</a>
+                <a href="../index.html" class="btn btn-primary">Try Now</a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-background">
+            <div class="hero-gradient"></div>
+            <div class="hero-grid"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>Open Source & Free Forever</span>
+                </div>
+                <h1 class="hero-headline">
+                    Build Beautiful Websites with
+                    <span class="gradient-text">Vanilla JavaScript</span>
+                </h1>
+                <p class="hero-subtitle">
+                    The visual HTML editor that exports clean, framework-free code. 
+                    No lock-in. No bloat. Just pure HTML, CSS, and JavaScript.
+                </p>
+                <div class="hero-cta">
+                    <a href="../index.html" class="btn btn-primary btn-lg">
+                        Get Started Free
+                        <span class="btn-arrow">→</span>
+                    </a>
+                    <a href="https://github.com/SebastianVernis/DragNDrop" class="btn btn-secondary btn-lg" target="_blank" rel="noopener">
+                        View on GitHub
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-value">50+</span>
+                        <span class="stat-label">Components</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-value">100%</span>
+                        <span class="stat-label">Free</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-value">0</span>
+                        <span class="stat-label">Dependencies</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="browser-mockup">
+                    <div class="browser-header">
+                        <div class="browser-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="browser-url">dragndrop.dev/editor</div>
+                    </div>
+                    <div class="browser-content">
+                        <div class="editor-preview">
+                            <div class="preview-sidebar">
+                                <div class="preview-item"></div>
+                                <div class="preview-item"></div>
+                                <div class="preview-item"></div>
+                                <div class="preview-item"></div>
+                            </div>
+                            <div class="preview-canvas">
+                                <div class="preview-header"></div>
+                                <div class="preview-hero"></div>
+                                <div class="preview-grid">
+                                    <div class="preview-card"></div>
+                                    <div class="preview-card"></div>
+                                    <div class="preview-card"></div>
+                                </div>
+                            </div>
+                            <div class="preview-panel">
+                                <div class="preview-prop"></div>
+                                <div class="preview-prop"></div>
+                                <div class="preview-prop"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Features</span>
+                <h2 class="section-title">Everything You Need to Build Faster</h2>
+                <p class="section-subtitle">
+                    Powerful features designed to streamline your workflow and boost productivity.
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-icon">
+                        <span>↺</span>
+                    </div>
+                    <h3 class="feature-title">Undo/Redo System</h3>
+                    <p class="feature-description">
+                        Never lose work with 50-state history. Go back and forth through your changes with ease.
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <span>⌨</span>
+                    </div>
+                    <h3 class="feature-title">Keyboard Shortcuts</h3>
+                    <p class="feature-description">
+                        Work 5x faster with 20+ keyboard shortcuts. Power users love the efficiency boost.
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <span>📱</span>
+                    </div>
+                    <h3 class="feature-title">Responsive Testing</h3>
+                    <p class="feature-description">
+                        Test on 8 different device sizes instantly. See how your design looks everywhere.
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <span>👁</span>
+                    </div>
+                    <h3 class="feature-title">Live Preview</h3>
+                    <p class="feature-description">
+                        See changes in real-time as you build. What you see is exactly what you get.
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon">
+                        <span>🎨</span>
+                    </div>
+                    <h3 class="feature-title">50+ Components</h3>
+                    <p class="feature-description">
+                        Drag & drop professional components. From buttons to complex layouts, we've got you covered.
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-icon">
+                        <span>💾</span>
+                    </div>
+                    <h3 class="feature-title">Auto-Save</h3>
+                    <p class="feature-description">
+                        Your work is always safe. Automatic saving ensures you never lose progress.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo" id="demo">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Live Demo</span>
+                <h2 class="section-title">See It in Action</h2>
+                <p class="section-subtitle">
+                    Try the editor right here. Drag components, edit properties, and export your code.
+                </p>
+            </div>
+            <div class="demo-container">
+                <div class="demo-frame">
+                    <iframe src="../index.html" title="DragNDrop Editor Demo" loading="lazy"></iframe>
+                </div>
+                <div class="demo-overlay" id="demo-overlay">
+                    <button class="btn btn-primary btn-lg" id="demo-start">
+                        Click to Interact
+                    </button>
+                </div>
+            </div>
+            <div class="demo-cta">
+                <a href="../index.html" class="btn btn-primary btn-lg" target="_blank">
+                    Open Full Editor
+                    <span class="btn-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison" id="comparison">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Comparison</span>
+                <h2 class="section-title">Why Choose DragNDrop?</h2>
+                <p class="section-subtitle">
+                    See how we stack up against the competition.
+                </p>
+            </div>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th class="highlight">
+                                <span class="table-logo">◇ DragNDrop</span>
+                            </th>
+                            <th>Webflow</th>
+                            <th>Framer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Price</td>
+                            <td class="highlight"><span class="check-green">Free Forever</span></td>
+                            <td>$14-212/mo</td>
+                            <td>$5-30/mo</td>
+                        </tr>
+                        <tr>
+                            <td>Code Export</td>
+                            <td class="highlight"><span class="check-green">✓ Clean Vanilla</span></td>
+                            <td><span class="check-yellow">⚠ Proprietary</span></td>
+                            <td><span class="check-yellow">⚠ React Only</span></td>
+                        </tr>
+                        <tr>
+                            <td>Open Source</td>
+                            <td class="highlight"><span class="check-green">✓ MIT License</span></td>
+                            <td><span class="check-red">✗</span></td>
+                            <td><span class="check-red">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Framework Required</td>
+                            <td class="highlight"><span class="check-green">None</span></td>
+                            <td>Webflow Runtime</td>
+                            <td>React</td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Lock-in</td>
+                            <td class="highlight"><span class="check-green">✓ No Lock-in</span></td>
+                            <td><span class="check-red">✗ Yes</span></td>
+                            <td><span class="check-red">✗ Yes</span></td>
+                        </tr>
+                        <tr>
+                            <td>Learning Curve</td>
+                            <td class="highlight"><span class="check-green">Low</span></td>
+                            <td>High</td>
+                            <td>Medium</td>
+                        </tr>
+                        <tr>
+                            <td>Offline Support</td>
+                            <td class="highlight"><span class="check-green">✓ 100%</span></td>
+                            <td><span class="check-red">✗</span></td>
+                            <td><span class="check-red">✗</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section class="social-proof" id="social-proof">
+        <div class="container">
+            <div class="proof-grid">
+                <div class="proof-card">
+                    <div class="proof-icon">⭐</div>
+                    <div class="proof-value" data-count="500">0</div>
+                    <div class="proof-label">GitHub Stars</div>
+                </div>
+                <div class="proof-card">
+                    <div class="proof-icon">👥</div>
+                    <div class="proof-value" data-count="1000">0</div>
+                    <div class="proof-label">Active Users</div>
+                </div>
+                <div class="proof-card">
+                    <div class="proof-icon">🌍</div>
+                    <div class="proof-value" data-count="50">0</div>
+                    <div class="proof-label">Countries</div>
+                </div>
+                <div class="proof-card">
+                    <div class="proof-icon">📦</div>
+                    <div class="proof-value" data-count="10000">0</div>
+                    <div class="proof-label">Projects Created</div>
+                </div>
+            </div>
+            <div class="testimonials">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "Finally, a visual editor that doesn't force me into a framework. The exported code is clean and exactly what I would write myself."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">JD</div>
+                        <div class="author-info">
+                            <span class="author-name">John Developer</span>
+                            <span class="author-role">Frontend Engineer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "I use DragNDrop to prototype ideas quickly. Being able to export vanilla HTML means I can integrate it anywhere."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SM</div>
+                        <div class="author-info">
+                            <span class="author-name">Sarah Miller</span>
+                            <span class="author-role">UX Designer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "Open source, free, and no vendor lock-in. This is how all web tools should be. Highly recommended!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MK</div>
+                        <div class="author-info">
+                            <span class="author-name">Mike Kim</span>
+                            <span class="author-role">Indie Hacker</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">FAQ</span>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">
+                    Got questions? We've got answers.
+                </p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Is it really free?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, forever. DragNDrop is open source under the MIT license. Core features will always be free. We believe in accessible tools for everyone.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>What code does it export?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Clean HTML, CSS, and JavaScript. No frameworks, no dependencies, no bloat. The code is exactly what you would write by hand, just faster.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Can I use it commercially?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely! The MIT license allows commercial use. Build client projects, sell templates, or use it for your business - no restrictions.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Do I need to know coding?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No coding knowledge required to use the visual editor. However, understanding HTML/CSS helps you get more out of it. It's also a great learning tool!</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Does it work offline?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, 100% browser-based. Once loaded, you can work offline. Your projects are saved locally and can be exported anytime.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Can I import existing HTML?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! You can import existing HTML files and continue editing them visually. The editor will parse your code and make it editable.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Is there vendor lock-in?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No lock-in whatsoever. Export your code and host it anywhere - Netlify, Vercel, GitHub Pages, your own server. You own your code completely.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>What browsers are supported?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>All modern browsers: Chrome, Firefox, Safari, and Edge (latest versions). We recommend Chrome for the best experience.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Can I collaborate with others?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Real-time collaboration is coming in v2.1! For now, you can share project files or use Git for version control.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>How do I get support?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Join our Discord community for real-time help, or open an issue on GitHub. We also have comprehensive documentation available.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta" id="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Build Something Amazing?</h2>
+                <p class="cta-subtitle">
+                    Join thousands of developers and designers who are building faster with DragNDrop.
+                </p>
+                <div class="cta-buttons">
+                    <a href="../index.html" class="btn btn-primary btn-xl">
+                        Start Building Now
+                        <span class="btn-arrow">→</span>
+                    </a>
+                    <a href="https://github.com/SebastianVernis/DragNDrop" class="btn btn-ghost btn-xl" target="_blank" rel="noopener">
+                        Star on GitHub
+                    </a>
+                </div>
+                <p class="cta-note">No signup required. Start building in seconds.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="footer-logo">
+                        <span class="logo-icon">◇</span>
+                        <span class="logo-text">DragNDrop</span>
+                    </a>
+                    <p class="footer-description">
+                        The visual HTML editor for vanilla JavaScript. Build beautiful websites without frameworks.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://github.com/SebastianVernis/DragNDrop" target="_blank" rel="noopener" aria-label="GitHub">
+                            <span>GitHub</span>
+                        </a>
+                        <a href="https://discord.gg/dragndrop" target="_blank" rel="noopener" aria-label="Discord">
+                            <span>Discord</span>
+                        </a>
+                        <a href="https://twitter.com/dragndropdev" target="_blank" rel="noopener" aria-label="Twitter">
+                            <span>Twitter</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#demo">Demo</a></li>
+                            <li><a href="#comparison">Comparison</a></li>
+                            <li><a href="../index.html">Editor</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="https://github.com/SebastianVernis/DragNDrop#readme" target="_blank" rel="noopener">Documentation</a></li>
+                            <li><a href="https://github.com/SebastianVernis/DragNDrop/releases" target="_blank" rel="noopener">Changelog</a></li>
+                            <li><a href="#faq">FAQ</a></li>
+                            <li><a href="https://github.com/SebastianVernis/DragNDrop/issues" target="_blank" rel="noopener">Report Bug</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Community</h4>
+                        <ul>
+                            <li><a href="https://github.com/SebastianVernis/DragNDrop" target="_blank" rel="noopener">GitHub</a></li>
+                            <li><a href="https://discord.gg/dragndrop" target="_blank" rel="noopener">Discord</a></li>
+                            <li><a href="https://github.com/SebastianVernis/DragNDrop/discussions" target="_blank" rel="noopener">Discussions</a></li>
+                            <li><a href="https://github.com/SebastianVernis/DragNDrop/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contribute</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="https://github.com/SebastianVernis/DragNDrop/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DragNDrop. Open source under MIT License.</p>
+                <p>Made with ♥ for the web community.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
