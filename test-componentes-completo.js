@@ -185,7 +185,19 @@ function verificarPlantillas() {
   log('='.repeat(80), 'cyan');
 
   const scriptPath = path.join(__dirname, 'script.js');
-  const contenido = fs.readFileSync(scriptPath, 'utf8');
+  
+  if (!verificarArchivo(scriptPath)) {
+    log('❌ ERROR: No se encontró script.js', 'red');
+    return;
+  }
+
+  let contenido;
+  try {
+    contenido = fs.readFileSync(scriptPath, 'utf8');
+  } catch (error) {
+    log(`❌ ERROR: No se pudo leer script.js - ${error.message}`, 'red');
+    return;
+  }
 
   plantillas.forEach(plantilla => {
     resultados.plantillas.total++;
