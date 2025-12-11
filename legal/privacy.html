@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - Editor HTML Drag & Drop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background: #f8fafc;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 12px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 24px;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        h3 {
+            color: #475569;
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: #475569;
+        }
+        
+        ul {
+            margin: 15px 0 15px 30px;
+            color: #475569;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background: #f1f5f9;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-top: 30px;
+            transition: background 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #5568d3;
+        }
+        
+        .date {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔒 Política de Privacidad</h1>
+        <p>Editor HTML Drag & Drop</p>
+    </div>
+    
+    <div class="container">
+        <div class="content">
+            <p class="date">Última actualización: 11 de diciembre de 2025</p>
+            
+            <h2>1. Introducción</h2>
+            <p>
+                Bienvenido a Editor HTML Drag & Drop. Esta Política de Privacidad explica cómo recopilamos, 
+                usamos, divulgamos y protegemos su información cuando utiliza nuestra aplicación web.
+            </p>
+            
+            <div class="highlight">
+                <strong>Compromiso de Privacidad:</strong> Nos comprometemos a proteger su privacidad y 
+                garantizar la seguridad de su información personal. Esta aplicación está diseñada para 
+                funcionar principalmente en su navegador local.
+            </div>
+            
+            <h2>2. Información que Recopilamos</h2>
+            
+            <h3>2.1 Información Almacenada Localmente</h3>
+            <p>Nuestra aplicación almacena la siguiente información en su navegador local (localStorage):</p>
+            <ul>
+                <li><strong>Proyectos guardados:</strong> El contenido HTML y configuraciones de sus proyectos</li>
+                <li><strong>Preferencias de usuario:</strong> Configuraciones de interfaz, tema, idioma</li>
+                <li><strong>Historial de acciones:</strong> Para funcionalidad de deshacer/rehacer</li>
+                <li><strong>Configuración de Git:</strong> Token de acceso personal y configuración de repositorio (si se configura)</li>
+            </ul>
+            
+            <h3>2.2 Información No Recopilada</h3>
+            <p>Esta aplicación NO recopila ni envía a servidores externos:</p>
+            <ul>
+                <li>Información personal identificable</li>
+                <li>Datos de navegación o uso</li>
+                <li>Contenido de sus proyectos (a menos que use la integración con Git)</li>
+                <li>Cookies de seguimiento o análisis</li>
+            </ul>
+            
+            <h2>3. Uso de la Información</h2>
+            <p>La información almacenada localmente se utiliza exclusivamente para:</p>
+            <ul>
+                <li>Guardar y restaurar sus proyectos</li>
+                <li>Mantener sus preferencias de configuración</li>
+                <li>Proporcionar funcionalidad de deshacer/rehacer</li>
+                <li>Sincronizar con GitHub (solo si usted lo configura explícitamente)</li>
+            </ul>
+            
+            <h2>4. Integración con GitHub</h2>
+            <p>
+                Si decide utilizar la función de autoguardado con Git, usted proporciona voluntariamente:
+            </p>
+            <ul>
+                <li>Personal Access Token de GitHub</li>
+                <li>Nombre de usuario/organización</li>
+                <li>Nombre del repositorio</li>
+            </ul>
+            
+            <div class="highlight">
+                <strong>Importante:</strong> Su token de GitHub se almacena únicamente en su navegador local 
+                y se utiliza exclusivamente para comunicarse directamente con la API de GitHub. Nunca se 
+                envía a nuestros servidores ni a terceros.
+            </div>
+            
+            <h2>5. Seguridad de los Datos</h2>
+            <p>Implementamos medidas de seguridad para proteger su información:</p>
+            <ul>
+                <li>Almacenamiento local cifrado en el navegador</li>
+                <li>Comunicación HTTPS con GitHub API</li>
+                <li>No se almacenan datos en servidores externos</li>
+                <li>Tokens de acceso almacenados de forma segura en localStorage</li>
+            </ul>
+            
+            <h2>6. Sus Derechos</h2>
+            <p>Usted tiene derecho a:</p>
+            <ul>
+                <li><strong>Acceder:</strong> Ver toda la información almacenada en su navegador</li>
+                <li><strong>Eliminar:</strong> Borrar todos los datos almacenados localmente en cualquier momento</li>
+                <li><strong>Exportar:</strong> Descargar sus proyectos en formato JSON o HTML</li>
+                <li><strong>Controlar:</strong> Decidir qué información se almacena y cómo se utiliza</li>
+            </ul>
+            
+            <h2>7. Cookies y Tecnologías Similares</h2>
+            <p>
+                Esta aplicación utiliza localStorage del navegador para almacenar datos localmente. 
+                No utilizamos cookies de seguimiento, análisis o publicidad de terceros.
+            </p>
+            
+            <h2>8. Servicios de Terceros</h2>
+            <p>Esta aplicación puede interactuar con los siguientes servicios de terceros:</p>
+            <ul>
+                <li><strong>GitHub API:</strong> Solo si configura la integración con Git</li>
+                <li><strong>Google Fonts:</strong> Para cargar fuentes tipográficas</li>
+            </ul>
+            <p>
+                Estos servicios tienen sus propias políticas de privacidad que recomendamos revisar.
+            </p>
+            
+            <h2>9. Privacidad de Menores</h2>
+            <p>
+                Esta aplicación no está dirigida a menores de 13 años. No recopilamos intencionalmente 
+                información personal de menores de edad.
+            </p>
+            
+            <h2>10. Cambios a esta Política</h2>
+            <p>
+                Podemos actualizar esta Política de Privacidad ocasionalmente. Le notificaremos sobre 
+                cambios significativos mediante un aviso en la aplicación. La fecha de "Última actualización" 
+                al inicio de esta política indica cuándo se realizó la última modificación.
+            </p>
+            
+            <h2>11. Eliminación de Datos</h2>
+            <p>Para eliminar todos sus datos almacenados localmente:</p>
+            <ol>
+                <li>Abra las herramientas de desarrollador de su navegador (F12)</li>
+                <li>Vaya a la pestaña "Application" o "Almacenamiento"</li>
+                <li>Seleccione "Local Storage"</li>
+                <li>Elimine todos los elementos relacionados con esta aplicación</li>
+            </ol>
+            <p>O simplemente borre los datos de navegación de su navegador para este sitio.</p>
+            
+            <h2>12. Contacto</h2>
+            <p>
+                Si tiene preguntas sobre esta Política de Privacidad o sobre cómo manejamos sus datos, 
+                puede contactarnos a través de:
+            </p>
+            <ul>
+                <li>Email: privacy@dragndrop-editor.com</li>
+                <li>GitHub: github.com/dragndrop-editor/issues</li>
+            </ul>
+            
+            <div class="highlight">
+                <strong>Resumen:</strong> Esta aplicación respeta su privacidad. Todos sus datos se almacenan 
+                localmente en su navegador. No recopilamos, compartimos ni vendemos su información personal. 
+                Usted tiene control total sobre sus datos.
+            </div>
+            
+            <a href="../index.html" class="back-btn">← Volver al Editor</a>
+        </div>
+    </div>
+</body>
+</html>
