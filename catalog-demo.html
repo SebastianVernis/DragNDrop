@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DragNDrop - Catálogo Interactivo de Implementaciones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .version-btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .version-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .version-btn.active {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            transform: scale(1.05);
+        }
+
+        .version-btn.deployable::after {
+            content: "✅";
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #27ae60;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .version-btn.needs-config::after {
+            content: "⚙️";
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #f39c12;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 120px);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+        }
+
+        .iframe-container {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .iframe-header {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .iframe-header h3 {
+            margin: 0;
+        }
+
+        .iframe-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .iframe-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .iframe-btn:hover {
+            background: #2980b9;
+        }
+
+        iframe {
+            width: 100%;
+            height: calc(100% - 60px);
+            border: none;
+            background: white;
+        }
+
+        .version-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .version-info h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .version-info .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .status.ready { background: #d4edda; color: #155724; }
+        .status.config { background: #fff3cd; color: #856404; }
+        .status.dev { background: #cce7ff; color: #004085; }
+
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tech-list li {
+            padding: 3px 0;
+            font-size: 14px;
+        }
+
+        .tech-list li:before {
+            content: "🔧 ";
+            margin-right: 5px;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        .features-list li {
+            padding: 2px 0;
+            font-size: 13px;
+        }
+
+        .features-list li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .no-selection {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            flex-direction: column;
+            color: #7f8c8d;
+        }
+
+        .legend {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .legend h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .iframe-container {
+                height: 600px;
+                order: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 DragNDrop - Catálogo de Implementaciones</h1>
+        <p style="text-align: center; margin: 10px 0; color: #7f8c8d;">
+            Explora y prueba todas las variantes del proyecto en tiempo real
+        </p>
+        
+        <div class="controls">
+            <button class="version-btn deployable" data-version="v1">V1 - Vanilla</button>
+            <button class="version-btn deployable" data-version="v2">V2 - Landing</button>
+            <button class="version-btn deployable" data-version="v3">V3 - Python API</button>
+            <button class="version-btn needs-config" data-version="v4">V4 - Node API</button>
+            <button class="version-btn deployable" data-version="v5">V5 - NPM Package</button>
+            <button class="version-btn" data-version="v6">V6 - React</button>
+            <button class="version-btn needs-config" data-version="v7">V7 - Python Full</button>
+            <button class="version-btn deployable" data-version="v8">V8 - Node Full</button>
+            <button class="version-btn" data-version="v9">V9 - React+Vite</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <div id="version-details">
+                <div class="no-selection">
+                    <h3>👈 Selecciona una versión</h3>
+                    <p>Haz clic en cualquier botón para ver los detalles y probar la implementación</p>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <h4>📋 Leyenda</h4>
+                <div class="legend-item">
+                    <span>✅</span>
+                    <span>Deployable inmediatamente</span>
+                </div>
+                <div class="legend-item">
+                    <span>⚙️</span>
+                    <span>Requiere configuración</span>
+                </div>
+                <div class="legend-item">
+                    <span style="background: #d4edda; padding: 2px 6px; border-radius: 3px; font-size: 12px;">PRODUCCIÓN</span>
+                    <span>Lista para usar</span>
+                </div>
+                <div class="legend-item">
+                    <span style="background: #cce7ff; padding: 2px 6px; border-radius: 3px; font-size: 12px;">DESARROLLO</span>
+                    <span>En construcción</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="iframe-container">
+            <div class="iframe-header">
+                <h3 id="iframe-title">Selecciona una versión para comenzar</h3>
+                <div class="iframe-actions">
+                    <button class="iframe-btn" onclick="refreshIframe()">🔄 Recargar</button>
+                    <button class="iframe-btn" onclick="openInNewTab()">🔗 Abrir en nueva pestaña</button>
+                    <button class="iframe-btn" onclick="toggleFullscreen()">⛶ Pantalla completa</button>
+                </div>
+            </div>
+            <iframe id="demo-iframe" style="display: none;"></iframe>
+            <div id="no-iframe" class="no-selection">
+                <h2>🎯 Catálogo Interactivo</h2>
+                <p>Prueba cada implementación en tiempo real</p>
+                <p>Compara tecnologías y características</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const versions = {
+            v1: {
+                name: 'V1 - Vanilla Standalone',
+                status: 'PRODUCCIÓN',
+                statusClass: 'ready',
+                url: 'http://18.223.32.141:8081/',
+                deployable: true,
+                description: 'Implementación completa sin dependencias',
+                technologies: [
+                    'HTML5 + CSS3',
+                    'Vanilla JavaScript',
+                    'Service Worker',
+                    'Monaco Editor',
+                    'IndexedDB'
+                ],
+                features: [
+                    '34 componentes integrados',
+                    'Sistema de colaboración P2P',
+                    'Integración con AI (Gemini)',
+                    'Tutorial interactivo',
+                    'Export completo HTML/CSS/JS',
+                    'PWA con funcionalidad offline',
+                    'Sistema de templates profesionales'
+                ]
+            },
+            v2: {
+                name: 'V2 - Landing Page',
+                status: 'PRODUCCIÓN',
+                statusClass: 'ready',
+                url: 'http://18.223.32.141:8082/landing.html',
+                deployable: true,
+                description: 'Página de presentación del proyecto',
+                technologies: [
+                    'HTML5',
+                    'CSS3',
+                    'Responsive Design'
+                ],
+                features: [
+                    'Diseño atractivo y moderno',
+                    'Totalmente responsive',
+                    'Animaciones CSS',
+                    'Información del proyecto'
+                ]
+            },
+            v3: {
+                name: 'V3 - Backend Python',
+                status: 'PRODUCCIÓN',
+                statusClass: 'ready',
+                url: 'http://18.223.32.141:8083/',
+                deployable: true,
+                description: 'API RESTful con FastAPI',
+                technologies: [
+                    'Python 3.13',
+                    'FastAPI',
+                    'SQLAlchemy',
+                    'Alembic',
+                    'Pydantic'
+                ],
+                features: [
+                    'API REST completa',
+                    'Documentación Swagger automática',
+                    'Autenticación JWT',
+                    'Migraciones de base de datos',
+                    'Validación de esquemas'
+                ]
+            },
+            v4: {
+                name: 'V4 - Backend NodeJS',
+                status: 'PRODUCCIÓN',
+                statusClass: 'config',
+                url: '#configuracion-requerida',
+                deployable: false,
+                description: 'API con Express y colaboración',
+                technologies: [
+                    'Node.js',
+                    'Express',
+                    'Drizzle ORM',
+                    'Better Auth',
+                    'WebSocket'
+                ],
+                features: [
+                    'API REST robusta',
+                    'Sistema de autenticación',
+                    'WebSocket para colaboración',
+                    'Rate limiting',
+                    'Testing con Jest'
+                ]
+            },
+            v5: {
+                name: 'V5 - NPM Package',
+                status: 'PRODUCCIÓN',
+                statusClass: 'ready',
+                url: 'http://18.223.32.141:8085/',
+                deployable: true,
+                description: 'Librería reutilizable para integración',
+                technologies: [
+                    'Node.js',
+                    'NPM Package',
+                    'Framework Detection',
+                    'File System API'
+                ],
+                features: [
+                    'Detección automática de frameworks',
+                    'Parser de componentes',
+                    'Validador de sintaxis',
+                    'File watcher integrado',
+                    'Servidor de desarrollo'
+                ]
+            },
+            v6: {
+                name: 'V6 - Frontend React',
+                status: 'DESARROLLO',
+                statusClass: 'dev',
+                url: '/versions-organized/v6-frontend-react/',
+                deployable: false,
+                description: 'SPA con React y TypeScript',
+                technologies: [
+                    'React',
+                    'TypeScript',
+                    'JSX',
+                    'CSS Modules'
+                ],
+                features: [
+                    'Componentes reutilizables',
+                    'Tipado estricto',
+                    'Estado global',
+                    'Interfaz moderna'
+                ]
+            },
+            v7: {
+                name: 'V7 - Python Fullstack',
+                status: 'PRODUCCIÓN',
+                statusClass: 'config',
+                url: '#configuracion-requerida',
+                deployable: false,
+                description: 'Backend + Frontend integrado',
+                technologies: [
+                    'Python + FastAPI',
+                    'Jinja2 Templates',
+                    'PostgreSQL',
+                    'SQLAlchemy'
+                ],
+                features: [
+                    'Aplicación fullstack unificada',
+                    'Templates server-side',
+                    'Base de datos PostgreSQL',
+                    'Sistema de autenticación completo'
+                ]
+            },
+            v8: {
+                name: 'V8 - NodeJS Fullstack',
+                status: 'PRODUCCIÓN',
+                statusClass: 'ready',
+                url: 'http://18.223.32.141:8084/',
+                deployable: true,
+                description: 'Colaboración tiempo real con CRDT',
+                technologies: [
+                    'Node.js + Express',
+                    'Socket.io',
+                    'Yjs + CRDT',
+                    'Better Auth',
+                    'PostgreSQL'
+                ],
+                features: [
+                    'Colaboración tiempo real',
+                    'CRDT para sincronización',
+                    'OAuth social login',
+                    'WebSocket bidireccional',
+                    'Deploy automation'
+                ]
+            },
+            v9: {
+                name: 'V9 - React + Vite',
+                status: 'DESARROLLO',
+                statusClass: 'dev',
+                url: '/versions-organized/v9-frontend-react-vite/',
+                deployable: false,
+                description: 'Frontend moderno con Vite',
+                technologies: [
+                    'React 18',
+                    'Vite',
+                    'TypeScript',
+                    'HMR',
+                    'ESLint'
+                ],
+                features: [
+                    'Hot Module Replacement',
+                    'Build ultra-rápido',
+                    'Arquitectura escalable',
+                    'Performance optimizada'
+                ]
+            }
+        };
+
+        let currentVersion = null;
+
+        function showVersion(versionKey) {
+            currentVersion = versionKey;
+            const version = versions[versionKey];
+            
+            // Actualizar botones
+            document.querySelectorAll('.version-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-version="${versionKey}"]`).classList.add('active');
+            
+            // Actualizar sidebar
+            const detailsDiv = document.getElementById('version-details');
+            detailsDiv.innerHTML = `
+                <div class="version-info">
+                    <h4>${version.name}</h4>
+                    <div class="status ${version.statusClass}">${version.status}</div>
+                    <p><strong>Descripción:</strong> ${version.description}</p>
+                    
+                    <h5 style="margin-top: 15px; margin-bottom: 5px;">🛠️ Tecnologías:</h5>
+                    <ul class="tech-list">
+                        ${version.technologies.map(tech => `<li>${tech}</li>`).join('')}
+                    </ul>
+                    
+                    <h5 style="margin-top: 15px; margin-bottom: 5px;">✨ Características:</h5>
+                    <ul class="features-list">
+                        ${version.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                    
+                    ${version.deployable ? 
+                        '<p style="margin-top: 15px; padding: 10px; background: #d4edda; border-radius: 5px; font-size: 14px;"><strong>✅ Listo para deploy:</strong> Se puede ejecutar inmediatamente</p>' :
+                        '<p style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 5px; font-size: 14px;"><strong>⚙️ Configuración requerida:</strong> Necesita setup de base de datos y variables de entorno</p>'
+                    }
+                </div>
+            `;
+            
+            // Actualizar iframe
+            const iframe = document.getElementById('demo-iframe');
+            const noIframe = document.getElementById('no-iframe');
+            const iframeTitle = document.getElementById('iframe-title');
+            
+            if (version.deployable && !version.url.includes('#')) {
+                iframe.src = version.url;
+                iframe.style.display = 'block';
+                noIframe.style.display = 'none';
+                iframeTitle.textContent = version.name;
+            } else {
+                iframe.style.display = 'none';
+                noIframe.style.display = 'flex';
+                noIframe.innerHTML = `
+                    <div style="text-align: center;">
+                        <h3>⚙️ Configuración Requerida</h3>
+                        <p>Esta versión necesita configuración adicional:</p>
+                        <ul style="text-align: left; margin-top: 10px;">
+                            <li>Base de datos (PostgreSQL)</li>
+                            <li>Variables de entorno</li>
+                            <li>Dependencias (npm install / pip install)</li>
+                            ${version.technologies.includes('Better Auth') ? '<li>OAuth credentials</li>' : ''}
+                        </ul>
+                        <p style="margin-top: 15px;">
+                            <a href="/versions-organized/${versionKey}/" target="_blank" style="color: #3498db;">
+                                📁 Ver archivos del proyecto
+                            </a>
+                        </p>
+                    </div>
+                `;
+                iframeTitle.textContent = `${version.name} - Configuración requerida`;
+            }
+        }
+
+        function refreshIframe() {
+            const iframe = document.getElementById('demo-iframe');
+            if (iframe.src) {
+                iframe.src = iframe.src;
+            }
+        }
+
+        function openInNewTab() {
+            if (currentVersion) {
+                const version = versions[currentVersion];
+                if (version.deployable && !version.url.includes('#')) {
+                    window.open(version.url, '_blank');
+                } else {
+                    window.open(`/versions-organized/${currentVersion}/`, '_blank');
+                }
+            }
+        }
+
+        function toggleFullscreen() {
+            const iframe = document.getElementById('demo-iframe');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            }
+        }
+
+        // Event listeners
+        document.querySelectorAll('.version-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                showVersion(btn.dataset.version);
+            });
+        });
+
+        // Auto-load V1 (más completa)
+        showVersion('v1');
+    </script>
+</body>
+</html>

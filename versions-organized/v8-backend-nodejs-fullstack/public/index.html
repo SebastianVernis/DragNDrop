@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Frontend - NodeJS Fullstack v8</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .feature-card h3 {
+            color: #9b59b6;
+            margin-bottom: 15px;
+        }
+        
+        .api-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .endpoint {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .method.get { background: #28a745; color: white; }
+        .method.post { background: #007bff; color: white; }
+        .method.put { background: #ffc107; color: black; }
+        .method.delete { background: #dc3545; color: white; }
+        
+        .try-button {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .try-button:hover {
+            background: #8e44ad;
+        }
+        
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .realtime-section {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .collaboration-demo {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .user-panel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .online-users {
+            margin-top: 15px;
+        }
+        
+        .user-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 15px;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: linear-gradient(45px, #9b59b6, #8e44ad);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px;
+            min-width: 150px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .demo-controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .demo-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        
+        .demo-button:hover {
+            background: #218838;
+        }
+        
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .connected {
+            background: #28a745;
+            color: white;
+        }
+        
+        .disconnected {
+            background: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-status" id="connectionStatus">🔌 Conectando...</div>
+    
+    <div class="container">
+        <h1>🚀 NodeJS Fullstack v8 - Demo Colaborativo</h1>
+        
+        <div class="realtime-section">
+            <h2>⚡ Colaboración en Tiempo Real</h2>
+            <p>Esta versión incluye WebSocket con Socket.io para colaboración entre múltiples usuarios</p>
+            
+            <div class="collaboration-demo">
+                <div class="user-panel">
+                    <h4>👤 Tu Sesión</h4>
+                    <input type="text" id="username" placeholder="Tu nombre" style="width: 100%; padding: 8px; margin: 10px 0; border-radius: 5px; border: none;">
+                    <button onclick="joinProject()" style="width: 100%; padding: 10px; background: white; color: #9b59b6; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">🏗️ Unirse a Proyecto Demo</button>
+                </div>
+                
+                <div class="user-panel">
+                    <h4>🌐 Usuarios Online</h4>
+                    <div class="online-users" id="onlineUsers">
+                        <div class="user-item">Esperando conexión...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🔗 WebSocket Real-time</h3>
+                <p>Socket.io para sincronización instantánea entre usuarios. Cursors, cambios y colaboración en vivo.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🗄️ Base de Datos</h3>
+                <p>Almacenamiento en memoria con API RESTful para proyectos, componentes y usuarios.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🏠 Salas de Proyecto</h3>
+                <p>Sistema de salas para colaborar en proyectos específicos con múltiples usuarios.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>📊 Estado Sincronizado</h3>
+                <p>Cambios propagados en tiempo real a todos los usuarios conectados al mismo proyecto.</p>
+            </div>
+        </div>
+        
+        <div class="demo-controls">
+            <button class="demo-button" onclick="seedData()">🌱 Crear Datos Demo</button>
+            <button class="demo-button" onclick="loadAllData()">🔄 Cargar Datos</button>
+            <button class="demo-button" onclick="simulateActivity()">🎭 Simular Actividad</button>
+        </div>
+        
+        <div class="api-section">
+            <h3>📋 API Endpoints</h3>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/</code> - Información del servidor
+                <button class="try-button" onclick="tryEndpoint('GET', '/')">Probar</button>
+                <div id="result-root" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/projects</code> - Listar proyectos
+                <button class="try-button" onclick="tryEndpoint('GET', '/api/projects')">Probar</button>
+                <div id="result-projects" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/api/projects</code> - Crear proyecto
+                <button class="try-button" onclick="createProject()">Crear</button>
+                <div id="result-create-project" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/rooms</code> - Salas activas
+                <button class="try-button" onclick="tryEndpoint('GET', '/api/rooms')">Probar</button>
+                <div id="result-rooms" class="result" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="projects-count">0</div>
+                <div>Proyectos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="users-count">0</div>
+                <div>Usuarios</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="connections-count">0</div>
+                <div>Conexiones</div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const API_BASE = 'http://localhost:8084';
+        let currentProject = 'proj1';
+        
+        // Estado de conexión
+        socket.on('connect', () => {
+            document.getElementById('connectionStatus').textContent = '🟢 Conectado';
+            document.getElementById('connectionStatus').className = 'connection-status connected';
+            updateConnectionCount();
+        });
+        
+        socket.on('disconnect', () => {
+            document.getElementById('connectionStatus').textContent = '🔴 Desconectado';
+            document.getElementById('connectionStatus').className = 'connection-status disconnected';
+        });
+        
+        // Eventos de colaboración
+        socket.on('user:joined', (user) => {
+            addOnlineUser(user);
+            showNotification(`${user.username} se unió al proyecto`);
+        });
+        
+        socket.on('user:left', (user) => {
+            removeOnlineUser(user);
+            showNotification(`${user.username} dejó el proyecto`);
+        });
+        
+        socket.on('project:created', (project) => {
+            showNotification(`Nuevo proyecto creado: ${project.name}`);
+            updateProjectsCount();
+        });
+        
+        socket.on('component:created', (component) => {
+            showNotification(`Componente ${component.name} añadido`);
+        });
+        
+        // Funciones de la interfaz
+        async function tryEndpoint(method, endpoint) {
+            const resultId = `result-${endpoint.replace(/[^\w]/g, '')}`;
+            const resultDiv = document.getElementById(resultId);
+            
+            if (!resultDiv) {
+                console.error('Result div not found for:', endpoint);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.style.display = 'block';
+                
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+                resultDiv.style.display = 'block';
+            }
+        }
+        
+        async function createProject() {
+            const projectData = {
+                name: `Proyecto Colaborativo ${Date.now()}`,
+                description: 'Proyecto con colaboración en tiempo real',
+                components: []
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/projects`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(projectData)
+                });
+                
+                const data = await response.json();
+                const resultDiv = document.getElementById('result-create-project');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.style.display = 'block';
+                
+                updateProjectsCount();
+            } catch (error) {
+                console.error('Error creating project:', error);
+            }
+        }
+        
+        function joinProject() {
+            const username = document.getElementById('username').value || `Usuario-${Date.now()}`;
+            socket.emit('join:project', currentProject, username);
+            showNotification(`Te uniste al proyecto como ${username}`);
+        }
+        
+        async function seedData() {
+            try {
+                const response = await fetch(`${API_BASE}/api/seed-data`, {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                alert(`✅ ${data.message}`);
+                updateAllCounts();
+            } catch (error) {
+                alert(`❌ Error: ${error.message}`);
+            }
+        }
+        
+        async function loadAllData() {
+            await tryEndpoint('GET', '/');
+            await tryEndpoint('GET', '/api/projects');
+            await tryEndpoint('GET', '/api/rooms');
+            updateAllCounts();
+        }
+        
+        function simulateActivity() {
+            // Simular movimiento de cursor
+            setInterval(() => {
+                socket.emit('cursor:move', {
+                    projectId: currentProject,
+                    position: {
+                        x: Math.random() * 500,
+                        y: Math.random() * 300
+                    },
+                    username: document.getElementById('username').value || 'Demo'
+                });
+            }, 2000);
+            
+            showNotification('🎭 Simulación de actividad iniciada');
+        }
+        
+        function addOnlineUser(user) {
+            const container = document.getElementById('onlineUsers');
+            const userDiv = document.createElement('div');
+            userDiv.className = 'user-item';
+            userDiv.id = `user-${user.socketId}`;
+            userDiv.textContent = `👤 ${user.username}`;
+            container.appendChild(userDiv);
+        }
+        
+        function removeOnlineUser(user) {
+            const userDiv = document.getElementById(`user-${user.socketId}`);
+            if (userDiv) userDiv.remove();
+        }
+        
+        function showNotification(message) {
+            // Simple notification system
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 70px;
+                right: 20px;
+                background: #9b59b6;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 5px;
+                font-size: 14px;
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.style.opacity = '1', 100);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        async function updateProjectsCount() {
+            try {
+                const response = await fetch(`${API_BASE}/api/projects`);
+                const data = await response.json();
+                document.getElementById('projects-count').textContent = data.length;
+            } catch (error) {
+                console.error('Error updating projects count:', error);
+            }
+        }
+        
+        async function updateUsersCount() {
+            try {
+                const response = await fetch(`${API_BASE}/api/users`);
+                const data = await response.json();
+                document.getElementById('users-count').textContent = data.length;
+            } catch (error) {
+                console.error('Error updating users count:', error);
+            }
+        }
+        
+        function updateConnectionCount() {
+            // Simulado - en una app real vendría del servidor
+            document.getElementById('connections-count').textContent = Math.floor(Math.random() * 10) + 1;
+        }
+        
+        async function updateAllCounts() {
+            await updateProjectsCount();
+            await updateUsersCount();
+            updateConnectionCount();
+        }
+        
+        // Inicializar
+        updateAllCounts();
+        
+        // Auto-join para demo
+        setTimeout(() => {
+            document.getElementById('username').value = `Demo-${Date.now()}`;
+            joinProject();
+        }, 1000);
+    </script>
+</body>
+</html>

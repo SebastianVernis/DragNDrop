@@ -1,0 +1,27 @@
+# Comandos para configurar Nginx paso a paso
+# Ejecuta estos comandos uno por uno con sudo:
+
+# 1. Mover configuración
+sudo cp /tmp/dragndrop-summary /etc/nginx/sites-available/
+
+# 2. Deshabilitar configuración default
+sudo rm -f /etc/nginx/sites-enabled/default
+
+# 3. Habilitar nueva configuración
+sudo ln -sf /etc/nginx/sites-available/dragndrop-summary /etc/nginx/sites-enabled/
+
+# 4. Ajustar permisos del directorio del proyecto
+sudo chmod 755 /home/admin/DragNDrop
+sudo chmod 644 /home/admin/DragNDrop/versions-summary.html
+sudo chmod -R 755 /home/admin/DragNDrop/versions-organized
+sudo chmod -R 755 /home/admin/DragNDrop/documentation-archive
+
+# 5. Verificar configuración
+sudo nginx -t
+
+# 6. Reiniciar nginx
+sudo systemctl reload nginx
+sudo systemctl restart nginx
+
+# 7. Verificar estado
+sudo systemctl status nginx

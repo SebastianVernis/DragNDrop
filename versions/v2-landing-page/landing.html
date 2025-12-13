@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DragNDrop - Editor Visual HTML en el Navegador</title>
+    <meta name="description" content="Editor visual HTML gratuito. Crea páginas web profesionales con drag & drop, AI integrada y sin instalación. Freemium desde el navegador.">
+    <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="logo">🎨</span>
+                <span class="brand-name">DragNDrop</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#features">Características</a></li>
+                <li><a href="#pricing">Precios</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#docs">Docs</a></li>
+                <li><a href="index.html" class="btn-primary">Abrir Editor</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <span class="badge">✨ 100% Gratis para empezar</span>
+                <h1 class="hero-title">Editor Visual HTML<br>Directo en tu Navegador</h1>
+                <p class="hero-subtitle">Crea páginas web profesionales con drag & drop, AI integrada y sin instalación. Desde principiantes hasta desarrolladores profesionales.</p>
+                
+                <div class="hero-actions">
+                    <a href="index.html" class="btn btn-primary btn-large">
+                        🚀 Comenzar Gratis
+                    </a>
+                    <a href="#demo" class="btn btn-secondary btn-large">
+                        ▶️ Ver Demo
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Gratis Forever</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Instalación</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">AI</div>
+                        <div class="stat-label">Powered</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <div class="browser-mockup">
+                    <div class="browser-header">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                        <span class="browser-url">dragndrop.editor/app</span>
+                    </div>
+                    <div class="browser-content">
+                        <img src="https://via.placeholder.com/800x500/667eea/ffffff?text=Editor+Screenshot" alt="DragNDrop Editor">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Todo lo que necesitas para crear increíbles páginas web</h2>
+                <p>Desde diseño hasta deploy, todo en un solo lugar</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Drag & Drop Visual</h3>
+                    <p>Arrastra componentes, ajusta propiedades en tiempo real y ve los cambios instantáneamente.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Integrada</h3>
+                    <p>Genera componentes con IA, verifica accesibilidad y optimiza SEO automáticamente.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Responsive Design</h3>
+                    <p>Previsualiza en desktop, tablet y móvil. Test responsive integrado.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Sin Instalación</h3>
+                    <p>100% en el navegador. Sin descargas, sin configuración, sin complicaciones.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Deploy Directo</h3>
+                    <p>Despliega a Vercel con un click. Integración con GitHub incluida.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Exporta Todo</h3>
+                    <p>HTML limpio, CSS optimizado, proyecto completo en ZIP. Tu código, tu propiedad.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎭</div>
+                    <h3>Temas & Templates</h3>
+                    <p>Templates profesionales, tema oscuro/claro, componentes reutilizables.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⌨️</div>
+                    <h3>Keyboard Shortcuts</h3>
+                    <p>+20 atajos de teclado, Undo/Redo ilimitado, comando palette.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">♿</div>
+                    <h3>Accesibilidad</h3>
+                    <p>Verificador WCAG automático, sugerencias de mejora, código accesible.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Precios Simples y Transparentes</h2>
+                <p>Comienza gratis, escala cuando lo necesites</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Free Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Free</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">0</span>
+                            <span class="period">/siempre</span>
+                        </div>
+                        <p class="plan-description">Perfecto para aprender y proyectos personales</p>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✅ Editor completo en navegador</li>
+                        <li>✅ Componentes ilimitados</li>
+                        <li>✅ Responsive design tools</li>
+                        <li>✅ Exportar HTML/CSS</li>
+                        <li>✅ Templates básicos</li>
+                        <li>✅ Tema oscuro/claro</li>
+                        <li>✅ 5 proyectos guardados</li>
+                        <li>❌ AI Features limitado (10/día)</li>
+                        <li>❌ Deploy manual</li>
+                        <li>❌ Sin colaboración</li>
+                    </ul>
+                    <a href="index.html" class="btn btn-outline btn-block">Empezar Gratis</a>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card featured">
+                    <div class="popular-badge">🔥 Más Popular</div>
+                    <div class="plan-header">
+                        <h3>Pro</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">9</span>
+                            <span class="period">/mes</span>
+                        </div>
+                        <p class="plan-description">Para freelancers y equipos pequeños</p>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✅ Todo de Free +</li>
+                        <li>✅ Proyectos ilimitados</li>
+                        <li>✅ AI Features ilimitado</li>
+                        <li>✅ Deploy automático (Vercel)</li>
+                        <li>✅ GitHub integration</li>
+                        <li>✅ Templates premium</li>
+                        <li>✅ Componentes avanzados</li>
+                        <li>✅ SEO optimizer</li>
+                        <li>✅ Soporte prioritario</li>
+                        <li>✅ Sin marca de agua</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary btn-block">Comenzar Pro</a>
+                </div>
+
+                <!-- Teams Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Teams</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">29</span>
+                            <span class="period">/mes</span>
+                        </div>
+                        <p class="plan-description">Para equipos que necesitan colaborar</p>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✅ Todo de Pro +</li>
+                        <li>✅ Hasta 10 miembros</li>
+                        <li>✅ Colaboración en tiempo real</li>
+                        <li>✅ Biblioteca de componentes compartida</li>
+                        <li>✅ Control de versiones</li>
+                        <li>✅ Permisos y roles</li>
+                        <li>✅ SSO (Single Sign-On)</li>
+                        <li>✅ Analytics avanzado</li>
+                        <li>✅ API access</li>
+                        <li>✅ Soporte dedicado</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline btn-block">Contactar Ventas</a>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Enterprise</h3>
+                        <div class="price">
+                            <span class="amount">Custom</span>
+                        </div>
+                        <p class="plan-description">Soluciones a medida para grandes organizaciones</p>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✅ Todo de Teams +</li>
+                        <li>✅ Usuarios ilimitados</li>
+                        <li>✅ Self-hosted option</li>
+                        <li>✅ White-label</li>
+                        <li>✅ SLA garantizado</li>
+                        <li>✅ Integración custom</li>
+                        <li>✅ Training & onboarding</li>
+                        <li>✅ Account manager dedicado</li>
+                        <li>✅ Auditoría de seguridad</li>
+                        <li>✅ Compliance (GDPR, SOC2)</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline btn-block">Hablar con Experto</a>
+                </div>
+            </div>
+
+            <div class="pricing-note">
+                <p>💡 Todos los planes incluyen actualizaciones gratuitas y sin compromiso de permanencia</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="use-cases">
+        <div class="container">
+            <div class="section-header">
+                <h2>¿Para quién es DragNDrop?</h2>
+            </div>
+
+            <div class="use-cases-grid">
+                <div class="use-case">
+                    <div class="use-case-icon">🎓</div>
+                    <h3>Estudiantes</h3>
+                    <p>Aprende HTML/CSS de forma visual. Experimenta sin miedo, ve los resultados al instante.</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">💼</div>
+                    <h3>Freelancers</h3>
+                    <p>Crea landing pages para clientes en minutos. Deploy directo a producción.</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">🏢</div>
+                    <h3>Startups</h3>
+                    <p>Prototipos rápidos, testing de ideas, MVP en horas no semanas.</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">👨‍💻</div>
+                    <h3>Desarrolladores</h3>
+                    <p>Acelera el desarrollo frontend. Código limpio y exportable. Integración con tu workflow.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Empieza a crear hoy mismo</h2>
+                <p>Sin tarjeta de crédito. Sin instalación. Sin límites creativos.</p>
+                <a href="index.html" class="btn btn-primary btn-large">
+                    🚀 Abrir Editor Gratis
+                </a>
+                <p class="cta-note">En menos de 5 segundos estarás creando tu primera página</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Producto</h4>
+                    <ul>
+                        <li><a href="#features">Características</a></li>
+                        <li><a href="#pricing">Precios</a></li>
+                        <li><a href="#demo">Demo</a></li>
+                        <li><a href="#">Changelog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <ul>
+                        <li><a href="docs/">Documentación</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Templates</a></li>
+                        <li><a href="#">Tutoriales</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Empresa</h4>
+                    <ul>
+                        <li><a href="#">Sobre Nosotros</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Carreras</a></li>
+                        <li><a href="#">Contacto</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacidad</a></li>
+                        <li><a href="#">Términos</a></li>
+                        <li><a href="#">Cookies</a></li>
+                        <li><a href="#">Licencia</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 DragNDrop. Hecho con 💘 para la comunidad web.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="GitHub">🐙</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="Discord">💬</a>
+                    <a href="#" aria-label="YouTube">📺</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.querySelector('.nav-menu');
+            menu.classList.toggle('active');
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

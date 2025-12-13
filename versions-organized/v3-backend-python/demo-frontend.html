@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Frontend - Python API v3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .api-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .api-section h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        
+        .endpoint {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .method.get { background: #28a745; color: white; }
+        .method.post { background: #007bff; color: white; }
+        .method.put { background: #ffc107; color: black; }
+        .method.delete { background: #dc3545; color: white; }
+        
+        .try-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .try-button:hover {
+            background: #c0392b;
+        }
+        
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .demo-data {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .demo-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        
+        .demo-button:hover {
+            background: #218838;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px;
+            min-width: 150px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍 Python FastAPI v3 - Demo Frontend</h1>
+        
+        <div class="demo-data">
+            <button class="demo-button" onclick="seedData()">🌱 Crear Datos Demo</button>
+            <button class="demo-button" onclick="loadData()">🔄 Cargar Todos los Datos</button>
+            <button class="demo-button" onclick="clearResults()">🗑️ Limpiar Resultados</button>
+        </div>
+        
+        <div class="api-section">
+            <h3>📋 Información de la API</h3>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/</code>
+                <button class="try-button" onclick="tryEndpoint('GET', '/')">Probar</button>
+                <div id="result-root" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/health</code>
+                <button class="try-button" onclick="tryEndpoint('GET', '/health')">Probar</button>
+                <div id="result-health" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/info</code>
+                <button class="try-button" onclick="tryEndpoint('GET', '/api/info')">Probar</button>
+                <div id="result-info" class="result" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <div class="api-section">
+            <h3>📁 Gestión de Proyectos</h3>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/projects/</code>
+                <button class="try-button" onclick="tryEndpoint('GET', '/projects/')">Listar Proyectos</button>
+                <div id="result-projects-get" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/projects/</code>
+                <button class="try-button" onclick="createProject()">Crear Proyecto</button>
+                <div id="result-projects-post" class="result" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <div class="api-section">
+            <h3>🧩 Gestión de Componentes</h3>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/components/</code>
+                <button class="try-button" onclick="tryEndpoint('GET', '/components/')">Listar Componentes</button>
+                <div id="result-components-get" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/components/</code>
+                <button class="try-button" onclick="createComponent()">Crear Componente</button>
+                <div id="result-components-post" class="result" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <div class="api-section">
+            <h3>👥 Gestión de Usuarios</h3>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/users/</code>
+                <button class="try-button" onclick="tryEndpoint('GET', '/users/')">Listar Usuarios</button>
+                <div id="result-users-get" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/users/</code>
+                <button class="try-button" onclick="createUser()">Crear Usuario</button>
+                <div id="result-users-post" class="result" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="projects-count">0</div>
+                <div>Proyectos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="components-count">0</div>
+                <div>Componentes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="users-count">0</div>
+                <div>Usuarios</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8083';
+        
+        async function tryEndpoint(method, endpoint) {
+            const resultId = `result-${endpoint.replace(/[^\w]/g, '-')}`;
+            const resultDiv = document.getElementById(resultId) || 
+                             document.getElementById(`result-${method.toLowerCase()}-${endpoint.replace(/[^\w]/g, '-')}`);
+            
+            if (!resultDiv) {
+                console.error('Result div not found for:', endpoint);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.style.display = 'block';
+                
+                // Actualizar contadores si es necesario
+                if (endpoint.includes('projects')) updateProjectsCount();
+                if (endpoint.includes('components')) updateComponentsCount();
+                if (endpoint.includes('users')) updateUsersCount();
+                
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+                resultDiv.style.display = 'block';
+            }
+        }
+        
+        async function createProject() {
+            const projectData = {
+                name: `Proyecto Demo ${Date.now()}`,
+                description: 'Proyecto creado desde el demo frontend',
+                components: []
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/projects/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(projectData)
+                });
+                
+                const data = await response.json();
+                const resultDiv = document.getElementById('result-projects-post');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.style.display = 'block';
+                
+                updateProjectsCount();
+            } catch (error) {
+                console.error('Error creating project:', error);
+            }
+        }
+        
+        async function createComponent() {
+            const componentData = {
+                name: `Componente ${Date.now()}`,
+                type: 'div',
+                properties: {
+                    backgroundColor: '#f0f0f0',
+                    padding: '10px',
+                    borderRadius: '5px'
+                },
+                position: {
+                    x: Math.floor(Math.random() * 200),
+                    y: Math.floor(Math.random() * 200)
+                }
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/components/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(componentData)
+                });
+                
+                const data = await response.json();
+                const resultDiv = document.getElementById('result-components-post');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.style.display = 'block';
+                
+                updateComponentsCount();
+            } catch (error) {
+                console.error('Error creating component:', error);
+            }
+        }
+        
+        async function createUser() {
+            const userData = {
+                username: `usuario_${Date.now()}`,
+                email: `user${Date.now()}@demo.com`
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/users/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                const data = await response.json();
+                const resultDiv = document.getElementById('result-users-post');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.style.display = 'block';
+                
+                updateUsersCount();
+            } catch (error) {
+                console.error('Error creating user:', error);
+            }
+        }
+        
+        async function seedData() {
+            try {
+                const response = await fetch(`${API_BASE}/seed-data/`, {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                alert(`✅ ${data.message}\n📊 ${data.users} usuarios, ${data.components} componentes, ${data.projects} proyectos`);
+                
+                // Actualizar contadores
+                updateAllCounts();
+            } catch (error) {
+                alert(`❌ Error: ${error.message}`);
+            }
+        }
+        
+        async function loadData() {
+            await tryEndpoint('GET', '/');
+            await tryEndpoint('GET', '/projects/');
+            await tryEndpoint('GET', '/components/');
+            await tryEndpoint('GET', '/users/');
+            updateAllCounts();
+        }
+        
+        function clearResults() {
+            const results = document.querySelectorAll('.result');
+            results.forEach(result => {
+                result.style.display = 'none';
+                result.textContent = '';
+            });
+        }
+        
+        async function updateProjectsCount() {
+            try {
+                const response = await fetch(`${API_BASE}/projects/`);
+                const data = await response.json();
+                document.getElementById('projects-count').textContent = data.length;
+            } catch (error) {
+                console.error('Error updating projects count:', error);
+            }
+        }
+        
+        async function updateComponentsCount() {
+            try {
+                const response = await fetch(`${API_BASE}/components/`);
+                const data = await response.json();
+                document.getElementById('components-count').textContent = data.length;
+            } catch (error) {
+                console.error('Error updating components count:', error);
+            }
+        }
+        
+        async function updateUsersCount() {
+            try {
+                const response = await fetch(`${API_BASE}/users/`);
+                const data = await response.json();
+                document.getElementById('users-count').textContent = data.length;
+            } catch (error) {
+                console.error('Error updating users count:', error);
+            }
+        }
+        
+        async function updateAllCounts() {
+            await updateProjectsCount();
+            await updateComponentsCount();
+            await updateUsersCount();
+        }
+        
+        // Cargar contadores al inicio
+        updateAllCounts();
+    </script>
+</body>
+</html>

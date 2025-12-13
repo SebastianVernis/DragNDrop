@@ -1,0 +1,21 @@
+# FastAPI and dependencies - versiones compatibles
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0
+python-multipart
+
+# Database
+sqlalchemy>=1.4.0
+alembic
+
+# Authentication  
+python-jose[cryptography]
+passlib[bcrypt]
+
+# Validation - versión compatible
+pydantic>=2.0.0
+
+# Development
+python-dotenv
+
+# CORS
+fastapi-cors
