@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Logs
+logs/
+*.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Testing
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+out/
+
+# Drizzle
+drizzle/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Vercel
+.vercel
+
+# Next.js (si se usa)
+.next/
+
+# Misc
+.cache/
+.parcel-cache/
